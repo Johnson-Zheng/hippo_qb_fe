@@ -8,6 +8,7 @@
 
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
+
   <body>
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
@@ -15,4 +16,41 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
+
+  <style>
+    html{
+      height:100%;
+      width: 100%;
+    }
+    body{
+      background:#fafafa;
+      font-family:"Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif,serif;
+    }
+
+    .panel_shadow{
+      position: absolute;
+      z-index: 99;
+      height:max-content;
+      background: rgb(255, 255, 255) !important;
+      box-shadow:0 5px 20px rgba(0,0,0,0.07);
+      opacity:1;
+      border-radius:10px;
+      padding:20px 30px 30px 35px;
+    }
+
+    .input_text{
+      text-align: left;
+      font-size:15px;
+      font-weight:400;
+      line-height:17px;
+      color:rgba(0,0,0,1);
+      opacity:1;
+    }
+    .mt-30{
+      margin-top:30px;
+    }
+    .mt-1875{
+      margin-top:18px;
+    }
+  </style>
 </html>

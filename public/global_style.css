@@ -1,0 +1,18 @@
+.panel_shadow{
+    position: absolute;
+    z-index: 99;
+    height:max-content;
+    background: rgb(255, 55, 26) !important;
+    box-shadow:0 5px 20px rgba(0,0,0,0.07);
+    opacity:1;
+    border-radius:10px;
+    padding:20px 30px 30px 30px;
+}
+
+.input_text{
+    font-size:15px;
+    font-weight:400;
+    line-height:17px;
+    color:rgba(0,0,0,1);
+    opacity:1;
+}
