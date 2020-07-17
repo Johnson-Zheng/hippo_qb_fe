@@ -12,6 +12,8 @@ Vue.use(router)
 Vue.use(ElementUI)
 Vue.prototype.GLOBAL = global_;
 axios.defaults.baseURL=global_.BASE_URL;
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
+axios.defaults.withCredentials=true
 Vue.prototype.$axios = axios
 
 router.beforeEach((to, from, next) => {

@@ -69,20 +69,22 @@
                 </el-tabs>
             </div>
         </div>
-        <p id="copyright">©2020 河马题库开发小组 软件sy1701<br>郑文伟、顾晓健、肖俊杰、潘喜睿</p>
+        <copyright></copyright>
     </div>
 </template>
 
 <script>
-    import {isEmail} from '@/utils/validate'
-    import { mapMutations } from 'vuex'
+    import {isEmail,findValue} from '@/utils/validate'
+    import {mapMutations} from 'vuex'
     import axios from 'axios'
+    import Copyright from "@/component/footer/copyright";
 
     export default {
         name: "login",
-        componets:{
-
+        components: {
+            Copyright
         },
+
         data() {
             let checkName = (rule, value, callback) => {
                 if (value.trim() === '') {
@@ -176,7 +178,6 @@
                     user_password: [{ required:true,validator: validatePass, trigger: 'blur' }],
                     password2: [{ required:true,validator: validatePass2, trigger: 'blur' }],
                     email: [{ required:true, validator: validateEmail, trigger: 'blur' }],
-                    code: [{ required:true,message:'请填写验证码', trigger: 'blur' }],
                     uno:[{ required:true,validator: checkUno, trigger: 'blur' }],
                 },
                 buttonText: '获取验证码',
@@ -241,7 +242,7 @@
                         let message = res.data.rspMsg
                         if(code==='200'){
                             this.$message({
-                                message: message,
+                                message: "发送成功",
                                 type:'success'
                             })
                             let time = 60
@@ -267,7 +268,11 @@
                                 type:'error'
                             });
                         }
-                    })
+                    }).catch(error => {
+                        let message = error.message
+                        this.$message.error(message)
+                        console.log(error)
+                    });
                 }else if(email===""){
                     this.$message({
                         message: '邮箱不能为空',
@@ -281,6 +286,7 @@
                     });
                 }
             },
+
             //注册用户
             register(form_name,au_form_name){
                 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
@@ -291,73 +297,77 @@
                 let email = form_name.email
                 let code = au_form_name.code
                 let isemail = isEmail(email)
-                let noEmpty = false
+                let noEmpty1 = !(findValue(au_form_name,""))
+                let noEmpty2 = !(findValue(form_name,""))
+                let valiEmailCode = false
+                if(email){
+                    axios.post('/api/user/checkcode?code='+code+'&mail='+email
+                    ).then(res1 => {
+                        if(res1.data.rspCode==="200"){
+                            if(noEmpty1 && noEmpty2){
+                                //验证密码
+                                if(password!==au_password2){
+                                    this.$message({
+                                        message: '两次密码不一致',
+                                        type: 'warning'
+                                    });
+                                }else if(!isemail){
+                                    this.$message({
+                                        message: '邮箱格式错误',
+                                        type: 'warning'
+                                    });
+                                }
+                                else{
+                                    axios.post('/api/register', JSON.stringify(this.register_form),
+                                    ).then(res => {
+                                        let resdata = res.data
+                                        let code = resdata.rspCode
+                                        let userdata = resdata.data
 
-                //验空
-                for(let key in form_name){
-                    let item = form_name[key]
-                    if(item===''){
-                        noEmpty = false
-                        break
-                    }else{
-                        noEmpty = true
-                    }
-                }
-                for(let key in au_form_name){
-                    let item = au_form_name[key]
-                    if(item===''){
-                        noEmpty = false
-                        break
-                    }else{
-                        noEmpty = true
-                    }
-                }
+                                        if(resdata.rspCode==='200'){
+                                            let info = '用户'+userdata+"注册成功"
+                                            this.$message({
+                                                message: info,
+                                                type: 'success'
+                                            });
+                                            this.tabSelect = 'first'
+                                        }else{
+                                            let errorMessage = "ERROR:"+code+" "+userdata
+                                            this.$message({
+                                                message: errorMessage,
+                                                type:'error'
+                                            });
+                                        }
 
-                if(noEmpty){
-                    //验证密码
-                    if(password!==au_password2){
-                        this.$message({
-                            message: '两次密码不一致',
-                            type: 'warning'
-                        });
-                    }else if(!isemail){
-                        this.$message({
-                            message: '邮箱格式错误',
-                            type: 'warning'
-                        });
-                    }
-                    //TODO：邮箱验证码匹配验证
-                    else{
-                        axios.post('/api/register', JSON.stringify(this.register_form),
-                        ).then(res => {
-                            let resdata = res.data
-                            let code = resdata.rspCode
-                            let userdata = resdata.data
+                                    }).catch(error => {
+                                        let message = error.message
+                                        this.$message.error(message)
 
-                            if(resdata.rspCode==='200'){
-                                let info = '用户'+userdata+"注册成功"
-                                this.$message({
-                                    message: info,
-                                    type: 'success'
-                                });
-                                this.tabSelect = 'first'
+                                    });
+                                }
                             }else{
-                                let errorMessage = "ERROR:"+code+" "+userdata
                                 this.$message({
-                                    message: errorMessage,
-                                    type:'error'
+                                    message: '表单未填写完整',
+                                    type: 'warning'
                                 });
                             }
+                        }else{
+                            this.$message({
+                                message: '邮箱和验证码验证失败',
+                                type: 'warning'
+                            });
+                        }
 
-                        }).catch(error => {
-                            let message = error.message
-                            this.$message.error(message)
-
+                    }).catch(error => {
+                        let message = error.message
+                        this.$message({
+                            message: message,
+                            type: 'error'
                         });
-                    }
+                    });
                 }else{
                     this.$message({
-                        message: '表单未填写完整',
+                        message: "邮箱不能为空",
                         type: 'warning'
                     });
                 }
@@ -386,24 +396,13 @@
         height:546px;
         object-fit: cover;
     }
-    #copyright{
-        position:absolute;
-        font-size:12px;
-        bottom:2vh;
-        left: 50%;
-        transform: translateX(-50%);
 
-        font-weight:400;
-        line-height:21px;
-        color:rgba(188,188,188,1);
-        opacity:1;
-    }
     #panel{
-        right: 10vw;
-        top:13vh;
+        right: 9.5%;
+        top:50%;
+        transform: translateY(-50%);
         width:350px;
         position: absolute;
-
     }
 
     #login-panel >>> .el-tabs__item {
@@ -413,14 +412,7 @@
         width: 175px;
     }
 
-    .forget{
-        font-size:14px;
-        font-weight:400;
-        line-height:17px;
-        color:rgba(136,136,136,1);
-        opacity:1;
-        text-decoration: none;
-    }
+
 
 
 </style>

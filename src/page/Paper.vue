@@ -1,0 +1,176 @@
+<template>
+    <body id="paper">
+    <el-form :model="paperQuestion"  class="login-container" label-position="left"
+             label-width="0px" v-loading="loading">
+        <h3 class="Paper_title">【{{ paperQuestion.papername}}】</h3>
+        <el-row :gutter="10">
+
+            <el-col v-for="(question,questionIndex) in paperQuestion.questions" :key="question.type" :xs="24" :sm="24">
+                <div>
+                    <h4>{{ questionIndex + 1 +'：' }} {{ question.questionName }}</h4>
+                    <!-- 单项选择题选项template -->
+                    <template v-if="isChoice(question.type)">
+                        <el-radio-group v-model="question.answerContent" @change="updateChoice(question)">
+                            <div class="box-card">
+                                <el-radio :label="choices[0]">{{ choices[0] }}. {{question.optionA }}</el-radio>
+                                <el-radio :label="choices[1]">{{ choices[1] }}. {{question.optionB }}</el-radio>
+                                <el-radio :label="choices[2]">{{ choices[2] }}. {{question.optionC }}</el-radio>
+                                <el-radio :label="choices[3]">{{ choices[3] }}. {{question.optionD }}</el-radio>
+                            </div>
+                        </el-radio-group>
+                    </template>
+                    <!-- 多项选择题选项template -->
+                    <template v-if="isMultiChoice(question.type)" >
+                        <el-checkbox-group v-model="question.answerContent" @change="updateChoice(question,mulchoice)">
+                            <el-checkbox label='A'>{{ choices[0] }}.{{question.optionA }}</el-checkbox>
+                            <el-checkbox label='B'>{{ choices[1] }}.{{question.optionB }}</el-checkbox>
+                            <el-checkbox label='C'>{{ choices[2] }}.{{question.optionC }}</el-checkbox>
+                            <el-checkbox label='D' >{{ choices[3] }}.{{question.optionD }}</el-checkbox>
+                            <el-checkbox label='E'>{{ choices[4] }}.{{question.optionE }}</el-checkbox>
+                        </el-checkbox-group>
+                    </template>
+                    <template v-if="!isChoice(question.type) && !isMultiChoice(question.type)">
+                        <el-input
+                                v-model="question.answerContent"
+                                type="textarea"
+                                :autosize="{ minRows: 1, maxRows: 4}"
+                                :maxlength="300"
+                                :clearable="true"
+                                @change="updateChoice(question)"
+                        />
+                    </template>
+                </div>
+            </el-col>
+        </el-row>
+
+
+        <el-button type="primary" style="width: 40%;background: #505458;border: none" v-on:click="submit">提交</el-button>
+
+
+    </el-form>
+    </body>
+</template>
+<script>
+    export default {
+        name: 'paper',
+        data () {
+            return {
+                choices: ['A', 'B', 'C', 'D', 'E', 'F'],
+                checkList: ['选中且禁用','复选框 A'],
+                mulchoices: [{
+                    "label": "A",
+                    "value": 'A'
+                }, {
+                    "label": "B",
+                    "value": "B"
+                }, {
+                    "label": "C",
+                    "value": 'C'
+                }, {
+                    "label": "D",
+                    "value": 'D'
+                },{
+                    "label": "E",
+                    "value": 'E'
+                }],
+                mulchoice:[],
+                singlechoice:'',
+                paperQuestion: null,
+                checked: true,
+                answer: {},
+                paper:'',
+                updateInfo: {
+                    //  studentId: '',
+                    //   paperId: '',
+                    //  answerContent: ''
+                },
+
+                loading: false
+            }
+        },
+        mounted () {
+            this.loading = true
+            this.getpaperinfo()
+        },
+        methods:{
+            getpaperinfo () {
+                var _this = this
+                this.$axios.get('/api/paper/getpaperinfo?pid=4').then(resp => {
+                    if (resp && resp.data.rspCode === '200') {
+                        _this.paperQuestion = resp.data.data
+                        _this.loading = false
+                    }
+                })
+            },
+            isChoice(typeId) {
+                return typeId === 1
+            }, isMultiChoice(typeId) {
+                return typeId === 2
+            },updateChoice(question,mul) {
+                if(question.type===2){
+                    this.setarrUpdateInfo(question,mul)}
+                else {
+                    this.setUpdateInfo(question)
+                    this.$message("添加单选成功")
+                }
+
+            }, setUpdateInfo(question) {
+                //   this.updateInfo.answerContent = question.answerContent
+                //  this.updateInfo.qid = question.qid
+                this.$set(this.updateInfo ,question.qid, question.answerContent)
+            }, setarrUpdateInfo(question,mul) {
+                //   this.updateInfo.answerContent = question.answerContent
+                //  this.updateInfo.qid = question.qid
+                //   this.$set(this.updateInfo ,question.qid, JSON.stringify(mul))
+                this.$set(this.updateInfo ,question.qid,mul.toString())
+            },
+            submit () {
+                var _this = this
+                this.$axios
+                    .post('/api/paper/1/4/submit', _this.updateInfo)
+                    .then(resp => {
+                        if (resp.data.rspCode === '200') {
+                            var data = resp.data
+                            this.$alert(resp.data.data,resp.data.rspMsg, {
+                                confirmButtonText: '确定'
+                            })
+                        } else {
+                            this.$alert(resp.data.data,resp.data.rspMsg, {
+                                confirmButtonText: '确定'
+                            })
+                        }
+                    })
+                    .catch(failResponse => {})
+            },
+        }
+    }
+</script>
+
+<style scoped>
+    #paper {
+        background-position: center;
+        height: 100%;
+        width: 100%;
+        background-size: cover;
+        position: fixed;
+    }
+    body{
+        margin: 0;
+    }
+    .login-container {
+        border-radius: 15px;
+        background-clip: padding-box;
+        margin: 90px auto;
+        width: 850px;
+        padding: 35px 35px 15px 35px;
+        background: #fff;
+        border: 1px solid #eaeaea;
+        box-shadow: 0 0 25px #cac6c6;
+    }
+    .Paper_title {
+        margin: 0px auto 40px auto;
+        text-align: center;
+        color: #505458;
+    }
+
+</style>
