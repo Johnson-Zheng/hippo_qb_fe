@@ -6,7 +6,11 @@
             <div id="login-panel">
                 <el-tabs v-model="tabSelect">
                     <el-tab-pane label="登陆" name="first">
-                        <el-form label-position="left" ref="form" :rules="login_rules" status-icon :model="login_form" label-width="80px" class="mt-30">
+                        <el-form
+                                label-position="left"
+                                ref="form"
+                                :rules="login_rules"
+                                status-icon :model="login_form" label-width="80px" class="mt-30">
                             <el-form-item label="用户名" prop="username" style="margin-top:40px">
                                 <el-input v-model="login_form.username" placeholder="请输入用户名"/>
                             </el-form-item>
@@ -31,7 +35,10 @@
 
                     </el-tab-pane>
                     <el-tab-pane label="注册" name="second">
-                        <el-form label-position="left" ref="form" :rules="register_rules" status-icon :model="register_form" label-width="80px" class="mt-30">
+                        <el-form label-position="left"
+                                 ref="register_form"
+                                 :rules="register_rules"
+                                 status-icon :model="register_form" label-width="80px" class="mt-30">
                             <el-form-item label="用户名" prop="username">
                                 <el-input v-model="register_form.username" placeholder="请输入用户名"/>
                             </el-form-item>
@@ -39,7 +46,7 @@
                                 <el-input placeholder="请输入密码" v-model="register_form.user_password" show-password/>
                             </el-form-item>
                             <el-form-item label="重复密码" prop="password2">
-                                <el-input placeholder="请再次输入密码" v-model="register_au_form.password2" show-password/>
+                                <el-input placeholder="请再次输入密码" v-model="register_form.password2" show-password/>
                             </el-form-item>
                             <el-form-item label="邮箱" prop="email">
                                 <el-input placeholder="请输入您的邮箱" v-model="register_form.email"/>
@@ -62,7 +69,7 @@
                                 <el-input placeholder="请输入您的学号/工号" v-model="register_form.uno"/>
                             </el-form-item>
 
-                            <el-col :span="24"><el-button type="primary" style="width:100%;" @click="register(register_form,register_au_form)">注册</el-button></el-col>
+                            <el-col :span="24"><el-button type="primary" style="width:100%;" @click="submitregister">注册</el-button></el-col>
                         </el-form>
                     </el-tab-pane>
 
@@ -94,7 +101,7 @@
                 }
             }
             let validateEmail = (rule, value, callback) => {
-                if (value.trim() === '') {
+                if (value === '') {
                     callback(new Error('邮箱不能为空'))
                 }else if(!isEmail(value)) {
                     callback(new Error('邮箱格式错误'))
@@ -110,11 +117,11 @@
                 }
             }
             let validatePass2 = (rule, value, callback) => {
-                let pass1 = this.register_form.user_password.trim()
+                var pass1 = this.register_form.user_password
                 if(pass1){
-                    if (value.trim()==='') {
+                    if (value==='') {
                         callback(new Error("请再次输入密码"))
-                    }else if (value.trim()!==pass1) {
+                    }else if (value!==pass1) {
                         callback(new Error("两次输入密码不一致!"))
                     }else {
                         callback();
@@ -158,6 +165,7 @@
                 register_form:{
                     username:'',
                     user_password:'',
+                    password2:'',
                     email:'',
                     role:'1',
                     enabled:true,
@@ -286,7 +294,25 @@
                     });
                 }
             },
-
+            submitregister() {
+                this.$refs.register_form.validate((valid) => {
+                    if (valid) {
+                        this.$axios
+                            .post('api/register?code='+this.register_au_form.code, this.register_form).then(resp => {
+                            if (resp && resp.data.rspCode === '200') {
+                                this.$message.success(resp.data.data+"注册成功")
+                            }
+                            else {
+                                this.loading = false;
+                                this.$message.warning(resp.data.data+",请重新尝试")
+                            }
+                        })
+                    } else {
+                        this.$message.error('请核验表单信息是否遗漏');
+                        return false;
+                    }
+                });
+            },
             //注册用户
             register(form_name,au_form_name){
                 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'

@@ -4,6 +4,7 @@ import login from '@/page/login'
 import reset_password from "@/page/reset_password";
 import tea_question from "@/page/teacher/tea_question";
 import Paper from "@/page/Paper";
+import CourseQuery from "../page/CourseQuery";
 
 Vue.use(Router)
 
@@ -13,6 +14,15 @@ export default new Router({
         {
             path:'/',
             redirect:login
+        },
+        {
+            path:'/course',
+            name:'course',
+            component:CourseQuery,
+            meta:{
+                // 页面标题title
+                title: '课程检索组件'
+            }
         },
         {
             path:'/login',
