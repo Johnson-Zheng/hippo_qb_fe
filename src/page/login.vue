@@ -300,55 +300,48 @@
                 let noEmpty1 = !(findValue(au_form_name,""))
                 let noEmpty2 = !(findValue(form_name,""))
                 let valiEmailCode = false
-                if(email){
+                if(noEmpty1 && noEmpty2){
                     axios.post('/api/user/checkcode?code='+code+'&mail='+email
                     ).then(res1 => {
                         if(res1.data.rspCode==="200"){
-                            if(noEmpty1 && noEmpty2){
-                                //验证密码
-                                if(password!==au_password2){
-                                    this.$message({
-                                        message: '两次密码不一致',
-                                        type: 'warning'
-                                    });
-                                }else if(!isemail){
-                                    this.$message({
-                                        message: '邮箱格式错误',
-                                        type: 'warning'
-                                    });
-                                }
-                                else{
-                                    axios.post('/api/register', JSON.stringify(this.register_form),
-                                    ).then(res => {
-                                        let resdata = res.data
-                                        let code = resdata.rspCode
-                                        let userdata = resdata.data
-
-                                        if(resdata.rspCode==='200'){
-                                            let info = '用户'+userdata+"注册成功"
-                                            this.$message({
-                                                message: info,
-                                                type: 'success'
-                                            });
-                                            this.tabSelect = 'first'
-                                        }else{
-                                            let errorMessage = "ERROR:"+code+" "+userdata
-                                            this.$message({
-                                                message: errorMessage,
-                                                type:'error'
-                                            });
-                                        }
-
-                                    }).catch(error => {
-                                        let message = error.message
-                                        this.$message.error(message)
-
-                                    });
-                                }
-                            }else{
+                            //验证密码
+                            if(password!==au_password2){
                                 this.$message({
-                                    message: '表单未填写完整',
+                                    message: '两次密码不一致',
                                     type: 'warning'
+                                });
+                            }else if(!isemail){
+                                this.$message({
+                                    message: '邮箱格式错误',
+                                    type: 'warning'
+                                });
+                            }
+                            else{
+                                axios.post('/api/register', JSON.stringify(this.register_form),
+                                ).then(res => {
+                                    let resdata = res.data
+                                    let code = resdata.rspCode
+                                    let userdata = resdata.data
+
+                                    if(resdata.rspCode==='200'){
+                                        let info = '用户'+userdata+"注册成功"
+                                        this.$message({
+                                            message: info,
+                                            type: 'success'
+                                        });
+                                        this.tabSelect = 'first'
+                                    }else{
+                                        let errorMessage = "ERROR:"+code+" "+userdata
+                                        this.$message({
+                                            message: errorMessage,
+                                            type:'error'
+                                        });
+                                    }
+
+                                }).catch(error => {
+                                    let message = error.message
+                                    this.$message.error(message)
+
                                 });
                             }
                         }else{
@@ -367,7 +360,7 @@
                     });
                 }else{
                     this.$message({
-                        message: "邮箱不能为空",
+                        message: "表单未填写完整",
                         type: 'warning'
                     });
                 }

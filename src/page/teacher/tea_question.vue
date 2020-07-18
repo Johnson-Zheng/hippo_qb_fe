@@ -40,7 +40,7 @@
                     width="120">
             </el-table-column>
             <el-table-column
-                    prop="cid"
+                    prop="type"
                     sortable
                     label="题目类型"
                     width="120">
@@ -86,6 +86,10 @@
                     qid: '1',
                     title: '1+1=',
                     answer: 'B',
+                    cid:'一年级数学',
+                    type:'',
+                    createTime:'200',
+                    difficult:'普通'
 
                 }]
             }
