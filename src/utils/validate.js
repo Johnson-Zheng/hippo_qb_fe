@@ -19,3 +19,32 @@ export  function findValue(dir_data, fvalue){
     }
 
 }
+
+export  function quextiontype(row, column){
+    let status = row.type
+    switch (status) {
+        case 1:
+            return '单选题'
+        case 2:
+            return '多选题'
+        case 3:
+            return '主观题'
+        default:
+            return '新题型'
+    }
+}
+export  function dateFormatter (row, column) {
+        let datetime = row.createTime;
+        if(datetime){
+            datetime = new Date(datetime);
+            let y = datetime.getFullYear() + '-';
+            let mon = datetime.getMonth()+1 + '-';
+            let d = datetime.getDate()+ ' ';
+            let h = datetime.getHours()+':';
+            let m = datetime.getMinutes()+':'
+            let s = datetime.getSeconds()
+            return y + mon + d ;
+        }
+        return 'NULL'
+    }
+
