@@ -3,6 +3,7 @@
     <el-form :model="paperQuestion"  class="login-container" label-position="left"
              label-width="0px" v-loading="loading">
         <h3 class="Paper_title">【{{ paperQuestion.papername}}】</h3>
+        <h6 class="Paper_title">答题过程中请不要关闭页面或复制粘贴试题及答案</h6>
         <el-row :gutter="10">
 
             <el-col v-for="(question,questionIndex) in paperQuestion.questions" :key="question.type" :xs="24" :sm="24">
@@ -21,7 +22,7 @@
                     </template>
                     <!-- 多项选择题选项template -->
                     <template v-if="isMultiChoice(question.type)" >
-                        <el-checkbox-group v-model="question.answerContent" @change="updateChoice(question,mulchoice)">
+                        <el-checkbox-group v-model="question.optionList" @change="updateChoice(question,mulchoice)">
                             <el-checkbox label='A'>{{ choices[0] }}.{{question.optionA }}</el-checkbox>
                             <el-checkbox label='B'>{{ choices[1] }}.{{question.optionB }}</el-checkbox>
                             <el-checkbox label='C'>{{ choices[2] }}.{{question.optionC }}</el-checkbox>
@@ -31,6 +32,7 @@
                     </template>
                     <template v-if="!isChoice(question.type) && !isMultiChoice(question.type)">
                         <el-input
+                                @paste.native.capture.prevent="handlePaste"
                                 v-model="question.answerContent"
                                 type="textarea"
                                 :autosize="{ minRows: 1, maxRows: 4}"
@@ -55,6 +57,8 @@
         name: 'paper',
         data () {
             return {
+                kid:'',
+                pid:'',
                 choices: ['A', 'B', 'C', 'D', 'E', 'F'],
                 checkList: ['选中且禁用','复选框 A'],
                 mulchoices: [{
@@ -92,10 +96,22 @@
             this.loading = true
             this.getpaperinfo()
         },
+        created() {
+            this.$nextTick(() => {
+                // 禁用右键
+                document.oncontextmenu = new Function("event.returnValue=false");
+                // 禁用选择
+                document.onselectstart = new Function("event.returnValue=false");
+            });
+                this.pid = this.$route.params.pid
+                this.kid = this.$route.params.kid
+                console.log(this.msg)
+
+        },
         methods:{
             getpaperinfo () {
                 var _this = this
-                this.$axios.get('/api/paper/getpaperinfo?pid=4').then(resp => {
+                this.$axios.get('/api/paper/getpaperinfo?pid='+this.pid).then(resp => {
                     if (resp && resp.data.rspCode === '200') {
                         _this.paperQuestion = resp.data.data
                         _this.loading = false
@@ -127,7 +143,7 @@
             submit () {
                 var _this = this
                 this.$axios
-                    .post('/api/paper/1/4/submit', _this.updateInfo)
+                    .post('/api/paper/'+this.kid+'/'+this.pid+'/submit', _this.updateInfo)
                     .then(resp => {
                         if (resp.data.rspCode === '200') {
                             var data = resp.data

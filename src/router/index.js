@@ -4,7 +4,8 @@ import login from '@/page/login'
 import reset_password from "@/page/reset_password";
 import tea_question from "@/page/teacher/tea_question";
 import Paper from "@/page/Paper";
-import CourseQuery from "../component/question/CourseQuery";
+import CourseQuery from "../page/CourseQuery";
+import test from "../page/test";
 
 Vue.use(Router)
 
@@ -40,6 +41,15 @@ export default new Router({
             meta:{
                 // 页面标题title
                 title: '河马题库-找回密码'
+            }
+        },
+        {
+            path:'/test',
+            name:'test',
+            component: test,
+            meta:{
+                // 页面标题title
+                title: '接收参数测试'
             }
         },
         {
