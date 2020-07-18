@@ -17,56 +17,67 @@
             <el-table-column
                     align="center"
                     type="selection"
-                    width="55">
+                    width="50">
             </el-table-column>
             <el-table-column
                     align="center"
                     prop="qid"
                     label="编号"
                     sortable
-                    width="80">
+                    width="80"
+                    >
             </el-table-column>
             <el-table-column
                     prop="questionName"
                     label="题目"
+                    min-width="120"
                     sortable
-                    width="240">
+                    :show-tooltip-when-overflow="true"
+                    >
             </el-table-column>
             <el-table-column
-                    align="center"
                     prop="answer"
                     label="答案"
+                    :show-tooltip-when-overflow="true"
+
                     sortable
-                    width="100">
+                    >
             </el-table-column>
             <el-table-column
                     prop="cid"
                     sortable
                     label="科目"
-                    width="120">
+                    width="80"
+                    >
             </el-table-column>
             <el-table-column
                     prop="type"
+                    align="center"
                     sortable
                     label="题目类型"
-                    width="120">
+                    width="100"
+                    >
             </el-table-column>
             <el-table-column
                     prop="createTime"
                     sortable
                     label="添加时间"
-                    width="180">
+                    min-width="100"
+                    >
             </el-table-column>
             <el-table-column
                     prop="diffcult"
+                    min-width="100"
                     sortable
                     label="题目难度"
-                    width="180">
+                    align="center"
+                    >
             </el-table-column>
             <el-table-column
                     fixed="right"
                 label="操作"
-                width="120">
+                    min-width="80"
+                >
             <template slot-scope="scope">
                 <el-button @click="checkInfo(scope.row)" type="text" size="small">查看详情></el-button>
             </template>

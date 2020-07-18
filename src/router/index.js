@@ -4,7 +4,7 @@ import login from '@/page/login'
 import reset_password from "@/page/reset_password";
 import tea_question from "@/page/teacher/tea_question";
 import Paper from "@/page/Paper";
-import CourseQuery from "../page/CourseQuery";
+import CourseQuery from "../component/question/CourseQuery";
 import test from "../page/test";
 
 Vue.use(Router)
