@@ -54,6 +54,7 @@
                     prop="type"
                     align="center"
                     sortable
+                    :formatter="quextiontype"
                     label="题目类型"
                     width="100"
                     >
@@ -61,6 +62,7 @@
             <el-table-column
                     prop="createTime"
                     sortable
+                    :formatter="dateFormatter"
                     label="添加时间"
                     min-width="100"
                     >
@@ -98,6 +100,7 @@
     import Copyright from "@/component/footer/copyright";
     import dayjs from 'dayjs'
     import questionInfo from "@/component/question/questionInfo";
+    import {quextiontype,dateFormatter} from "@/utils/validate"
     export default {
         name: "tea_question",
         components:{
@@ -107,6 +110,8 @@
         },
         data(){
             return{
+                quextiontype,
+                dateFormatter,
                 //控制弹窗 显示
                 dialogVisible: false,
                 //点击查看按钮  这条数据详细信息
@@ -134,45 +139,6 @@
                     if(res && res.data.rspCode ==='200'){
                         this.questionTable = res.data.data
                         console.log(this.questionTable)
-                        for ( let i=0; i<this.questionTable.length;i++){
-                            this.questionTable[i].createTime = dayjs(this.questionTable[i].createTime).format("YYYY-MM-DD HH:mm");
-                            switch(this.questionTable[i].type){
-                                case 1:{
-                                    this.questionTable[i].type = '单选'
-                                    break
-                                }
-                                case 2:{
-                                    this.questionTable[i].type = '多选'
-                                    break
-                                }
-                                case 3:{
-                                    this.questionTable[i].type = '主观'
-                                    break
-                                }
-                                default:{
-                                    this.questionTable[i].type = '-'
-                                    break
-                                }
-                            };
-                            switch(this.questionTable[i].diffcult){
-                                case 1:{
-                                    this.questionTable[i].diffcult = '简单'
-                                    break
-                                }
-                                case 2:{
-                                    this.questionTable[i].diffcult = '正常'
-                                    break
-                                }
-                                case 3:{
-                                    this.questionTable[i].diffcult = '拔高'
-                                    break
-                                }
-                                default:{
-                                    this.questionTable[i].diffcult = '-'
-                                    break
-                                }
-                            }
-                        }
                         this.loading = false
                     }
                 })

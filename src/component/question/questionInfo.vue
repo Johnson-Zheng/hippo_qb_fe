@@ -11,7 +11,7 @@
                 <h4>题目类型</h4>
             </el-col>
             <el-col :span="6">
-                <p>{{dialogInfo.type}}</p>
+                <p>{{quextiontype(dialogInfo)}}</p>
             </el-col>
         </el-row>
         <el-row class="mt-1875">
@@ -19,7 +19,7 @@
                 <h4>创建时间</h4>
             </el-col>
             <el-col :span="10">
-                <p>{{dialogInfo.createTime}}</p>
+                <p>{{dateFormatter(dialogInfo)}}</p>
             </el-col>
             <el-col :span="4">
                 <h4>创建者</h4>
@@ -77,6 +77,7 @@
 
 <script>
     import dayjs from "dayjs";
+    import {dateFormatter,quextiontype} from "@/utils/validate"
     export default {
         name: "questionInfo",
         props: {
@@ -99,7 +100,8 @@
         },
         data() {
             return {
-
+                quextiontype,
+                dateFormatter
             };
         },
         created() {
