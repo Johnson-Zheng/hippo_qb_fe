@@ -1,6 +1,8 @@
 <template>
     <div><a>接受参数页面</a>
-    <a>参数：{{msg}}</a></div>
+    <a>参数：{{msg}}</a>
+
+    </div>
 </template>
 
 <script>

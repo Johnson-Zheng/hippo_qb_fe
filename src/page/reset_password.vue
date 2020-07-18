@@ -14,7 +14,9 @@
         components:{CourseQuery},//组件注册
         data(){
             return{
-                qdata:{}//接受组件值
+                qdata:{}, //接受组件值
+                pid:'10',
+                kid:'1',
             }
         },
         methods:{
@@ -24,10 +26,12 @@
             },
             jumppage(){
                 this.$router.push({
-                    path: '/test',
-                    name: 'test',
+                    path: '/paper',
+                    name: 'Paper',
                     params: {
-                        msgKey: this.qdata.cid
+                        msgKey: this.qdata.cid,
+                        kid:this.kid,
+                        pid:this.pid
                     }
                     /*query: {
                         key: 'key',
