@@ -1,16 +1,16 @@
 <template>
 <div><h1>Register</h1>
-
-<CourseQuery @courseid="showcid"></CourseQuery>//复制这里 引用组件
+    <!--复制这里 引用组件-->
+<CourseQuery @courseid="showcid"></CourseQuery>
     <a>查询结果：{{qdata}}</a>
 </div>
 </template>
 
 <script>
-    import CourseQuery from "./CourseQuery";
+    import CourseQuery from "./CourseQuery";//引用组件
     export default {
         name: "register",
-        components:{CourseQuery},
+        components:{CourseQuery},//组件注册
         data(){
             return{
                 qdata:''//接受组件值

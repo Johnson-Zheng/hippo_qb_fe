@@ -4,8 +4,10 @@
             filterable
             remote
             reserve-keyword
-            placeholder="请输入关键词"
+            placeholder="课程名称(3-5个字符)"
             :remote-method="remoteMethod"
+            no-data-text="系统暂无此课程"
+            loading-text="正在检索课程"
             :loading="loading"
             @change="showvalue">
         <el-option
@@ -28,12 +30,16 @@
                 list: [],
                 states:[],
                 loading:true,
+                flag:true
             }
         },
         methods:{
             remoteMethod(query) {
-                if (query !== ''&&query.length>= 3&&query.length <= 10) {
+                if (query !== ''&&query.length>= 3&&query.length <= 10&&this.flag===true) {
                     this.loading = true;
+                    this.flag=false
+                    var time = 3
+
                     setTimeout(() => {
                         this.loading = false;
                         var _this = this
@@ -48,8 +54,15 @@
                             }
                         })
                     }, 200);
+                    var timer = setInterval(() => {
+                        time--;
+                        if (time === 0) {
+                            clearInterval(timer);
+                            this.flag=true
+                        }
+                    }, 1000)
                 } else {
-                    this.$message("请不要输入小于3个或大于10个字符")
+                    this.$message("请不要输入小于3个或大于10个字符或频繁请求")
                     this.options = [];
                     this.loading=false
                 }
