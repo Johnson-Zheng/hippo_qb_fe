@@ -1,7 +1,7 @@
 <template>
-    <div class="nav shadow">
+    <div class="nav shadow ">
         <img class="logo" src="../../assets/logo/nav-logo-tea.png"/>
-        <el-menu :default-active="menuIndex" class="menu" mode="horizontal" @select="handleSelect">
+        <el-menu :default-active="menuIndex" class="menu hidden-sm-and-down"  mode="horizontal" @select="handleSelect">
             <el-menu-item index="1">首页</el-menu-item>
             <el-menu-item index="2">题库</el-menu-item>
             <el-menu-item index="3">试卷</el-menu-item>

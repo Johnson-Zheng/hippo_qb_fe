@@ -7,7 +7,7 @@
 </template>
 
 <script>
-    import CourseQuery from "./CourseQuery";//引用组件
+    import CourseQuery from "../component/question/CourseQuery";//引用组件
     export default {
         name: "register",
         components:{CourseQuery},//组件注册

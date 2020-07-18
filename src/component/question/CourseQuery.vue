@@ -1,5 +1,6 @@
 <template>
-    <div><el-select
+    <div>
+        <el-select
             v-model="svalue"
             filterable
             remote

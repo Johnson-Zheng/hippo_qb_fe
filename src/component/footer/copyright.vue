@@ -12,12 +12,14 @@
     #copyright{
         position:absolute;
         font-size:12px;
-        bottom:2vh;
+        bottom:3vh;
         left: 50%;
         transform: translateX(-50%);
         font-weight:400;
         line-height:21px;
         color:rgba(188,188,188,1);
         opacity:1;
+        text-align: center;
+        user-select: none;
     }
 </style>

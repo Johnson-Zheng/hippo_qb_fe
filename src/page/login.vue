@@ -4,7 +4,7 @@
         <img id="img1" src="../assets/images/login_img1.png">
         <div id="panel" class="panel_shadow">
             <div id="login-panel">
-                <el-tabs v-model="tabSelect">
+                <el-tabs v-model="tabSelect" align="center">
                     <el-tab-pane label="登陆" name="first">
                         <el-form
                                 label-position="left"
@@ -216,7 +216,7 @@
                                 type: 'success'
                             });
                             let token = resdata.data.token
-                            // this.$router.push('/reset_password');
+                            this.$router.push('/tea_question');
                         }else{
                             let errorMessage = "ERROR:"+code+" "+userdata
                             this.$message({

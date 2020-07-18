@@ -5,6 +5,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import router from './router'
 import axios from "axios";
 import global_ from './Global'
+import 'element-ui/lib/theme-chalk/display.css';
 
 Vue.config.productionTip = false
 
