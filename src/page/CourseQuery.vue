@@ -1,6 +1,6 @@
 <template>
     <div><el-select
-            v-model="svalue"
+            v-model="course"
             filterable
             remote
             reserve-keyword
@@ -14,7 +14,7 @@
                 v-for="item in options"
                 :key="item.cid"
                 :label="item.courseName"
-                :value="item.cid">
+                :value="item">
         </el-option>
     </el-select>
    </div>
@@ -26,7 +26,7 @@
         data(){
             return{
                 options: [],
-                svalue: '',
+                course:{},
                 list: [],
                 states:[],
                 loading:true,
@@ -67,7 +67,7 @@
                     this.loading=false
                 }
             }, showvalue(){
-                this.$emit('courseid', this.svalue)
+                this.$emit('courseid', this.course)
             }
         }
 

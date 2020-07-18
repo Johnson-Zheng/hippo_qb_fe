@@ -21,7 +21,7 @@
                     </template>
                     <!-- 多项选择题选项template -->
                     <template v-if="isMultiChoice(question.type)" >
-                        <el-checkbox-group v-model="question.answerContent" @change="updateChoice(question,mulchoice)">
+                        <el-checkbox-group v-model="question.optionList" @change="updateChoice(question,mulchoice)">
                             <el-checkbox label='A'>{{ choices[0] }}.{{question.optionA }}</el-checkbox>
                             <el-checkbox label='B'>{{ choices[1] }}.{{question.optionB }}</el-checkbox>
                             <el-checkbox label='C'>{{ choices[2] }}.{{question.optionC }}</el-checkbox>
@@ -95,7 +95,7 @@
         methods:{
             getpaperinfo () {
                 var _this = this
-                this.$axios.get('/api/paper/getpaperinfo?pid=4').then(resp => {
+                this.$axios.get('/api/paper/getpaperinfo?pid=10').then(resp => {
                     if (resp && resp.data.rspCode === '200') {
                         _this.paperQuestion = resp.data.data
                         _this.loading = false
