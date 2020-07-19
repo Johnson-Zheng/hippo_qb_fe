@@ -6,21 +6,25 @@
     <el-button type="text" @click="jumppage">页面传参跳转测试</el-button>
     <PaperQuery @paperid="showpid"></PaperQuery>
     <a>试卷查询结果：{{pdata.pid}}-{{pdata.name}}</a>
+    <FileUpload ref="fileUpload"  @FileUpload="showurl"></FileUpload>
+    <a>图片上传结果：{{url}}</a>
 </div>
 </template>
 
 <script>
     import CourseQuery from "../component/question/CourseQuery";//引用组件
     import PaperQuery from "../component/question/PaperQuery";//引用组件
+    import FileUpload from "../component/question/FileUpload";
     export default {
         name: "register",
-        components:{CourseQuery,PaperQuery},//组件注册
+        components:{CourseQuery,PaperQuery,FileUpload},//组件注册
         data(){
             return{
                 qdata:{},
                 pdata:{},//接受组件值
                 pid:'10',
                 kid:'1',
+                url:''
             }
         },
         methods:{
@@ -30,6 +34,12 @@
             },
             showpid:function (msg){
                 this.pdata=msg
+            },
+            showurl:function(msg){
+                this.url=msg
+            },uploadFile () {
+                this.$refs.fileUpload.title = title
+                this.$message(this.$refs.fileUpload.url)
             },
             jumppage(){
                 this.$router.push({
