@@ -7,7 +7,7 @@
         <el-table
                 :data="questionTable"
                 v-loading="loading"
-                :default-sort = "{prop: 'qid', order: 'ascending'}"
+                :default-sort = "{prop: 'createTime', order: 'descending'}"
                 style="width: 100%"
                 :header-cell-style="{background:'#F5F7FA',fontWeight:'400'}"
                 height="420"
@@ -46,7 +46,7 @@
             <el-table-column
                     prop="cid"
                     sortable
-                    label="科目"
+                    label="课程"
                     width="80"
                     >
             </el-table-column>
@@ -68,10 +68,10 @@
                     >
             </el-table-column>
             <el-table-column
-                    prop="diffcult"
+                    prop="createBy"
                     min-width="100"
                     sortable
-                    label="题目难度"
+                    label="创建者"
                     align="center"
                     >
             </el-table-column>
@@ -122,15 +122,15 @@
                 addDialogVisible:false,
                 loading:false,
                 questionTable: null,
-                testTableData: [{
-                    qid: '1',
-                    questionName: '1+1=',
-                    answer: 'B',
-                    type: '单选',
-                    cid: '一年级数学',
-                    createTime: '200',
-                    diffcult: '普通'
-                }],
+                // testTableData: [{
+                //     qid: '1',
+                //     questionName: '1+1=',
+                //     answer: 'B',
+                //     type: '单选',
+                //     cid: '一年级数学',
+                //     createTime: '200',
+                //     createBy:''
+                // }],
             }
         },
         mounted(){
@@ -191,11 +191,17 @@
         width: 550px;
         height: max-content;
         border-radius: 10px;
-        padding: 20px;
+        padding: 20px 20px 10px  20px;
     }
     #addQuestion >>>.el-dialog__title{
         font-size:24px;
         font-weight: 500;
         text-align: left!important;
+    }
+    #addQuestion >>> .el-radio-group{
+        width: 100%;
+    }
+    #addQuestion >>> .el-select{
+        width:100%;
     }
 </style>

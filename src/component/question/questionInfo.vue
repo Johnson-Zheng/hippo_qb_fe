@@ -2,6 +2,31 @@
     <el-dialog title="题目详情" :visible.sync="dialogVisible" :before-close="cancelDialog" >
         <el-row>
             <el-col :span="4">
+                <h4>试题题目</h4>
+            </el-col>
+            <el-col :span="20">
+                <p>{{dialogInfo.questionName}}</p>
+            </el-col>
+        </el-row>
+        <el-row class="mt-1875">
+            <el-col :span="4">
+                <h4>题目选项</h4>
+            </el-col>
+            <el-col :span="20">
+              <p>{{getOptions(dialogInfo)}}</p>
+            </el-col>
+
+        </el-row>
+        <el-row class="mt-1875">
+            <el-col :span="4">
+                <h4>试题答案</h4>
+            </el-col>
+            <el-col :span="6">
+                <p>{{dialogInfo.answer}}</p>
+            </el-col>
+        </el-row>
+        <el-row class="mt-1875">
+            <el-col :span="4">
                 <h4>试题编号</h4>
             </el-col>
             <el-col :span="10">
@@ -28,39 +53,8 @@
                 <p>{{dialogInfo.createBy}}</p>
             </el-col>
         </el-row>
-        <el-row class="mt-1875">
-            <el-col :span="4">
-                <h4>试题题目</h4>
-            </el-col>
-            <el-col :span="10">
-                <p>{{dialogInfo.questionName}}</p>
-            </el-col>
-            <el-col :span="4">
-                <h4>试题答案</h4>
-            </el-col>
-            <el-col :span="6">
-                <p>{{dialogInfo.answer}}</p>
-            </el-col>
-        </el-row>
-        <el-row class="mt-1875">
-            <el-col :span="4">
-                <h4>题目选项</h4>
-            </el-col>
-            <el-col :span="10">
-                <!--          <p>{{getOptions(dialogInfo)}}</p> --->
-        <p v-if="dialogInfo.type===2">{{"A:"+dialogInfo.optionA+" B:"+ dialogInfo.optionB +
-            " C:"+ dialogInfo.optionC + " D:" + dialogInfo.optionD+" E:"+ dialogInfo.optionE+" F:"+dialogInfo.optionF}}</p>
-                <p v-if="dialogInfo.type===1">{{"A:"+dialogInfo.optionA+" B:"+ dialogInfo.optionB +
-                    " C:"+ dialogInfo.optionC + " D:" + dialogInfo.optionD}}</p>
-            </el-col>
-            <el-col :span="4">
-                <h4>难度</h4>
-            </el-col>
-            <el-col :span="6">
-                <p>{{dialogInfo.diffcult}}</p>
-            </el-col>
 
-        </el-row>
+
 
         <el-row class="mt-1875">
             <el-col :span="4">
@@ -113,8 +107,8 @@
                 let list = [info.optionA,info.optionB,info.optionC,info.optionD,info.optionE,info.optionF]
                 let result = ""
                 for (let i=0;i<list.length;i++){
-                    if(list[i] !== null){
-                        result += list1[i]+list[i]+' '
+                    if(list[i] !== ''){
+                        result += list1[i]+list[i]+'\r\n'
                     }
                 }
                 return result;

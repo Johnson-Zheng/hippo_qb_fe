@@ -1,5 +1,6 @@
 <template>
-    <div><el-select
+    <div>
+        <el-select
             v-model="course"
             value-key="cid"
             filterable
@@ -11,13 +12,13 @@
             loading-text="正在检索课程"
             :loading="loading"
             @change="showvalue">
-        <el-option
-                v-for="item in options"
-                :key="item.cid"
-                :label="item.courseName"
-                :value="item">
-        </el-option>
-    </el-select>
+            <el-option
+                    v-for="item in options"
+                    :key="item.cid"
+                    :label="item.courseName"
+                    :value="item">
+            </el-option>
+        </el-select>
    </div>
 </template>
 

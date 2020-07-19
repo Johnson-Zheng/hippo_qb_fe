@@ -32,17 +32,26 @@ export  function questionType(row){
             return '新题型'
     }
 }
+
+function checkTime(i)
+{
+    if (i<10)
+    {i="0" + i}
+    return i
+}
+
 export  function dateFormatter (row) {
         let datetime = row.createTime;
         if(datetime){
             datetime = new Date(datetime);
             let y = datetime.getFullYear() + '-';
-            let mon = datetime.getMonth()+1 + '-';
-            let d = datetime.getDate()+ ' ';
-            let h = datetime.getHours()+':';
-            let m = datetime.getMinutes()+':'
-            let s = datetime.getSeconds()
-            return y + mon + d ;
+            let mon = checkTime(datetime.getMonth()+1)+ '-';
+            let d = checkTime(datetime.getDate())+ ' ';
+
+            let h = checkTime(datetime.getHours())+':';
+            let m = checkTime(datetime.getMinutes())+':'
+            let s = checkTime(datetime.getSeconds())
+            return y + mon + d + ' ' +h+m+s;
         }
         return 'NULL'
     }
