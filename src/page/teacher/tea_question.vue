@@ -54,7 +54,7 @@
                     prop="type"
                     align="center"
                     sortable
-                    :formatter="quextiontype"
+                    :formatter="questionType"
                     label="题目类型"
                     width="100"
                     >
@@ -87,11 +87,12 @@
         </el-table>
         <div class="operate-panel">
             <el-button class="operate-button" type="danger">删除</el-button>
-            <el-button class="operate-button add-button" type="primary">添加题目</el-button>
+            <el-button class="operate-button add-button" type="primary " @click="addQuestion">添加试题</el-button>
         </div>
     </div>
     <copyright></copyright>
     <question-info id="questionInfo" :dialogVisible="dialogVisible" :dialogInfo="dialogInfo" @update:dialogVisible="dialogVisibles "></question-info>
+    <add-question id="addQuestion" :addDialogVisible="addDialogVisible" @update:addDialogVisible="addDialogVisibles"></add-question>
 </div>
 </template>
 
@@ -100,22 +101,25 @@
     import Copyright from "@/component/footer/copyright";
     import dayjs from 'dayjs'
     import questionInfo from "@/component/question/questionInfo";
-    import {quextiontype,dateFormatter} from "@/utils/validate"
+    import {questionType,dateFormatter} from "@/utils/validate"
+    import addQuestion from "@/component/question/addQuestion";
     export default {
         name: "tea_question",
         components:{
+            addQuestion,
             Copyright,
             navigation,
             questionInfo
         },
         data(){
             return{
-                quextiontype,
+                questionType: questionType,
                 dateFormatter,
                 //控制弹窗 显示
                 dialogVisible: false,
                 //点击查看按钮  这条数据详细信息
                 dialogInfo:{},
+                addDialogVisible:false,
                 loading:false,
                 questionTable: null,
                 testTableData: [{
@@ -150,6 +154,12 @@
             dialogVisibles(v){
                 this.dialogVisible = v
             },
+            addDialogVisibles(v){
+                this.addDialogVisible = v
+            },
+            addQuestion(){
+                this.addDialogVisible = true;
+            }
         }
     }
 </script>
@@ -173,6 +183,17 @@
         padding: 20px;
     }
     #questionInfo >>> .el-dialog__title{
+        font-size:24px;
+        font-weight: 500;
+        text-align: left!important;
+    }
+    #addQuestion >>> .el-dialog{
+        width: 550px;
+        height: max-content;
+        border-radius: 10px;
+        padding: 20px;
+    }
+    #addQuestion >>>.el-dialog__title{
         font-size:24px;
         font-weight: 500;
         text-align: left!important;

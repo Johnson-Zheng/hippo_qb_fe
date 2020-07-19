@@ -17,10 +17,9 @@ export  function findValue(dir_data, fvalue){
         return result
         }
     }
-
 }
 
-export  function quextiontype(row, column){
+export  function questionType(row){
     let status = row.type
     switch (status) {
         case 1:
@@ -33,7 +32,7 @@ export  function quextiontype(row, column){
             return '新题型'
     }
 }
-export  function dateFormatter (row, column) {
+export  function dateFormatter (row) {
         let datetime = row.createTime;
         if(datetime){
             datetime = new Date(datetime);

@@ -11,7 +11,7 @@
                 <h4>题目类型</h4>
             </el-col>
             <el-col :span="6">
-                <p>{{quextiontype(dialogInfo)}}</p>
+                <p>{{questionType(dialogInfo)}}</p>
             </el-col>
         </el-row>
         <el-row class="mt-1875">
@@ -77,7 +77,7 @@
 
 <script>
     import dayjs from "dayjs";
-    import {dateFormatter,quextiontype} from "@/utils/validate"
+    import {dateFormatter,questionType} from "@/utils/validate"
     export default {
         name: "questionInfo",
         props: {
@@ -90,23 +90,11 @@
                 default: {}
             }
         },
-        watch: {
-            //监听 弹窗显示， 可以用来写 请求接口
-            dialogVisible: function(newVal, oldVal) {
-                if (newVal) {
-                    console.log(newVal);
-                }
-            }
-        },
         data() {
             return {
-                quextiontype,
+                questionType: questionType,
                 dateFormatter
             };
-        },
-        created() {
-        },
-        mounted() {
         },
         methods: {
             //修改父组件传过来的值
