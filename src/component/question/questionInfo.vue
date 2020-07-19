@@ -47,8 +47,11 @@
                 <h4>题目选项</h4>
             </el-col>
             <el-col :span="10">
-                <p>{{getOptions(dialogInfo)}}</p>
-<!--                <p>{{"A:"+dialogInfo.optionA+" B:"+ dialogInfo.optionB + " C:"+ dialogInfo.optionC + " D:" + dialogInfo.optionD+" E:"+ dialogInfo.optionE+" F:"+dialogInfo.optionF}}</p>-->
+                <!--          <p>{{getOptions(dialogInfo)}}</p> --->
+        <p v-if="dialogInfo.type===2">{{"A:"+dialogInfo.optionA+" B:"+ dialogInfo.optionB +
+            " C:"+ dialogInfo.optionC + " D:" + dialogInfo.optionD+" E:"+ dialogInfo.optionE+" F:"+dialogInfo.optionF}}</p>
+                <p v-if="dialogInfo.type===1">{{"A:"+dialogInfo.optionA+" B:"+ dialogInfo.optionB +
+                    " C:"+ dialogInfo.optionC + " D:" + dialogInfo.optionD}}</p>
             </el-col>
             <el-col :span="4">
                 <h4>难度</h4>

@@ -115,6 +115,10 @@
                     if (resp && resp.data.rspCode === '200') {
                         _this.paperQuestion = resp.data.data
                         _this.loading = false
+                    }else {
+                        this.$alert(resp.data.rspMsg+"：获取试卷信息异常，请勿从非官方链接参加考试", '提示', {
+                            confirmButtonText: '确定'
+                        })
                     }
                 })
             },
