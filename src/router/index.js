@@ -61,6 +61,7 @@ export default new Router({
                 title: '老师端-题库'
             }
         },
+
         {
             path:'/Paper',
             name:'Paper',
