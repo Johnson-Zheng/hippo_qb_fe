@@ -21,6 +21,7 @@
                 pdata:{},//接受组件值
                 pid:'10',
                 kid:'1',
+                security:true,
             }
         },
         methods:{
@@ -38,7 +39,8 @@
                     params: {
                         msgKey: this.qdata.cid,
                         kid:this.kid,
-                        pid:this.pid
+                        pid:this.pid,
+                        security:this.security
                     }
                     /*query: {
                         key: 'key',
