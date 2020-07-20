@@ -6,19 +6,22 @@
         <h2>试题列表</h2>
         <el-table
                 :data="questionTable"
+                ref="questionTable"
                 v-loading="loading"
                 :default-sort = "{prop: 'createTime', order: 'descending'}"
                 style="width: 100%"
                 :header-cell-style="{background:'#F5F7FA',fontWeight:'400'}"
-                height="420"
+                height="450"
                 show-overflow-tooltip="true"
-                fit=true
-        >
-            <el-table-column
-                    align="center"
-                    type="selection"
-                    width="50">
-            </el-table-column>
+                fit>
+<!--                @selection-change="handleSelectChange"-->
+
+
+<!--            <el-table-column-->
+<!--                    align="center"-->
+<!--                    type="selection"-->
+<!--                    width="50">-->
+<!--            </el-table-column>-->
             <el-table-column
                     align="center"
                     prop="qid"
@@ -85,14 +88,23 @@
             </template>
             </el-table-column>
         </el-table>
-        <div class="operate-panel">
-            <el-button class="operate-button" type="danger">删除</el-button>
+        <div class="operate-panel" >
+<!--            <el-button class="operate-button" type="danger" @click="showDeleteDialog">删除所选</el-button>-->
             <el-button class="operate-button add-button" type="primary " @click="addQuestion">添加试题</el-button>
         </div>
     </div>
     <copyright></copyright>
     <question-info id="questionInfo" :dialogVisible="dialogVisible" :dialogInfo="dialogInfo" @update:dialogVisible="dialogVisibles "></question-info>
     <add-question id="addQuestion" :addDialogVisible="addDialogVisible" @update:addDialogVisible="addDialogVisibles"></add-question>
+
+<!--    &lt;!&ndash; 删除提示框 &ndash;&gt;-->
+<!--    <el-dialog id="del-dialog" title="确认删除？" :visible.sync="delVisible" append-to-body >-->
+<!--        <p>删除后数据不可恢复，是否继续删除？</p>-->
+<!--        <span slot="footer" class="dialog-footer">-->
+<!--                <el-button @click="delVisible = false">取消</el-button>-->
+<!--                <el-button type="danger" @click="handleDeleteSelections" >确认删除</el-button>-->
+<!--            </span>-->
+<!--    </el-dialog>-->
 </div>
 </template>
 
@@ -111,26 +123,19 @@
             navigation,
             questionInfo
         },
-        data(){
-            return{
+        data() {
+            return {
+                // delVisible:false,
+                selectBoxList:[],
                 questionType: questionType,
                 dateFormatter,
                 //控制弹窗 显示
                 dialogVisible: false,
                 //点击查看按钮  这条数据详细信息
-                dialogInfo:{},
-                addDialogVisible:false,
-                loading:false,
+                dialogInfo: {},
+                addDialogVisible: false,
+                loading: false,
                 questionTable: null,
-                // testTableData: [{
-                //     qid: '1',
-                //     questionName: '1+1=',
-                //     answer: 'B',
-                //     type: '单选',
-                //     cid: '一年级数学',
-                //     createTime: '200',
-                //     createBy:''
-                // }],
             }
         },
         mounted(){
@@ -142,7 +147,7 @@
                 this.$axios.get('/api/question/alllist').then(res=>{
                     if(res && res.data.rspCode ==='200'){
                         this.questionTable = res.data.data
-                        console.log(this.questionTable)
+                        // console.log(this.questionTable)
                         this.loading = false
                     }
                 })
@@ -154,12 +159,40 @@
             dialogVisibles(v){
                 this.dialogVisible = v
             },
+
             addDialogVisibles(v){
                 this.addDialogVisible = v
             },
             addQuestion(){
                 this.addDialogVisible = true;
-            }
+            },
+
+            // handleSelectChange(val){
+            //     this.selectBoxList = val
+            // },
+            // handleDeleteSelections(){
+            //
+            // },
+            // showDeleteDialog(){
+            //     if(this.selectBoxList.length>0){
+            //         this.$confirm('此操作将永久删除选中的数据, 是否继续?', '提示', {
+            //             confirmButtonText: '继续删除',
+            //             cancelButtonText: '取消',
+            //             type: 'warning'
+            //         }).then(() => {
+            //             this.handleDeleteSelections()
+            //         }).catch(() => {
+            //             this.$message({
+            //                 type: 'info',
+            //                 message: '已取消删除'
+            //             });
+            //         });
+            //     }else{
+            //         this.$message.warning("您未选中表格中的任何数据")
+            //     }
+            //
+            // },
+
         }
     }
 </script>
@@ -171,6 +204,7 @@
         width: 88%;
         text-align:left;
     }
+
     .operate-panel{
         position: relative;
         margin-top:20px;
@@ -204,4 +238,5 @@
     #addQuestion >>> .el-select{
         width:100%;
     }
+
 </style>

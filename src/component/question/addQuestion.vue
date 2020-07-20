@@ -1,10 +1,10 @@
 <template>
     <el-dialog title="添加试题" :visible.sync="addDialogVisible" :before-close="cancelAddDialog" :close-on-click-modal="false" append-to-body>
         <el-form label-position="left" :model="addQuestionForm" ref="addQuestionForm" label-width="80px" :rules="addQuetionRules">
-            <el-form-item label="试题科目" prop="cid" >
+            <el-form-item label="试题课程" prop="cid" >
                 <CourseQuery @courseid="showcid"></CourseQuery>
             </el-form-item>
-            <el-form-item label="试题类型">
+            <el-form-item label="试题类型" prop="type">
                 <el-radio-group v-model="questionType">
                     <el-radio label="1">单选题</el-radio>
                     <el-radio label="2">多选题</el-radio>
@@ -14,15 +14,17 @@
             <el-form-item label="试题题目" prop="questionName">
                 <el-input placeholder="1+1=？"  v-model="addQuestionForm.questionName"/>
             </el-form-item>
-            <el-form-item label="选项数量" v-if="questionType!=='3'">
+            <el-form-item label="选项数量" v-if="questionType==='1'|| questionType==='2' ">
                 <el-input-number v-model="questionNum" :min="2" :max="6" size="small"></el-input-number>
             </el-form-item>
             <el-form-item v-if="questionType==='1' || questionType==='2'" label='题目选项'>
-                <el-col v-for="option in questionNum">
-                    <el-input class="mt-1875" :placeholder="alphabet[option-1]" v-model="optionList[option-1]"/>
-                </el-col>
+                <el-row>
+                    <el-col :span="8" v-for="option in questionNum">
+                        <el-input class="mt-1875" :placeholder="alphabet[option-1]" v-model="optionList[option-1]"/>
+                    </el-col>
+                </el-row>
             </el-form-item>
-            <el-form-item v-if="questionType==='1'" label="单选答案">
+            <el-form-item v-if="questionType==='1'" label="单选答案" prop="answer">
                 <el-row >
                     <el-radio-group v-model="addQuestionForm.answer" prop="answer">
                         <el-col :span="4" v-for="i in questionNum" >
@@ -32,13 +34,13 @@
                 </el-row>
             </el-form-item>
             <el-form-item v-if="questionType==='2'" label="多选答案" prop="answer">
-                <el-rows >
+                <el-row >
                     <el-checkbox-group v-model="checkboxList">
                         <el-col :span="4" v-for="i in questionNum">
                             <el-checkbox :label="alphabet[i-1]" >{{alphabet[i-1]}}</el-checkbox>
                         </el-col>
                     </el-checkbox-group>
-                </el-rows>
+                </el-row>
             </el-form-item>
             <el-form-item v-if="questionType==='3'" label="主观答案" prop="answer">
                 <el-input
@@ -86,6 +88,7 @@
         },
 
         data(){
+
             return{
                 questionType:'',
                 checkboxList:[],
@@ -109,10 +112,9 @@
                     cid: '', //科目编号
                 },
                 addQuetionRules:{
-                    cid: [{required:true, message:'请选择科目', trigger: 'blur' }],
-                    options:[{required:true, message:'请输入选项', trigger: 'blur' }],
+                    cid: [{required:true, message:'题目课程不能为空', trigger: 'blur'}],
+                    type:[{required:true, message:'请选择试题类型', trigger: 'blur' }],
                     questionName: [{required:true, message:'请输入题目', trigger: 'blur' }],
-                    answer: [{required:true, message:'请输入选项B的答案', trigger: 'blur' }]
                 }
             }
         },
@@ -128,7 +130,6 @@
                     this.$refs.addQuestionForm.resetFields();
                     this.addQuestionForm = {
                         type:'',
-                        //TODO:创建者需要题库页面传参
                         questionName:'',
                         answer:'',
                         optionA:'',
@@ -142,12 +143,16 @@
                         remarks:'  ',//备注
                         cid: '', //科目编号
                     }
+                    this.questionType=''
+                    this.checkboxList=[]
+                    this.questionNum = 2
+                    this.optionList=['', '', '', '', '', '']
+
             },
             showcid:function (msg){
                 this.addQuestionForm.cid = msg.cid
             },
             addQuestionHandle(){
-
                 this.addQuestionForm.type = this.questionType.toString()
                 let qtype = this.addQuestionForm.type
                 if(qtype === '2'){
@@ -162,12 +167,12 @@
                     this.addQuestionForm.optionE = this.optionList[4]
                     this.addQuestionForm.optionF = this.optionList[5]
 
-                    if (valid) {
+                    if (valid && this.checkOptions() && this.checkAnswer()) {
                         this.$axios
                             .post('/api/question/addquestion', this.addQuestionForm).then(resp => {
                             if (resp && resp.data.rspCode === '200') {
-                                this.$message.success(resp.data.data+"试题添加成功")
                                 this.cancelAddDialog()
+                                this.$message.success("试题添加成功")
                                 location.reload();
                             }
                             else {
@@ -176,11 +181,33 @@
                             }
                         })
 
-                    } else {
-                        this.$message.error('请核验表单信息是否遗漏');
+                    } else if(!this.checkOptions()){
+                        this.$message.warning('选项对应内容未填写完整');
+                        return false;
+                    }else if(!this.checkAnswer()){
+                        this.$message.warning('未填写答案');
+                        return false;
+                    }
+                    else {
+                        this.$message.warning('请核验表单信息是否遗漏');
                         return false;
                     }
                 });
+
+            },
+            checkOptions(){
+                let num  = this.questionNum //选项数量
+                let count = 0
+                for(let i=0;i<num;i++) {
+                    if(this.optionList[i] !==''){
+                        count+=1
+                        console.log(count)
+                    }
+                }
+                return num===count
+            },
+            checkAnswer(){
+                return this.addQuestionForm.answer!==''
             }
         }
     }

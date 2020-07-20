@@ -56,7 +56,7 @@
 
 
 
-        <el-row class="mt-1875">
+        <el-row class="mt-1875" v-if="dialogInfo.context!==''">
             <el-col :span="4">
                 <h4>题目解析</h4>
             </el-col>

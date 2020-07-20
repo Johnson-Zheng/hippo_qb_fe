@@ -40,7 +40,7 @@ function checkTime(i)
     return i
 }
 
-export  function dateFormatter (row) {
+export function dateFormatter (row) {
         let datetime = row.createTime;
         if(datetime){
             datetime = new Date(datetime);
