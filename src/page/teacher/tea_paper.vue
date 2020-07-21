@@ -10,17 +10,9 @@
                 :default-sort = "{prop: 'createTime', order: 'descending'}"
                 style="width: 100%"
                 :header-cell-style="{background:'#F5F7FA',fontWeight:'400'}"
-                height="420"
+                height="450"
                 show-overflow-tooltip="true"
                 fit>
-<!--            @selection-change="handleSelectChange"-->
-
-
-<!--            <el-table-column-->
-<!--                    align="center"-->
-<!--                    type="selection"-->
-<!--                    width="50">-->
-<!--            </el-table-column>-->
             <el-table-column
                     align="center"
                     prop="pid"
@@ -38,17 +30,10 @@
                     >
             </el-table-column>
             <el-table-column
-                    prop="questionId"
-                    label="题目列表"
-                    :show-tooltip-when-overflow="true"
-
-                    sortable
-                    >
-            </el-table-column>
-            <el-table-column
                     prop="sinscore"
                     sortable
-                    label="单选总分"
+                    align="center"
+                    label="单选分数"
                     width="100"
                     >
             </el-table-column>
@@ -59,6 +44,14 @@
                     label="多选总分"
                     width="100"
                     >
+            </el-table-column>
+            <el-table-column
+                    prop="subscore"
+                    align="center"
+                    label="主观题总分"
+                    :show-tooltip-when-overflow="true"
+                    sortable
+            >
             </el-table-column>
             <el-table-column
                     prop="createTime"
@@ -103,9 +96,9 @@
         </el-pagination>
     </div>
     <copyright></copyright>
-    <question-info id="questionInfo" :dialogVisible="dialogVisible" :dialogInfo="dialogInfo" @update:dialogVisible="dialogVisibles "></question-info>
-    <add-question id="addQuestion" :addDialogVisible="addDialogVisible" @update:addDialogVisible="addDialogVisibles"></add-question>
 
+<!--    <add-question id="addQuestion" :addDialogVisible="addDialogVisible" @update:addDialogVisible="addDialogVisibles"></add-question>-->
+    <paper-info id="paperInfo" :dialogVisible="dialogVisible" :dialogInfo="dialogInfo" @update:dialogVisible="dialogVisibles "></paper-info>
 </div>
 </template>
 
@@ -114,15 +107,16 @@
     import Copyright from "@/component/footer/copyright";
     import dayjs from 'dayjs'
     import questionInfo from "@/component/question/questionInfo";
+    import PaperInfo from "@/component/paper/paperInfo";
     import {questionType,dateFormatter} from "@/utils/validate"
     import addQuestion from "@/component/question/addQuestion";
     export default {
         name: "tea_paper",
         components:{
-            addQuestion,
+            PaperInfo,
+            // addQuestion,
             Copyright,
             navigation,
-            questionInfo
         },
         data() {
             return {
@@ -186,34 +180,6 @@
             // addQuestion(){
             //     this.addDialogVisible = true;
             // },
-
-            // handleSelectChange(val){
-            //     this.selectBoxList = val
-            // },
-            // handleDeleteSelections(){
-            //
-            // },
-            // showDeleteDialog(){
-            //     if(this.selectBoxList.length>0){
-            //         this.$confirm('此操作将永久删除选中的数据, 是否继续?', '提示', {
-            //             confirmButtonText: '继续删除',
-            //             cancelButtonText: '取消',
-            //             type: 'warning'
-            //         }).then(() => {
-            //             this.handleDeleteSelections()
-            //         }).catch(() => {
-            //             this.$message({
-            //                 type: 'info',
-            //                 message: '已取消删除'
-            //             });
-            //         });
-            //     }else{
-            //         this.$message.warning("您未选中表格中的任何数据")
-            //     }
-            //
-            // },
-
-
         }
     }
 </script>
@@ -231,33 +197,34 @@
         margin-top:20px;
     }
 
-    #questionInfo >>> .el-dialog{
-        width: 550px;
+    #paperInfo >>> .el-dialog{
+        width: 700px;
         height: max-content;
         border-radius: 10px;
         padding: 20px;
     }
-    #questionInfo >>> .el-dialog__title{
+    #paperInfo >>> .el-dialog__title{
         font-size:24px;
         font-weight: 500;
         text-align: left!important;
     }
-    #addQuestion >>> .el-dialog{
-        width: 550px;
-        height: max-content;
-        border-radius: 10px;
-        padding: 20px 20px 10px  20px;
-    }
-    #addQuestion >>>.el-dialog__title{
-        font-size:24px;
-        font-weight: 500;
-        text-align: left!important;
-    }
-    #addQuestion >>> .el-radio-group{
-        width: 100%;
-    }
-    #addQuestion >>> .el-select{
-        width:100%;
-    }
+
+    /*#addQuestion >>> .el-dialog{*/
+    /*    width: 550px;*/
+    /*    height: max-content;*/
+    /*    border-radius: 10px;*/
+    /*    padding: 20px 20px 10px  20px;*/
+    /*}*/
+    /*#addQuestion >>>.el-dialog__title{*/
+    /*    font-size:24px;*/
+    /*    font-weight: 500;*/
+    /*    text-align: left!important;*/
+    /*}*/
+    /*#addQuestion >>> .el-radio-group{*/
+    /*    width: 100%;*/
+    /*}*/
+    /*#addQuestion >>> .el-select{*/
+    /*    width:100%;*/
+    /*}*/
 
 </style>

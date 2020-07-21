@@ -1,7 +1,7 @@
 <template>
     <el-dialog title="添加试题" :visible.sync="addDialogVisible" :before-close="cancelAddDialog" :close-on-click-modal="false" append-to-body>
         <el-form label-position="left" :model="addQuestionForm" ref="addQuestionForm" label-width="80px" :rules="addQuetionRules">
-            <el-form-item label="试题课程" prop="cid" >
+            <el-form-item label="试题课程" >
                 <CourseQuery @courseid="showcid"></CourseQuery>
             </el-form-item>
             <el-form-item label="试题类型" prop="type">
@@ -109,10 +109,9 @@
                     diffcult:'', //难度
                     context:'', //答案解析
                     remarks:'',//备注
-                    cid: '', //科目编号
+                    course: {}, //科目编号
                 },
                 addQuetionRules:{
-                    cid: [{required:true, message:'题目课程不能为空', trigger: 'blur'}],
                     type:[{required:true, message:'请选择试题类型', trigger: 'blur' }],
                     questionName: [{required:true, message:'请输入题目', trigger: 'blur' }],
                 }
@@ -141,7 +140,7 @@
                         diffcult:'', //难度
                         context:'', //答案解析
                         remarks:'  ',//备注
-                        cid: '', //科目编号
+                        course:{}, //科目编号
                     }
                     this.questionType=''
                     this.checkboxList=[]
@@ -150,7 +149,7 @@
 
             },
             showcid:function (msg){
-                this.addQuestionForm.cid = msg.cid
+                this.addQuestionForm.course = msg
             },
             addQuestionHandle(){
                 this.addQuestionForm.type = this.questionType.toString()
