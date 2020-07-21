@@ -87,7 +87,7 @@
                     >
                     </el-table-column>
                     <el-table-column
-                            prop="cid"
+                            prop="course.courseName"
                             sortable
                             label="课程"
                             width="80"

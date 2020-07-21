@@ -80,23 +80,33 @@
             </el-table-column>
 
         </el-table>
+
         <div class="operate-panel" >
 <!--            <el-button class="operate-button" type="danger" @click="showDeleteDialog">删除所选</el-button>-->
-            <el-button class="operate-button add-button" type="primary " @click="addQuestion">添加试卷</el-button>
+            <el-row type="flex" justify="end">
+                <el-col :span="20">
+                    <el-pagination
+                            @size-change="handleSizeChange"
+                            :page-sizes="[5,10,15,20,25,50]"
+                            :page-size=dataPerPage
+                            @current-change="handleCurrentChange"
+                            :current-page="currentPage"
+                            layout="total, prev, pager, next,sizes"
+                            background
+                            :total=totalElements>
+                    </el-pagination>
+                </el-col>
+                <el-col :span="4">
+                    <el-button class="operate-button" type="primary " @click="addQuestion">添加试卷</el-button>
+
+                </el-col>
+            </el-row>
+
         </div>
-        <el-pagination
-                @size-change="handleSizeChange"
-                :page-sizes="[5,10,15,20,25,50]"
-                :page-size=dataPerPage
-                @current-change="handleCurrentChange"
-                :current-page="currentPage"
-                layout="total, prev, pager, next,sizes"
-                background
-                :total=totalElements>
-        </el-pagination>
+
     </div>
     <copyright></copyright>
-
+    <add-paper id="addPaper" :addDialogVisible="addDialogVisible" @update:addDialogVisible="addDialogVisibles"></add-paper>
 <!--    <add-question id="addQuestion" :addDialogVisible="addDialogVisible" @update:addDialogVisible="addDialogVisibles"></add-question>-->
     <paper-info id="paperInfo" :dialogVisible="dialogVisible" :dialogInfo="dialogInfo" @update:dialogVisible="dialogVisibles "></paper-info>
 </div>
@@ -106,14 +116,15 @@
     import navigation from "@/component/header/navigation";
     import Copyright from "@/component/footer/copyright";
     import dayjs from 'dayjs'
-    import questionInfo from "@/component/question/questionInfo";
     import PaperInfo from "@/component/paper/paperInfo";
     import {questionType,dateFormatter} from "@/utils/validate"
+    import addPaper from "@/component/paper/addPaper";
     import addQuestion from "@/component/question/addQuestion";
     export default {
         name: "tea_paper",
         components:{
             PaperInfo,
+            addPaper,
             // addQuestion,
             Copyright,
             navigation,
@@ -172,14 +183,13 @@
                 this.currentPage = val
                 this.loading = true
                 this.getPaperTable(this.dataPerPage,this.currentPage-1)
-            }
-            //
-            // addDialogVisibles(v){
-            //     this.addDialogVisible = v
-            // },
-            // addQuestion(){
-            //     this.addDialogVisible = true;
-            // },
+            },
+            addDialogVisibles(v){
+                this.addDialogVisible = v
+            },
+            addQuestion(){
+                this.addDialogVisible = true;
+            },
         }
     }
 </script>
@@ -209,22 +219,22 @@
         text-align: left!important;
     }
 
-    /*#addQuestion >>> .el-dialog{*/
-    /*    width: 550px;*/
-    /*    height: max-content;*/
-    /*    border-radius: 10px;*/
-    /*    padding: 20px 20px 10px  20px;*/
-    /*}*/
-    /*#addQuestion >>>.el-dialog__title{*/
-    /*    font-size:24px;*/
-    /*    font-weight: 500;*/
-    /*    text-align: left!important;*/
-    /*}*/
-    /*#addQuestion >>> .el-radio-group{*/
-    /*    width: 100%;*/
-    /*}*/
-    /*#addQuestion >>> .el-select{*/
-    /*    width:100%;*/
-    /*}*/
+    #addPaper >>> .el-dialog{
+        width: 550px;
+        height: max-content;
+        border-radius: 10px;
+        padding: 20px 20px 10px  20px;
+    }
+    #addPaper >>>.el-dialog__title{
+        font-size:24px;
+        font-weight: 500;
+        text-align: left!important;
+    }
+    #addPaper >>> .el-radio-group{
+        width: 100%;
+    }
+    #addPaper >>> .el-select{
+        width:100%;
+    }
 
 </style>

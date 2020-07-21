@@ -18,7 +18,7 @@
             <template slot-scope="props">
                 <el-form label-position="left" inline class="demo-table-expand">
                     <el-form-item label="课程详情">
-                        <span>{{ props.row.course.cid }}</span>
+                        <span>{{ props.row.course.coursecontext }}</span>
                     </el-form-item>
                 </el-form>
             </template>
