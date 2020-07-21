@@ -4,10 +4,9 @@ import login from '@/page/login'
 import reset_password from "@/page/reset_password";
 import tea_question from "@/page/teacher/tea_question";
 import Paper from "@/page/Paper";
-import CourseQuery from "../component/question/CourseQuery";
 import test from "../page/test";
-import QuestionsList from "../component/question/QuestionsList";
-
+import NewTest from "../page/NewTest";
+import reset_pwd from "../page/reset_pwd";
 Vue.use(Router)
 
 export default new Router({
@@ -16,15 +15,6 @@ export default new Router({
         {
             path:'/',
             redirect:login
-        },
-        {
-            path:'/course',
-            name:'course',
-            component:CourseQuery,
-            meta:{
-                // 页面标题title
-                title: '课程检索组件'
-            }
         },
         {
             path:'/login',
@@ -45,6 +35,24 @@ export default new Router({
             }
         },
         {
+            path:'/reset_pwd',
+            name:'reset_pwd',
+            component: reset_pwd,
+            meta:{
+                // 页面标题title
+                title: '河马题库-重置密码'
+            }
+        },
+        {
+            path:'/newtest',
+            name:'newtest',
+            component: NewTest,
+            meta:{
+                // 页面标题title
+                title: '河马题库-新功能测试页面'
+            }
+        },
+        {
             path:'/test',
             name:'test',
             component: test,
@@ -53,15 +61,7 @@ export default new Router({
                 title: '接收参数测试'
             }
         },
-        {
-            path:'/questionlist',
-            name:'QuestionsList',
-            component: QuestionsList,
-            meta:{
-                // 页面标题title
-                title: '题目列表'
-            }
-        },
+
         {
             path:'/tea_question',
             name:'tea_question',
