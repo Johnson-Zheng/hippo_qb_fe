@@ -62,7 +62,7 @@
 
 
     </el-form>
-    <h6 class="Paper_warn" v-if="security">本场考试属于标准化考试,禁止复制粘贴题目及答案，请勿从随意刷新、退出考试界面，网络波动请联系老师</h6>
+    <h6 class="Paper_warn" v-if="security">注意：本场考试属于标准化考试,禁止复制粘贴题目及答案，请勿从随意刷新、退出考试界面，网络波动请联系老师！</h6>
     </body>
 </template>
 <script>
@@ -138,7 +138,7 @@
                         })
                     }
                 })}else {
-                    this.$alert("请勿从非官方链接参加考试", '提示', {
+                    this.$alert("请勿从非官方链接参加考试,刷新页面后需要重新参加考试", '提示：试卷获取失败', {
                         confirmButtonText: '确定'
                     })
                 }
@@ -152,8 +152,9 @@
                     this.setarrUpdateInfo(question,mul)}
                 else {
                     this.setUpdateInfo(question)
-                    this.$message("添加单选成功")
+                 //   this.$message("添加单选成功")
                 }
+                console.log(question)
 
             }, setUpdateInfo(question) {
                 //   this.updateInfo.answerContent = question.answerContent

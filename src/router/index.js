@@ -6,6 +6,7 @@ import tea_question from "@/page/teacher/tea_question";
 import Paper from "@/page/Paper";
 import CourseQuery from "../component/question/CourseQuery";
 import test from "../page/test";
+import QuestionsList from "../component/question/QuestionsList";
 
 Vue.use(Router)
 
@@ -50,6 +51,15 @@ export default new Router({
             meta:{
                 // 页面标题title
                 title: '接收参数测试'
+            }
+        },
+        {
+            path:'/questionlist',
+            name:'QuestionsList',
+            component: QuestionsList,
+            meta:{
+                // 页面标题title
+                title: '题目列表'
             }
         },
         {
