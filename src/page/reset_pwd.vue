@@ -1,5 +1,7 @@
 <template>
+
     <div id="container">
+        <a>{{url}}</a>
         <img id="logo" src="../assets/logo/横向@2x.png">
         <img id="img1" src="../assets/images/login_img1.png">
         <div id="panel" class="panel_shadow">
@@ -10,12 +12,12 @@
                                 label-position="left"
                                 ref="resetform"
                                 :rules="login_rules"
-                                status-icon :model="login_form" label-width="80px" class="mt-30">
-                            <el-form-item label="用户名" prop="username" style="margin-top:40px">
-                                <el-input v-model="login_form.username" placeholder="请输入用户名"/>
+                                status-icon :model="reset_form" label-width="80px" class="mt-30">
+                            <el-form-item label="新密码" prop="password" style="margin-top:40px">
+                                <el-input v-model="reset_form.password" placeholder="请输入密码"/>
                             </el-form-item>
-                            <el-form-item label="邮箱" prop="email" style="margin-bottom:40px">
-                                <el-input placeholder="请输入邮箱" v-model="login_form.email" />
+                            <el-form-item label="重复新密码" prop="passwoed_2" style="margin-bottom:40px">
+                                <el-input placeholder="请再一次输入密码" v-model="reset_form.password_2" />
                             </el-form-item>
 
 
@@ -34,37 +36,26 @@
 </template>
 
 <script>
-    import {isEmail,findValue} from '@/utils/validate'
-    import {mapMutations} from 'vuex'
-    import axios from 'axios'
-    import Copyright from "@/component/footer/copyright";
-
     export default {
-        name: "reset_password",
-        components: {
-            Copyright
-        },
-
-        data() {
-            return {
+        name: "reset_pwd",
+        data(){
+            return{
                 tabSelect:"first",
-                remember_me : true,
-                login_form: {
-                    username: '',
-                    email: '',
+                url:'',
+                name:'',
+                reset_form: {
+                    password: '',
+                    password_2: '',
                 },
             }
         },
         methods:{
-
-            //发送邮件
-
             resetpwd() {
-                        this.$axios
-                            .post('api/user/resetpassword',
+                        this.$axios.put('api/user/resetpwd',
                                 {
-                                    username:this.login_form.username,
-                                    email:this.login_form.email
+                                    user_password:this.reset_form.password,
+                                    username:this.url,
+                                    name:this.name
                                 }).then(resp => {
                             if (resp && resp.data.rspCode === '200') {
                                 this.$message.success(resp.data.data)
@@ -75,10 +66,12 @@
                             }
                         })
             },
-            //注册用户
-
+        },
+        mounted() {
+            this.url=this.$route.query.url;
+            this.name=this.$route.query.name;
         }
-    };
+    }
 </script>
 
 <style scoped>
