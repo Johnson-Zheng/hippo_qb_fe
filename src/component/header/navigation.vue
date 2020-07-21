@@ -1,11 +1,12 @@
 <template>
     <div class="nav shadow ">
         <img class="logo" src="../../assets/logo/nav-logo-tea.png"/>
-        <el-menu :default-active="menuIndex" class="menu hidden-sm-and-down"  mode="horizontal" @select="handleSelect">
-            <el-menu-item index="1">首页</el-menu-item>
-            <el-menu-item index="2">题库</el-menu-item>
-            <el-menu-item index="3">试卷</el-menu-item>
-            <el-menu-item index="4">考试</el-menu-item>
+        <el-menu :default-active="path" class="menu hidden-sm-and-down"  mode="horizontal" @select="handleSelect" router>
+            <template v-for="(item, index) in nav_menu_data">
+                <el-menu-item :index = "item.path" :key = "index">
+                    {{item.title}}
+                </el-menu-item>
+            </template>
         </el-menu>
         <router-link class="nav-link" to="login">登陆</router-link>
     </div>
@@ -16,12 +17,29 @@
         name: "navigation",
         data(){
             return{
-                menuIndex:"2"
+                path: '',
+                nav_menu_data: [{
+                    title: '首页',
+                    path: '/'
+                }, {
+                    title: '题库',
+                    path: '/tea_question'
+                }, {
+                    title: '试卷',
+                    path: '/tea_paper'
+                }, {
+                    title: '考试',
+                    path: '/'
+                }]
             }
         },
+        created () {
+            this.onRouteChanged()
+        },
         methods: {
-            handleSelect(key, keyPath) {
-                console.log(key, keyPath);
+            onRouteChanged () {
+                let that = this
+                that.path  = that.$route.path
             }
         }
     }

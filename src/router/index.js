@@ -1,9 +1,13 @@
 import Vue from "vue"
 import Router from 'vue-router'
+
 import login from '@/page/login'
 import reset_password from "@/page/reset_password";
+
 import tea_question from "@/page/teacher/tea_question";
+
 import Paper from "@/page/Paper";
+import tea_paper from "@/page/teacher/tea_paper";
 import CourseQuery from "../component/question/CourseQuery";
 import test from "../page/test";
 
@@ -69,6 +73,15 @@ export default new Router({
             meta:{
                 // 页面标题title
                 title: 'Paper'
+            }
+        },
+        {
+            path:'/tea_paper',
+            name:'tea_paper',
+            component: tea_paper,
+            meta:{
+                // 页面标题title
+                title: '老师端-试卷'
             }
         }
     ]

@@ -1,20 +1,19 @@
 <template>
 <div class="container">
-
     <navigation></navigation>
     <div class="table-panel panel_shadow">
-        <h2>试题列表</h2>
+        <h2>试卷列表</h2>
         <el-table
-                :data="questionTable"
-                ref="questionTable"
+                :data="paperTable"
+                ref="paperTable"
                 v-loading="loading"
                 :default-sort = "{prop: 'createTime', order: 'descending'}"
                 style="width: 100%"
                 :header-cell-style="{background:'#F5F7FA',fontWeight:'400'}"
-                height="450"
+                height="420"
                 show-overflow-tooltip="true"
                 fit>
-<!--                @selection-change="handleSelectChange"-->
+<!--            @selection-change="handleSelectChange"-->
 
 
 <!--            <el-table-column-->
@@ -24,41 +23,40 @@
 <!--            </el-table-column>-->
             <el-table-column
                     align="center"
-                    prop="qid"
+                    prop="pid"
                     label="编号"
                     sortable
                     width="80"
                     >
             </el-table-column>
             <el-table-column
-                    prop="questionName"
-                    label="题目"
+                    prop="name"
+                    label="试卷标题"
                     min-width="120"
                     sortable
                     :show-tooltip-when-overflow="true"
                     >
             </el-table-column>
             <el-table-column
-                    prop="answer"
-                    label="答案"
+                    prop="questionId"
+                    label="题目列表"
                     :show-tooltip-when-overflow="true"
 
                     sortable
                     >
             </el-table-column>
             <el-table-column
-                    prop="cid"
+                    prop="sinscore"
                     sortable
-                    label="课程"
-                    width="80"
+                    label="单选总分"
+                    width="100"
                     >
             </el-table-column>
             <el-table-column
-                    prop="type"
+                    prop="mulscore"
                     align="center"
                     sortable
-                    :formatter="questionType"
-                    label="题目类型"
+                    label="多选总分"
                     width="100"
                     >
             </el-table-column>
@@ -87,24 +85,27 @@
                 <el-button @click="checkInfo(scope.row)" type="text" size="small">查看详情></el-button>
             </template>
             </el-table-column>
+
         </el-table>
         <div class="operate-panel" >
 <!--            <el-button class="operate-button" type="danger" @click="showDeleteDialog">删除所选</el-button>-->
-            <el-button class="operate-button add-button" type="primary " @click="addQuestion">添加试题</el-button>
+            <el-button class="operate-button add-button" type="primary " @click="addQuestion">添加试卷</el-button>
         </div>
+        <el-pagination
+                @size-change="handleSizeChange"
+                :page-sizes="[5,10,15,20,25,50]"
+                :page-size=dataPerPage
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                layout="total, prev, pager, next,sizes"
+                background
+                :total=totalElements>
+        </el-pagination>
     </div>
     <copyright></copyright>
     <question-info id="questionInfo" :dialogVisible="dialogVisible" :dialogInfo="dialogInfo" @update:dialogVisible="dialogVisibles "></question-info>
     <add-question id="addQuestion" :addDialogVisible="addDialogVisible" @update:addDialogVisible="addDialogVisibles"></add-question>
 
-<!--    &lt;!&ndash; 删除提示框 &ndash;&gt;-->
-<!--    <el-dialog id="del-dialog" title="确认删除？" :visible.sync="delVisible" append-to-body >-->
-<!--        <p>删除后数据不可恢复，是否继续删除？</p>-->
-<!--        <span slot="footer" class="dialog-footer">-->
-<!--                <el-button @click="delVisible = false">取消</el-button>-->
-<!--                <el-button type="danger" @click="handleDeleteSelections" >确认删除</el-button>-->
-<!--            </span>-->
-<!--    </el-dialog>-->
 </div>
 </template>
 
@@ -116,7 +117,7 @@
     import {questionType,dateFormatter} from "@/utils/validate"
     import addQuestion from "@/component/question/addQuestion";
     export default {
-        name: "tea_question",
+        name: "tea_paper",
         components:{
             addQuestion,
             Copyright,
@@ -125,8 +126,13 @@
         },
         data() {
             return {
-                // delVisible:false,
-                selectBoxList:[],
+                //当前页码
+                currentPage:0,
+                //每页数据数量
+                dataPerPage:10,
+                //总元素数
+                totalElements: 0,
+
                 questionType: questionType,
                 dateFormatter,
                 //控制弹窗 显示
@@ -135,19 +141,19 @@
                 dialogInfo: {},
                 addDialogVisible: false,
                 loading: false,
-                questionTable: null,
+                paperTable: null,
             }
         },
         mounted(){
             this.loading = true
-            this.getQuestionTable()
+            this.getPaperTable(this.dataPerPage,this.currentPage)
         },
         methods:{
-            getQuestionTable(){
-                this.$axios.get('/api/question/alllist').then(res=>{
+            getPaperTable(dataPerpage, currentPage){
+                this.$axios.get('/api/paper/list?num='+dataPerpage+'&start='+currentPage).then(res=>{
                     if(res && res.data.rspCode ==='200'){
-                        this.questionTable = res.data.data
-                        // console.log(this.questionTable)
+                        this.paperTable = res.data.data["content"]
+                        this.totalElements = res.data.data['totalElements']
                         this.loading = false
                     }
                 }).catch(error => {
@@ -163,13 +169,23 @@
             dialogVisibles(v){
                 this.dialogVisible = v
             },
-
-            addDialogVisibles(v){
-                this.addDialogVisible = v
+            handleSizeChange(val){
+                this.dataPerPage = val
+                this.loading = true
+                this.getPaperTable(this.dataPerPage,this.currentPage-1)
             },
-            addQuestion(){
-                this.addDialogVisible = true;
-            },
+            handleCurrentChange(val){
+                this.currentPage = val
+                this.loading = true
+                this.getPaperTable(this.dataPerPage,this.currentPage-1)
+            }
+            //
+            // addDialogVisibles(v){
+            //     this.addDialogVisible = v
+            // },
+            // addQuestion(){
+            //     this.addDialogVisible = true;
+            // },
 
             // handleSelectChange(val){
             //     this.selectBoxList = val
@@ -196,6 +212,7 @@
             //     }
             //
             // },
+
 
         }
     }
