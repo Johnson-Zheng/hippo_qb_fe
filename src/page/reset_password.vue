@@ -58,7 +58,6 @@
         methods:{
 
             //发送邮件
-
             resetpwd() {
                         this.$axios
                             .post('api/user/resetpassword',

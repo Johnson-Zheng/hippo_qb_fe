@@ -41,14 +41,14 @@
                     prop="mulscore"
                     align="center"
                     sortable
-                    label="多选总分"
+                    label="多选分数"
                     width="100"
                     >
             </el-table-column>
             <el-table-column
                     prop="subscore"
                     align="center"
-                    label="主观题总分"
+                    label="主观题分数"
                     :show-tooltip-when-overflow="true"
                     sortable
             >
@@ -137,7 +137,7 @@
                 dataPerPage:10,
                 //总元素数
                 totalElements: 0,
-
+                questionlist:[],
                 questionType: questionType,
                 dateFormatter,
                 //控制弹窗 显示
@@ -190,6 +190,9 @@
             addQuestion(){
                 this.addDialogVisible = true;
             },
+            showqlist:function (msg){
+                this.questionlist=msg
+            },
         }
     }
 </script>
@@ -236,5 +239,6 @@
     #addPaper >>> .el-select{
         width:100%;
     }
+
 
 </style>

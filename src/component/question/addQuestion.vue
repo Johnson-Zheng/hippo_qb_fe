@@ -11,17 +11,28 @@
                     <el-radio label="3">主观题</el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item label="试题题目" prop="questionName">
-                <el-input placeholder="1+1=？"  v-model="addQuestionForm.questionName"/>
-            </el-form-item>
             <el-form-item label="选项数量" v-if="questionType==='1'|| questionType==='2' ">
                 <el-input-number v-model="questionNum" :min="2" :max="6" size="small"></el-input-number>
             </el-form-item>
+            <el-form-item label="试题题目" prop="questionName">
+                <el-input placeholder="1+1=？"  v-model="addQuestionForm.questionName"/>
+            </el-form-item>
             <el-form-item v-if="questionType==='1' || questionType==='2'" label='题目选项'>
                 <el-row>
-                    <el-col :span="8" v-for="option in questionNum">
-                        <el-input class="mt-1875" :placeholder="alphabet[option-1]" v-model="optionList[option-1]"/>
-                    </el-col>
+                    <div v-for="option in questionNum">
+                        <el-col :span="7" v-if='option===1 || option===2' style="margin-bottom:10px;margin-right: 23px">
+                            <el-input  :placeholder="alphabet[option-1]" v-model="optionList[option-1]"/>
+                        </el-col>
+                        <el-col :span="7" v-if='option===4 || option===5' style="margin-right: 23px">
+                            <el-input  :placeholder="alphabet[option-1]" v-model="optionList[option-1]"/>
+                        </el-col>
+                        <el-col :span="7" v-if='option===3' style="margin-bottom:10px">
+                            <el-input  :placeholder="alphabet[option-1]" v-model="optionList[option-1]"/>
+                        </el-col>
+                        <el-col :span="7" v-if='option===6'>
+                            <el-input  :placeholder="alphabet[option-1]" v-model="optionList[option-1]"/>
+                        </el-col>
+                    </div>
                 </el-row>
             </el-form-item>
             <el-form-item v-if="questionType==='1'" label="单选答案" prop="answer">
@@ -65,10 +76,10 @@
         </el-form>
         <el-row class="mt-30">
 
-            <el-col :span="8" style="opacity:0">
+            <el-col :span="6" style="opacity:0">
                 <p>1</p>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
                 <el-button @click="cancelAddDialog" size="medium" class="normal-button">取消</el-button>
             </el-col>
             <el-col :span="6">
@@ -170,9 +181,9 @@
                         this.$axios
                             .post('/api/question/addquestion', this.addQuestionForm).then(resp => {
                             if (resp && resp.data.rspCode === '200') {
-                                this.cancelAddDialog()
                                 this.$message.success("试题添加成功")
-                                location.reload();
+                                this.cancelAddDialog()
+                                this.$router.go(0)
                             }
                             else {
                                 this.loading = false;
@@ -195,15 +206,20 @@
 
             },
             checkOptions(){
-                let num  = this.questionNum //选项数量
-                let count = 0
-                for(let i=0;i<num;i++) {
-                    if(this.optionList[i] !==''){
-                        count+=1
-                        console.log(count)
+                if(this.addQuestionForm.type ==='1' || this.addQuestionForm.type ==='2'){
+                    let num  = this.questionNum //选项数量
+                    let count = 0
+                    for(let i=0;i<num;i++) {
+                        if(this.optionList[i] !==''){
+                            count+=1
+                            console.log(count)
+                        }
                     }
+                    return num===count
+                }else{
+                    return true
                 }
-                return num===count
+
             },
             checkAnswer(){
                 return this.addQuestionForm.answer!==''

@@ -18,7 +18,7 @@
             <template slot-scope="props">
                 <el-form label-position="left" inline class="demo-table-expand">
                     <el-form-item label="课程详情">
-                        <span>{{ props.row.course.coursecontext }}</span>
+                        <span>{{ props.row.course.coursecontext}}</span>
                     </el-form-item>
                 </el-form>
             </template>
@@ -51,7 +51,7 @@
                     prop="course.courseName"
                     sortable
                     label="课程"
-                    width="80"
+                    width="120"
                     >
             </el-table-column>
             <el-table-column
@@ -68,12 +68,12 @@
                     sortable
                     :formatter="dateFormatter"
                     label="添加时间"
-                    min-width="100"
+                    width="170"
                     >
             </el-table-column>
             <el-table-column
                     prop="createBy"
-                    min-width="100"
+                    width="100"
                     sortable
                     label="创建者"
                     align="center"
@@ -142,7 +142,6 @@
                 this.$axios.get('/api/question/alllist').then(res=>{
                     if(res && res.data.rspCode ==='200'){
                         this.questionTable = res.data.data
-                        // console.log(this.questionTable)
                         this.loading = false
                     }
                 }).catch(error => {

@@ -21,7 +21,7 @@
             <el-col :span="4">
                 <h4>试题答案</h4>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="20">
                 <p>{{dialogInfo.answer}}</p>
             </el-col>
         </el-row>

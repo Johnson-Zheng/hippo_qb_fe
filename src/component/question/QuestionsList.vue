@@ -43,8 +43,9 @@
         name: "QuestionsList",
         data(){
             return{
-                tableData: [],
+
                 dialogFormVisible: false,
+                tableData: [],
                 multipleSelection: [],
                 cid:'1',
                 type:'1',
