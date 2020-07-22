@@ -4,7 +4,6 @@
             <el-form-item label="试卷标题" >
                 <el-input placeholder="XX课程期末考试测验卷"  v-model="addPaperForm.name"/>
             </el-form-item>
-                </el-row>
             <el-row type="flex" justify="space-between">
                 <el-col :span="7">
                     <el-form-item label="单选分值">
