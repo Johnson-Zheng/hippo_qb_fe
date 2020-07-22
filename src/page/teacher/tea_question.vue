@@ -17,8 +17,14 @@
           <el-table-column type="expand">
             <template slot-scope="props">
                 <el-form label-position="left" inline class="demo-table-expand">
-                    <el-form-item label="课程详情">
-                        <span>{{ props.row.course.coursecontext}}</span>
+                    <el-form-item label="课程编号">
+                        <p class="tips-text">{{ props.row.course.cid}}</p>
+                    </el-form-item>
+                    <el-form-item label="课程名称">
+                        <p class="tips-text">{{ props.row.course.courseName}}</p>
+                    </el-form-item>
+                    <el-form-item label="课程介绍">
+                        <p class="tips-text">{{ props.row.course.coursecontext}}</p>
                     </el-form-item>
                 </el-form>
             </template>
@@ -209,6 +215,10 @@
     }
     #addQuestion >>> .el-select{
         width:100%;
+    }
+    .demo-table-expand >>> .el-form-item__label{
+        font-weight: 500;
+        font-size: 14px;
     }
 
 </style>

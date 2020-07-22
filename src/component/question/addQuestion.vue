@@ -4,7 +4,7 @@
             <el-form-item label="试题课程" >
                 <CourseQuery @courseid="showcid"></CourseQuery>
             </el-form-item>
-            <el-form-item label="试题类型" prop="type">
+            <el-form-item label="试题类型">
                 <el-radio-group v-model="questionType">
                     <el-radio label="1">单选题</el-radio>
                     <el-radio label="2">多选题</el-radio>
@@ -75,7 +75,6 @@
             </el-form-item>
         </el-form>
         <el-row class="mt-30">
-
             <el-col :span="6" style="opacity:0">
                 <p>1</p>
             </el-col>
@@ -86,12 +85,13 @@
                 <el-button type="primary" @click="addQuestionHandle" size="medium" class="ok-button">确定添加</el-button>
             </el-col>
         </el-row>
+
     </el-dialog>
 </template>
 
 <script>
     import CourseQuery from "@/component/question/CourseQuery";
-    import {questionType} from "@/utils/validate";
+    import {isEmptyObject,sleep} from "@/utils/validate";
     export default {
         name: "addQuestion",
         components: {
@@ -99,7 +99,6 @@
         },
 
         data(){
-
             return{
                 questionType:'',
                 checkboxList:[],
@@ -120,10 +119,10 @@
                     diffcult:'', //难度
                     context:'', //答案解析
                     remarks:'',//备注
-                    course: {}, //科目编号
+                    course:{}
                 },
                 addQuetionRules:{
-                    type:[{required:true, message:'请选择试题类型', trigger: 'blur' }],
+                    // type:[{required:true, message:'请选择试题类型', trigger: 'blur' }],
                     questionName: [{required:true, message:'请输入题目', trigger: 'blur' }],
                 }
             }
@@ -150,8 +149,8 @@
                         optionF:'',
                         diffcult:'', //难度
                         context:'', //答案解析
-                        remarks:'  ',//备注
-                        course:{}, //科目编号
+                        remarks:'',//备注
+                        course:{}
                     }
                     this.questionType=''
                     this.checkboxList=[]
@@ -177,33 +176,46 @@
                     this.addQuestionForm.optionE = this.optionList[4]
                     this.addQuestionForm.optionF = this.optionList[5]
 
-                    if (valid && this.checkOptions() && this.checkAnswer()) {
+                    if (valid && this.checkCourse()  && this.checkType() && this.checkOptions() && this.checkAnswer() ) {
                         this.$axios
                             .post('/api/question/addquestion', this.addQuestionForm).then(resp => {
                             if (resp && resp.data.rspCode === '200') {
                                 this.$message.success("试题添加成功")
                                 this.cancelAddDialog()
-                                this.$router.go(0)
+                                sleep(1000).then(()=>{
+                                    location.reload();
+                                })
+
                             }
                             else {
                                 this.loading = false;
                                 this.$message.warning(resp.data.data+",请重新尝试")
                             }
-                        })
+                        }).catch(error => {
+                            let message = error.message
+                            this.$message({
+                                message: message,
+                                type: 'error'
+                            });
+                        });
 
-                    } else if(!this.checkOptions()){
+                    }else if(!this.checkCourse()){
+                        this.$message.warning("未选择试题课程")
+                    }else if(!this.checkType()){
+                        this.$message.warning("未选择题目类型")
+                    }else if(!this.checkOptions()){
                         this.$message.warning('选项对应内容未填写完整');
-                        return false;
                     }else if(!this.checkAnswer()){
                         this.$message.warning('未填写答案');
-                        return false;
                     }
                     else {
                         this.$message.warning('请核验表单信息是否遗漏');
-                        return false;
                     }
                 });
 
+            },
+            checkType(){
+                return this.addQuestionForm.type ===''
             },
             checkOptions(){
                 if(this.addQuestionForm.type ==='1' || this.addQuestionForm.type ==='2'){
@@ -221,8 +233,11 @@
                 }
 
             },
-            checkAnswer(){
-                return this.addQuestionForm.answer!==''
+            checkAnswer() {
+                return this.addQuestionForm.answer !== ''
+            },
+            checkCourse(){
+                return !isEmptyObject(this.addQuestionForm.course)
             }
         }
     }

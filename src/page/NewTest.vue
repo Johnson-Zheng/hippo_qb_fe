@@ -48,7 +48,7 @@
                 // this.questionlist=[]
                 this.$refs.questionlist.dialogFormVisible = true
                 this.$refs.questionlist.type = 1
-                this.$refs.questionlist.cid = 1
+                this.$refs.questionlist.cid = 3
             },
             jumppage(){
                 this.$router.push({

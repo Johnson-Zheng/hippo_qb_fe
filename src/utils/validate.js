@@ -54,3 +54,16 @@ export function dateFormatter (row) {
         }
         return 'NULL'
     }
+
+
+export function isEmptyObject(obj){ // 判断对象为空
+    for (var n in obj) {
+        return false
+    }
+    return true
+}
+export function sleep(ms) {
+    return new Promise(resolve =>
+        setTimeout(resolve, ms)
+    )
+}

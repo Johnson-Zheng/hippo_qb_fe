@@ -1,66 +1,111 @@
 <template>
     <el-dialog title="添加试卷" :visible.sync="addDialogVisible" :before-close="cancelAddDialog" :close-on-click-modal="false" append-to-body>
-        <el-form label-position="left" :model="addPaperForm" ref="addPaperForm" label-width="80px" :rules="addQuetionRules">
-            <el-form-item label="试卷标题" >
+        <el-form label-position="left" :model="addPaperForm" ref="addPaperForm" label-width="80px" :rules="addPaperRules">
+            <el-form-item label="试卷标题" prop="name">
                 <el-input placeholder="XX课程期末考试测验卷"  v-model="addPaperForm.name"/>
             </el-form-item>
             <el-row type="flex" justify="space-between">
                 <el-col :span="7">
-                    <el-form-item label="单选分值">
-                        <el-input placeholder="5"  v-model="addPaperForm.sincore"/>
+                    <el-form-item label="单选分值" prop="sinscore" >
+                        <el-input placeholder="5" size="small"  v-model="addPaperForm.sinscore" @change="setTotalScore"/>
                     </el-form-item>
                 </el-col>
                 <el-col :span="7">
-                    <el-form-item label="多选分值">
-                        <el-input placeholder="5"  v-model="addPaperForm.sincore"/>
+                    <el-form-item label="多选分值" prop="mulscore" @change="setTotalScore">
+                        <el-input placeholder="5" size="small"  v-model="addPaperForm.mulscore" @change="setTotalScore"/>
                     </el-form-item>
                 </el-col>
                 <el-col :span="7">
-                    <el-form-item label="主观分值">
-                        <el-input placeholder="5"  v-model="addPaperForm.sincore"/>
+                    <el-form-item label="主观分值" prop="subscore" @change="setTotalScore">
+                        <el-input placeholder="5" size="small"  v-model="addPaperForm.subscore" @change="setTotalScore"/>
                     </el-form-item>
                 </el-col>
             </el-row>
-            <h3>添加试题</h3>
-            <p class="tips-text">请在指定科目和题目类型后添加试题</p>
-            <el-form-item label="科目选择" class="mt-1875">
-                <CourseQuery @courseid="showcid"></CourseQuery>
+            <div class="addQuestion">
+                <h3 style="margin: 0 0 10px 0">添加试题</h3>
+                <el-form-item label="选择课程" class="mt-1875">
+                    <CourseQuery @courseid="showcid"></CourseQuery>
+                </el-form-item>
+                <el-form-item v-if="this.cid!==0" label="题目类型">
+                    <el-radio-group v-model="type" @change=this.handleTypechange size="small">
+                        <el-radio-button :label="1">单选题</el-radio-button>
+                        <el-radio-button :label="2">多选题</el-radio-button>
+                        <el-radio-button :label="3">主观题</el-radio-button>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item v-if="this.cid!==0" label='选择题目'>
+                    <el-table
+                            ref="multipleTable"
+                            :data="this.tableData"
+                            tooltip-effect="dark"
+                            style="width: 100%"
+                            @selection-change="handleSelectionChange"
+                            size="small"
+                            max-height="200"
+                    >
+                        <el-table-column
+                                type="selection"
+                                width="55">
+                        </el-table-column>
+                        <el-table-column
+                                prop="qid"
+                                label="题目编号"
+                                width="120">
+                        </el-table-column>
+                        <el-table-column
+                                prop="questionName"
+                                label="题目"
+                                show-overflow-tooltip>
+                        </el-table-column>
+                    </el-table>
+                    <el-row type="flex">
+                        <el-col justify="end">
+                            <el-button type="text" @click="addSelectQuestion">添加所选试题</el-button>
+                        </el-col>
+                    </el-row>
+                </el-form-item>
+                <el-form-item v-if="postQidList.length!==0" label='已选列表' style="margin:0">
+                    <el-table ref="multipleTable"
+                              :data="this.selectForm"
+                              tooltip-effect="dark"
+                              style="width: 100%"
+                              size="small"
+                              max-height="200"
+                    >
+                        <el-table-column
+                                prop="qid"
+                                label="题目编号"
+                                width="120">
+                        </el-table-column>
+                        <el-table-column
+                                prop="questionName"
+                                label="题目"
+                                show-overflow-tooltip>
+                        </el-table-column>
+                        <el-table-column
+                                prop="type"
+                                label="题目类型"
+                                :formatter="questionType"
+                                show-overflow-tooltip>
+                        </el-table-column>
+                    </el-table>
+                    <el-row>
+                        <el-col :span="8" v-if="addPaperForm.sinsum!==0">
+                            <p  class="tips-text">单选题共 {{this.addPaperForm.sinsum}} 个</p>
+                        </el-col>
+                        <el-col :span="8" v-if="addPaperForm.mulsum!==0">
+                            <p  class="tips-text">多选题共 {{this.addPaperForm.mulsum}} 个</p>
+                        </el-col>
+                        <el-col :span="8" v-if="addPaperForm.subsum!==0">
+                            <p  class="tips-text">主观题共 {{this.addPaperForm.subsum}} 个</p>
+                        </el-col>
+                    </el-row>
+                </el-form-item>
+            </div>
+            <el-form-item v-if="this.addPaperForm.totalScore!==0" label="试卷总分" class="mt-1875">
+                <p>{{this.addPaperForm.totalScore}}</p>
             </el-form-item>
-            <el-form-item label="题目类型">
-                <el-radio-group v-model="type">
-                    <el-radio-button :label="1">单选题</el-radio-button>
-                    <el-radio-button :label="2">多选题</el-radio-button>
-                    <el-radio-button :label="3">主观题</el-radio-button>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item label='选择题目'>
-                <el-table
-                        ref="multipleTable"
-                        :data="this.tableData"
-                        tooltip-effect="dark"
-                        style="width: 100%"
-                        @selection-change="handleSelectionChange">
-                    <el-table-column
-                            type="selection"
-                            width="55">
-                    </el-table-column>
-                    <el-table-column
-                            prop="qid"
-                            label="题目编号"
-                            width="120">
-                    </el-table-column>
-                    <el-table-column
-                            prop="questionName"
-                            label="题目"
-                            show-overflow-tooltip>
-                    </el-table-column>
-                </el-table>
-                <el-button type="primary" @click="addquestion">确认添加</el-button>
-            </el-form-item>
-
-
         </el-form>
-
         <el-row class="mt-30">
             <el-col :span="8" style="opacity:0">
                 <p>1</p>
@@ -69,15 +114,19 @@
                 <el-button @click="cancelAddDialog" size="medium" class="normal-button">取消</el-button>
             </el-col>
             <el-col :span="6">
-                <el-button type="primary" @click="addQuestionHandle" size="medium" class="ok-button">确定添加</el-button>
+                <el-button type="primary" @click="addQuestionHandle" size="medium" class="ok-button">添加</el-button>
             </el-col>
         </el-row>
+
     </el-dialog>
+
+
 </template>
 
 <script>
     import CourseQuery from "@/component/question/CourseQuery";
-    import {questionType} from "@/utils/validate";
+    import {questionType,sleep} from "@/utils/validate";
+
     export default {
         name: "addPaper",
         components: {
@@ -85,36 +134,34 @@
         },
         mounted(){
             this.loading = true
-            this.getquestionlist(this.type,this.cid)
+
         },
         data(){
-
             return{
                 loading:true,
                 tableData: [],
                 multipleSelection: [],
-                questionType:'',
-                cid:'1',
-                type:'1',
-                checkboxList:[],
-                alphabet:   ["A", "B", "C", 'D', 'E', 'F'],
-                optionList: ['', '', '', '', '', ''],
-                questionNum:2,
+                selectForm:[],
+                postQidList:[],
+                questionType:questionType,
+                cid:0,
+                type:1,
                 addPaperForm:{
-                    type:'',
-                    //TODO:创建者需要题库页面传参
                     name:'',
                     sinscore:'',
                     mulscore:'',
                     subscore:'',
-                    sinsum:'',
-                    mulsum:'',
-                    subsum:'',
-
+                    sinsum:0,
+                    mulsum:0,
+                    subsum:0,
+                    questionId:'',
+                    totalScore:0,
                 },
-                addQuetionRules:{
-                    type:[{required:true, message:'请选择试题类型', trigger: 'blur' }],
-                    questionName: [{required:true, message:'请输入题目', trigger: 'blur' }],
+                addPaperRules:{
+                    name:[{required:true, message:'试卷标题不能为空', trigger: 'blur' }],
+                    sinscore: [{required:true, message:'单选分值不能为空', trigger: 'blur' }],
+                    mulscore: [{required:true, message:'多选分值不能为空', trigger: 'blur' }],
+                    subscore: [{required:true, message:'主观分值不能为空', trigger: 'blur' }],
                 }
             }
         },
@@ -126,116 +173,152 @@
         },
         methods:{
             cancelAddDialog() {
-                    this.$emit("update:addDialogVisible", false)
-                    this.$refs.addPaperForm.resetFields();
-                    //TODO:数据重置
-                    this.addPaperForm = {
-
-                    }
-                    this.questionType=''
-                    this.checkboxList=[]
-                    this.questionNum = 2
-                    this.optionList=['', '', '', '', '', '']
-
+                this.$emit("update:addDialogVisible", false);
+                this.$refs.addPaperForm.resetFields();
+                this.cid=0;
+                this.type=1;
+                this.multipleSelection=[];
+                this.selectForm=[];
+                this.addPaperForm = {
+                    name:'',
+                    sinscore:'',
+                    mulscore:'',
+                    subscore:'',
+                    sinsum:0,
+                    mulsum:0,
+                    subsum:0,
+                    questionId:'',
+                    totalScore:0,
+                }
+                this.postQidList=[]
             },
             handleSelectionChange(val) {
                 this.multipleSelection=[]
-                // this.$set(this.multipleSelection ,val.date,val.address)
-                for (let i=0; i<= val.length-1;i++){
-                    this.multipleSelection.push(val[i].qid)
+                for (let i=0; i< val.length;i++){
+                    this.multipleSelection.push(val[i])
                 }
-                console.log(this.multipleSelection);
             },
             getquestionlist(type,cid){
                 var _this = this
-                if(_this.cid!==undefined){
-                    this.$axios.get('/api/quesion/qlistbytypecid?cid='+this.cid+'&type='+this.type).then(resp => {
+                if(this.checkClass()){
+                    this.$axios.get('/api/question/qlistbytypecid?cid='+this.cid+'&type='+this.type).then(resp => {
                         if (resp && resp.data.rspCode === '200') {
-                            _this.tableData = resp.data.dtata
+                            _this.tableData = resp.data.data
                             _this.loading = false
                         }else {
                             this.$alert(resp.data.rspMsg+"：获取题目信息异常", '提示', {
                                 confirmButtonText: '确定'
                             })
                         }
-                    })}else {
-                    this.$alert("请勿直接访问接口", '提示：题目获取失败', {
-                        confirmButtonText: '确定'
                     })
+                }else {
+                    this.$message.warning('未选择课程，无法获取数据')
+                    return false;
                 }
-
             },
             showcid:function (msg){
                 this.cid = msg.cid
+                this.getquestionlist(this.type,this.cid)
+            },
+            handleTypechange(val){
+                this.type = val
+                this.getquestionlist(this.type,this.cid)
+            },
+            async addSelectQuestion(){
+                let list = this.multipleSelection
+                let sincount = this.addPaperForm.sinsum
+                let mulcount = this.addPaperForm.mulsum
+                let subcount = this.addPaperForm.subsum
+                if(list.length!==0){
+                    for(let i in list){
+                        let qid = list[i].qid
+                        let qtype = list[i].type
+                        if(this.postQidList.indexOf(qid)===-1)
+                        {
+                            this.selectForm.push(this.multipleSelection[i])
+                            this.postQidList.push(qid)
+                            if(qtype===1){
+                                sincount++
+                            }else if(qtype===2){
+                                mulcount++
+                            }else if(qtype===3){
+                                subcount++
+                            }
+                        }else{
+                            let message = "编号为"+qid+"的试题已存在，请勿重复添加"
+                            await this.$message.warning(message);
+                            continue
+                        }
+                    }
+                    this.addPaperForm.sinsum = sincount
+                    this.addPaperForm.mulsum = mulcount
+                    this.addPaperForm.subsum = subcount
+                    this.setTotalScore()
+                }else{
+                    this.$message.warning("未选中任何数据，无法添加")
+                }
             },
             addQuestionHandle(){
-                this.addPaperForm.type = this.questionType.toString()
-                let qtype = this.addPaperForm.type
-                if(qtype === '2'){
-                    this.addPaperForm.answer = this.checkboxList.toString()
-                }
-
                 this.$refs.addPaperForm.validate((valid) => {
-                    this.addPaperForm.optionA = this.optionList[0]
-                    this.addPaperForm.optionB = this.optionList[1]
-                    this.addPaperForm.optionC = this.optionList[2]
-                    this.addPaperForm.optionD = this.optionList[3]
-                    this.addPaperForm.optionE = this.optionList[4]
-                    this.addPaperForm.optionF = this.optionList[5]
-
-                    if (valid && this.checkOptions() && this.checkAnswer()) {
+                    if (valid && this.checkClass() && this.checkQidList()) {
+                        this.addPaperForm.questionId = this.postQidList.toString()
                         this.$axios
-                            .post('/api/question/addquestion', this.addPaperForm).then(resp => {
+                            .post('/api/paper/addpaper', this.addPaperForm).then(resp => {
                             if (resp && resp.data.rspCode === '200') {
                                 this.cancelAddDialog()
-                                this.$message.success("试题添加成功")
-                                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-                                    confirmButtonText: '确定',
-                                    type: 'warning'
-                                }).then(() => {
+                                this.$message.success("试卷添加成功")
+                                sleep(1000).then(()=>{
                                     location.reload();
-                                });
+                                })
                             }
                             else {
                                 this.loading = false;
                                 this.$message.warning(resp.data.data+",请重新尝试")
                             }
-                        })
-
-                    } else if(!this.checkOptions()){
-                        this.$message.warning('选项对应内容未填写完整');
-                        return false;
-                    }else if(!this.checkAnswer() ){
-                        this.$message.warning('未填写答案');
-                        return false;
-                    }
-                    else {
+                        }).catch(error => {
+                            let message = error.message
+                            this.$message({
+                                message: message,
+                                type: 'error'
+                            });
+                        });
+                    }else if(!valid){
                         this.$message.warning('请核验表单信息是否遗漏');
+                        return false;
+                    } else if(!this.checkClass()){
+                        this.$message.warning('未选择课程');
+                        return false;
+                    }else if(!this.checkQidList()){
+                        this.$message.warning('未选择试题');
                         return false;
                     }
                 });
 
             },
-            checkOptions(){
-                let num  = this.questionNum //选项数量
-                let count = 0
-                for(let i=0;i<num;i++) {
-                    if(this.optionList[i] !==''){
-                        count+=1
-                        console.log(count)
-                    }
-                }
-                return num===count
+            checkClass(){
+                return (this.cid!==0)
             },
-            checkAnswer(){
-                return this.addPaperForm.answer!==''
+            checkQidList(){
+                return this.postQidList.length
+            },
+            setTotalScore(){
+                let sinscore = (this.addPaperForm.sinscore!=='' ) ? parseInt(this.addPaperForm.sinscore) : 0
+                let mulscore = (this.addPaperForm.mulscore!=='' ) ? parseInt(this.addPaperForm.mulscore) : 0
+                let subscore = (this.addPaperForm.subscore!=='' ) ? parseInt(this.addPaperForm.subscore) : 0
+                let sinsum = this.addPaperForm.sinsum
+                let mulsum = this.addPaperForm.mulsum
+                let subsum = this.addPaperForm.subsum
+                this.addPaperForm.totalScore = sinscore*sinsum + mulscore*mulsum + subscore*subsum
+
             }
         }
     }
 </script>
 
 <style scoped>
-    .mr-10{
-        margin-right: 20px;
+    .addQuestion{
+        padding: 10px;
+        background: #fafafa;
+        border-radius: 5px;
     }
 </style>
