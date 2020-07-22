@@ -1,7 +1,7 @@
 <template>
     <div class="nav shadow ">
         <img class="logo" src="../../assets/logo/nav-logo-tea.png"/>
-        <el-menu :default-active="path" class="menu hidden-sm-and-down"  mode="horizontal" @select="handleSelect" router>
+        <el-menu :default-active="path" class="menu hidden-sm-and-down"  mode="horizontal" router>
             <template v-for="(item, index) in nav_menu_data">
                 <el-menu-item :index = "item.path" :key = "index">
                     {{item.title}}
@@ -29,7 +29,7 @@
                     path: '/tea_paper'
                 }, {
                     title: '考试',
-                    path: '/'
+                    path: '/tea_exam'
                 }]
             }
         },

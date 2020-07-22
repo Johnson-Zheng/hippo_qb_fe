@@ -1,13 +1,19 @@
 import Vue from "vue"
 import Router from 'vue-router'
+
 import login from '@/page/login'
 import reset_password from "@/page/reset_password";
+import reset_pwd from "../page/reset_pwd";
+
 import tea_question from "@/page/teacher/tea_question";
-import Paper from "@/page/Paper";
+import tea_paper from "@/page/teacher/tea_paper";
+import tea_exam from "@/page/teacher/tea_exam";
+
 import test from "../page/test";
 import NewTest from "../page/NewTest";
-import reset_pwd from "../page/reset_pwd";
-import tea_paper from "@/page/teacher/tea_paper";
+import Paper from "@/page/Paper";
+
+
 Vue.use(Router)
 
 export default new Router({
@@ -90,7 +96,18 @@ export default new Router({
                 // 页面标题title
                 title: '老师端-试卷'
             }
-        }
+        },
+        {
+            path:'/tea_exam',
+            name:'tea_exam',
+            component: tea_exam,
+            meta:{
+                // 页面标题title
+                title: '老师端-考试'
+            }
+        },
+
+
     ]
 
 })

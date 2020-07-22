@@ -136,7 +136,6 @@
         methods:{
                 cancelAddDialog() {
                     this.$emit("update:addDialogVisible", false)
-                    this.$refs.addQuestionForm.resetFields();
                     this.addQuestionForm = {
                         type:'',
                         questionName:'',
@@ -215,7 +214,7 @@
 
             },
             checkType(){
-                return this.addQuestionForm.type ===''
+                return this.addQuestionForm.type !==''
             },
             checkOptions(){
                 if(this.addQuestionForm.type ==='1' || this.addQuestionForm.type ==='2'){
