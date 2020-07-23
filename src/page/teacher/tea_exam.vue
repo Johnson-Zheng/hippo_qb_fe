@@ -155,7 +155,7 @@
         },
         methods:{
             getPaperTable(dataPerpage, currentPage){
-                this.$axios.get('/api/paper/list?num='+dataPerpage+'&start='+currentPage).then(res=>{
+                this.$axios.get('paper/list?num='+dataPerpage+'&start='+currentPage).then(res=>{
                     if(res && res.data.rspCode ==='200'){
                         this.paperTable = res.data.data["content"]
                         this.totalElements = res.data.data['totalElements']

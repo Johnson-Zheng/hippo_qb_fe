@@ -67,7 +67,7 @@
             getquestionlist(type,cid){
                 var _this = this
                 if(_this.cid!==undefined){
-                    this.$axios.get('/api/question/qlistbytypecid?cid='+this.cid+'&type='+this.type).then(resp => {
+                    this.$axios.get('question/qlistbytypecid?cid='+this.cid+'&type='+this.type).then(resp => {
                         if (resp && resp.data.rspCode === '200') {
                             _this.tableData = resp.data.data
                             _this.loading = false

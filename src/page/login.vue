@@ -244,7 +244,7 @@
                 let isemail = isEmail(email)
 
                 if (email && isemail) {
-                    axios.post('/api/user/sendcheckcode?to='+email,
+                    axios.post('user/sendcheckcode?to='+email,
                     ).then(res => {
                         let code = res.data.rspCode
                         let message = res.data.rspMsg
@@ -298,7 +298,7 @@
                 this.$refs.register_form.validate((valid) => {
                     if (valid) {
                         this.$axios
-                            .post('api/register?code='+this.register_au_form.code, this.register_form).then(resp => {
+                            .post('register?code='+this.register_au_form.code, this.register_form).then(resp => {
                             if (resp && resp.data.rspCode === '200') {
                                 this.$message.success(resp.data.data+"注册成功")
                             }
@@ -327,7 +327,7 @@
                 let noEmpty2 = !(findValue(form_name,""))
                 let valiEmailCode = false
                 if(noEmpty1 && noEmpty2){
-                    axios.post('/api/user/checkcode?code='+code+'&mail='+email
+                    axios.post('user/checkcode?code='+code+'&mail='+email
                     ).then(res1 => {
                         if(res1.data.rspCode==="200"){
                             //验证密码
@@ -343,7 +343,7 @@
                                 });
                             }
                             else{
-                                axios.post('/api/register', JSON.stringify(this.register_form),
+                                axios.post('register', JSON.stringify(this.register_form),
                                 ).then(res => {
                                     let resdata = res.data
                                     let code = resdata.rspCode

@@ -60,7 +60,7 @@
             //发送邮件
             resetpwd() {
                         this.$axios
-                            .post('api/user/resetpassword',
+                            .post('user/resetpassword',
                                 {
                                     username:this.login_form.username,
                                     email:this.login_form.email

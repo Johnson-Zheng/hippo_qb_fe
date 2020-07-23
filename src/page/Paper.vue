@@ -128,7 +128,7 @@
             getpaperinfo () {
                 var _this = this
                 if(_this.pid!==undefined){
-                this.$axios.get('/api/paper/getpaperinfo?pid='+this.pid).then(resp => {
+                this.$axios.get('paper/getpaperinfo?pid='+this.pid).then(resp => {
                     if (resp && resp.data.rspCode === '200') {
                         _this.paperQuestion = resp.data.data
                         _this.loading = false
@@ -170,7 +170,7 @@
 
                 var _this = this
                 this.$axios
-                    .post('/api/paper/'+this.kid+'/'+this.pid+'/submit', _this.updateInfo)
+                    .post('paper/'+this.kid+'/'+this.pid+'/submit', _this.updateInfo)
                     .then(resp => {
                         if (resp.data.rspCode === '200') {
                             var data = resp.data

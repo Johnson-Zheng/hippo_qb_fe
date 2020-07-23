@@ -51,7 +51,7 @@
         },
         methods:{
             resetpwd() {
-                        this.$axios.put('api/user/resetpwd',
+                        this.$axios.put('user/resetpwd',
                                 {
                                     user_password:this.reset_form.password,
                                     username:this.url,

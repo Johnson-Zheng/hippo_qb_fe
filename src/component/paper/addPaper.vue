@@ -201,7 +201,7 @@
             getquestionlist(type,cid){
                 var _this = this
                 if(this.checkClass()){
-                    this.$axios.get('/api/question/qlistbytypecid?cid='+this.cid+'&type='+this.type).then(resp => {
+                    this.$axios.get('question/qlistbytypecid?cid='+this.cid+'&type='+this.type).then(resp => {
                         if (resp && resp.data.rspCode === '200') {
                             _this.tableData = resp.data.data
                             _this.loading = false
@@ -263,7 +263,7 @@
                     if (valid && this.checkClass() && this.checkQidList()) {
                         this.addPaperForm.questionId = this.postQidList.toString()
                         this.$axios
-                            .post('/api/paper/addpaper', this.addPaperForm).then(resp => {
+                            .post('paper/addpaper', this.addPaperForm).then(resp => {
                             if (resp && resp.data.rspCode === '200') {
                                 this.cancelAddDialog()
                                 this.$message.success("试卷添加成功")

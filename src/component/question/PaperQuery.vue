@@ -43,7 +43,7 @@
                     setTimeout(() => {
                         this.loading = false;
                         var _this = this
-                        this.$axios.get('api/paper/queryPaper?papername='+query).then(resp => {
+                        this.$axios.get('paper/queryPaper?papername='+query).then(resp => {
                             if (resp && resp.data.rspCode === '200') {
                                 _this.list = resp.data.data
                                 _this.options = resp.data.data

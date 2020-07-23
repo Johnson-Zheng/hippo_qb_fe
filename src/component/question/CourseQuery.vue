@@ -45,7 +45,7 @@
                     setTimeout(() => {
                         this.loading = false;
                         var _this = this
-                        this.$axios.get('api/course/queryCourse?coursename='+query).then(resp => {
+                        this.$axios.get('course/queryCourse?coursename='+query).then(resp => {
                             if (resp && resp.data.rspCode === '200') {
                                 _this.list = resp.data.data
                                 _this.options = resp.data.data
