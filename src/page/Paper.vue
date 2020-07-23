@@ -9,7 +9,11 @@
 
             <el-col v-for="(question,questionIndex) in paperQuestion.questions" :key="question.type" :xs="24" :sm="24">
                 <div>
-                    <h4>{{ questionIndex + 1 +'：' }} {{ question.questionName }}</h4>
+                    <h4 v-if="question.type===1">【单选题】{{ questionIndex + 1 +'：' }} {{ question.questionName }}</h4>
+                    <h4 v-else-if="question.type===2">【多选题】{{ questionIndex + 1 +'：' }} {{ question.questionName }}</h4>
+                    <h4 v-else-if="question.type===3">【主观题】{{ questionIndex + 1 +'：' }} {{ question.questionName }}</h4>
+                    <h4 v-else>【新题型题】{{ questionIndex + 1 +'：' }} {{ question.questionName }}</h4>
+
                     <!-- 单项选择题选项template -->
                     <template v-if="isChoice(question.type)">
                         <el-radio-group v-model="question.answerContent" @change="updateChoice(question)">

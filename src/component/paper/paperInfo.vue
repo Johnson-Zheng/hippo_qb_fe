@@ -37,19 +37,19 @@
                 <h4>单选分数</h4>
             </el-col>
             <el-col :span="2">
-                <p>{{dialogInfo.sinscore}}</p>
+                <p>{{dialogInfo.sinscore}}/题</p>
             </el-col>
             <el-col :span="4">
                 <h4>多选分数</h4>
             </el-col>
             <el-col :span="2">
-                <p>{{dialogInfo.mulscore}}</p>
+                <p>{{dialogInfo.mulscore}}/题</p>
             </el-col>
             <el-col :span="4">
                 <h4>主观分数</h4>
             </el-col>
             <el-col :span="2">
-                <p>{{dialogInfo.subscore}}</p>
+                <p>{{dialogInfo.subscore}}/题</p>
             </el-col>
         </el-row>
 

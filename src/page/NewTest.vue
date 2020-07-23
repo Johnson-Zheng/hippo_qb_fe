@@ -26,8 +26,8 @@
         data(){
             return{
                 qdata:{},
-                pdata:{},//接受组件值
-                pid:'10',
+                pdata:{},//接受组件值test
+                pid:'1',
                 kid:'1',
                 security:true,
                 questionlist:[]
