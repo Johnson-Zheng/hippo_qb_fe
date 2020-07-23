@@ -15,7 +15,6 @@
             <el-col :span="20">
               <p>{{getOptions(dialogInfo)}}</p>
             </el-col>
-
         </el-row>
         <el-row class="mt-1875">
             <el-col :span="4">
