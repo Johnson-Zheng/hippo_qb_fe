@@ -203,7 +203,7 @@
                 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
                 axios.defaults.withCredentials=true
                 if(user_name && user_password){
-                    axios.post('/api/jwtlogin', JSON.stringify(this.login_form),
+                    axios.post('jwtlogin', JSON.stringify(this.login_form),
                     ).then(res => {
                         let resdata = res.data
                         let code = resdata.rspCode

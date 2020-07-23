@@ -145,7 +145,7 @@
         },
         methods:{
             getQuestionTable(){
-                this.$axios.get('/api/question/alllist').then(res=>{
+                this.$axios.get('question/alllist').then(res=>{
                     if(res && res.data.rspCode ==='200'){
                         this.questionTable = res.data.data
                         this.loading = false

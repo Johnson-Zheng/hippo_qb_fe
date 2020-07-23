@@ -177,7 +177,7 @@
 
                     if (valid && this.checkCourse()  && this.checkType() && this.checkOptions() && this.checkAnswer() ) {
                         this.$axios
-                            .post('/api/question/addquestion', this.addQuestionForm).then(resp => {
+                            .post('question/addquestion', this.addQuestionForm).then(resp => {
                             if (resp && resp.data.rspCode === '200') {
                                 this.$message.success("试题添加成功")
                                 this.cancelAddDialog()
