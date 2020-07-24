@@ -90,7 +90,7 @@
                             prop="course.courseName"
                             sortable
                             label="课程"
-                            width="80"
+                            width="100"
                     >
                     </el-table-column>
                     <el-table-column

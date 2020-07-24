@@ -7,7 +7,6 @@ export function isEmail (s) {
     return /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(s)
 }
 
-
 export  function findValue(dir_data, fvalue){
     let result = false
     for(let key in dir_data){
@@ -32,32 +31,40 @@ export  function questionType(row){
     }
 }
 
-function checkTime(i)
-{
-    if (i<10)
-    {i="0" + i}
+function checkTime(i){
+    if ( i < 10 ) { i="0" + i }
     return i
 }
 
-export function dateFormatter (row) {
-        let datetime = row.createTime;
-        if(datetime){
-            datetime = new Date(datetime);
-            let y = datetime.getFullYear() + '-';
-            let mon = checkTime(datetime.getMonth()+1)+ '-';
-            let d = checkTime(datetime.getDate())+ ' ';
-
-            let h = checkTime(datetime.getHours())+':';
-            let m = checkTime(datetime.getMinutes())+':'
-            let s = checkTime(datetime.getSeconds())
-            return y + mon + d + ' ' +h+m+s;
-        }
-        return 'NULL'
+function timestamp2datetime(datetime){
+    if(datetime){
+        datetime = new Date(datetime)
+        let y = datetime.getFullYear() + '-'
+        let mon = checkTime(datetime.getMonth()+1)+ '-'
+        let d = checkTime(datetime.getDate())+ ' '
+        let h = checkTime(datetime.getHours())+':'
+        let m = checkTime(datetime.getMinutes())+':'
+        let s = checkTime(datetime.getSeconds())
+        return y + mon + d + ' ' +h+m+s
     }
+    return 'NULL'
+}
 
+export function dateFormatter (row) {
+    let datetime = row.createTime
+    return timestamp2datetime(datetime)
+}
+export function startDateFormatter (row) {
+    let datetime = row.starttime
+    return timestamp2datetime(datetime)
+}
+export function deadlineDateFormatter (row) {
+    let datetime = row.deadline
+    return timestamp2datetime(datetime)
+}
 
 export function isEmptyObject(obj){ // 判断对象为空
-    for (var n in obj) {
+    for (let n in obj) {
         return false
     }
     return true

@@ -4,85 +4,82 @@
     <div class="table-panel panel_shadow">
         <h2>考试列表</h2>
         <el-table
-                :data="paperTable"
-                ref="paperTable"
+                :data="examTable"
+                ref="examTable"
                 v-loading="loading"
                 :default-sort = "{prop: 'createTime', order: 'descending'}"
                 style="width: 100%"
                 :header-cell-style="{background:'#F5F7FA',fontWeight:'400'}"
-                height="450"
+                max-height="450"
                 show-overflow-tooltip="true"
                 fit>
             <el-table-column
                     align="center"
-                    prop="pid"
+                    prop="kid"
                     label="编号"
                     sortable
-                    width="80"
-                    >
+                    width="80">
+            </el-table-column>
+            <el-table-column
+                    align="center"
+                    prop="pid"
+                    label="试卷编号"
+                    sortable
+                    width="100">
             </el-table-column>
             <el-table-column
                     prop="name"
                     label="试卷标题"
-                    min-width="120"
+                    width="150"
                     sortable
-                    :show-tooltip-when-overflow="true"
-                    >
+                    :show-tooltip-when-overflow="true">
             </el-table-column>
             <el-table-column
-                    prop="sinscore"
+                    prop="starttime"
                     sortable
-                    align="center"
-                    label="单选分数"
-                    width="100"
-                    >
+                    label="开始时间"
+                    :formatter="startDateFormatter"
+                    width="150">
             </el-table-column>
             <el-table-column
-                    prop="mulscore"
-                    align="center"
+                    prop="deadline"
                     sortable
-                    label="多选分数"
-                    width="100"
-                    >
+                    :formatter="deadlineDateFormatter"
+                    label="截止时间"
+                    width="150">
             </el-table-column>
             <el-table-column
-                    prop="subscore"
+                    prop="time"
                     align="center"
-                    label="主观题分数"
-                    :show-tooltip-when-overflow="true"
                     sortable
-            >
+                    label="考试时长"
+                    width="150">
             </el-table-column>
             <el-table-column
                     prop="createTime"
                     sortable
                     :formatter="dateFormatter"
                     label="添加时间"
-                    min-width="100"
-                    >
+                    min-width="100">
             </el-table-column>
             <el-table-column
                     prop="createBy"
                     min-width="100"
                     sortable
                     label="创建者"
-                    align="center"
-                    >
+                    align="center">
             </el-table-column>
             <el-table-column
                     fixed="right"
-                label="操作"
-                    min-width="80"
-                >
+                    label="操作"
+                    min-width="80">
             <template slot-scope="scope">
                 <el-button @click="checkInfo(scope.row)" type="text" size="small">查看详情></el-button>
             </template>
             </el-table-column>
-
         </el-table>
 
         <div class="operate-panel" >
-<!--            <el-button class="operate-button" type="danger" @click="showDeleteDialog">删除所选</el-button>-->
             <el-row type="flex" justify="end">
                 <el-col :span="20">
                     <el-pagination
@@ -117,7 +114,7 @@
     import Copyright from "@/component/footer/copyright";
     import dayjs from 'dayjs'
     import PaperInfo from "@/component/paper/paperInfo";
-    import {questionType,dateFormatter} from "@/utils/validate"
+    import {questionType,dateFormatter,startDateFormatter,deadlineDateFormatter} from "@/utils/validate"
     import addPaper from "@/component/paper/addPaper";
     import addQuestion from "@/component/question/addQuestion";
     export default {
@@ -140,13 +137,15 @@
                 questionlist:[],
                 questionType: questionType,
                 dateFormatter,
+                startDateFormatter,
+                deadlineDateFormatter,
                 //控制弹窗 显示
                 dialogVisible: false,
                 //点击查看按钮  这条数据详细信息
                 dialogInfo: {},
                 addDialogVisible: false,
                 loading: false,
-                paperTable: null,
+                examTable: null,
             }
         },
         mounted(){
@@ -155,12 +154,12 @@
         },
         methods:{
             getPaperTable(dataPerpage, currentPage){
-                this.$axios.get('paper/list?num='+dataPerpage+'&start='+currentPage).then(res=>{
+                this.$axios.get('exroom/listnum?num='+dataPerpage+'&start='+currentPage).then(res=>{
                     if(res && res.data.rspCode ==='200'){
-                        this.paperTable = res.data.data["content"]
+                        this.examTable = res.data.data["content"]
                         this.totalElements = res.data.data['totalElements']
                         this.loading = false
-                    }
+                }
                 }).catch(error => {
                     let message = error.message
                     this.$message.error(message)
