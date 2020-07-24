@@ -97,10 +97,6 @@
             cancelDialog() {
                 this.$emit("update:dialogVisible", false);
             },
-            date(val) {
-                // 过滤器过滤时间格式
-                return dayjs(val).format("YYYY-MM-DD HH:mm");
-            },
             getOptions(info){
                 let list1 = ["A:","B:","C:","D:","E:","F:"]
                 let list = [info.optionA,info.optionB,info.optionC,info.optionD,info.optionE,info.optionF]

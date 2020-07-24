@@ -10,8 +10,9 @@
                 :default-sort = "{prop: 'createTime', order: 'descending'}"
                 style="width: 100%"
                 :header-cell-style="{background:'#F5F7FA',fontWeight:'400'}"
-                height="450"
+                max-height="420"
                 show-overflow-tooltip="true"
+                size="small"
                 fit>
             <el-table-column
                     align="center"
