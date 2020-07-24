@@ -198,12 +198,13 @@
             ...mapMutations(['changeLogin']),
             //登陆表单提交及验证
             user_login(form_name){
+                var _this = this
                 let user_name = this.login_form.username
                 let user_password = this.login_form.user_password
                 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
-                axios.defaults.withCredentials=true
+                axios.defaults.withCredentials=false
                 if(user_name && user_password){
-                    axios.post('jwtlogin', JSON.stringify(this.login_form),
+                    axios.post('login', JSON.stringify(this.login_form),
                     ).then(res => {
                         let resdata = res.data
                         let code = resdata.rspCode
@@ -216,6 +217,8 @@
                                 type: 'success'
                             });
                             let token = resdata.data.token
+                          //  _this.$store.commit('login', resdata.data)
+                            localStorage.setItem("Hippotoken", resdata.data);
                             this.$router.push('/tea_question');
                         }else{
                             let errorMessage = "ERROR:"+code+" "+userdata
