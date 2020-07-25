@@ -16,7 +16,34 @@ axios.defaults.baseURL=global_.BASE_URL;
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
 axios.defaults.withCredentials=false
 Vue.prototype.$axios = axios
-axios.defaults.headers.common['Hippotoken'] = localStorage.getItem("Hippotoken");
+
+//axios.defaults.headers.common['Hippotoken'] = localStorage.getItem("token");
+axios.interceptors.request.use(
+    config => {
+      let token = localStorage.getItem('token')
+      if (token && token != '') {
+        config.headers.hippotoken = token;
+      }
+      return config;
+
+    },
+    error => {
+      return Promise.reject(error);
+    });
+
+// http response 拦截器
+axios.interceptors.response.use(
+    response => {
+        console.log(response.headers.Hippotoken)
+        if(response.headers['hippotoken']!==''&&response.headers['hippotoken']){
+            store.commit('login', response.headers['hippotoken']);
+            console.log("token更新")
+        return response;  //请求成功的时候返回的data
+            }else {
+            return response;  //请求成功的时候返回的data
+        }
+    },
+    );
 router.beforeEach((to, from, next) => {
   if(to.meta.title){
     document.title = to.meta.title

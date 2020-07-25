@@ -217,8 +217,8 @@
                                 type: 'success'
                             });
                             let token = resdata.data.token
-                          //  _this.$store.commit('login', resdata.data)
-                            localStorage.setItem("Hippotoken", resdata.data);
+                            _this.$store.commit('login', resdata.data)
+
                             this.$router.push('/tea_question');
                         }else{
                             let errorMessage = "ERROR:"+code+" "+userdata
@@ -316,84 +316,7 @@
                     }
                 });
             },
-            //注册用户
-            register(form_name,au_form_name){
-                axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
-                axios.defaults.withCredentials=true
-                let username = form_name.username
-                let password = form_name.user_password
-                let au_password2 = au_form_name.password2
-                let email = form_name.email
-                let code = au_form_name.code
-                let isemail = isEmail(email)
-                let noEmpty1 = !(findValue(au_form_name,""))
-                let noEmpty2 = !(findValue(form_name,""))
-                let valiEmailCode = false
-                if(noEmpty1 && noEmpty2){
-                    axios.post('user/checkcode?code='+code+'&mail='+email
-                    ).then(res1 => {
-                        if(res1.data.rspCode==="200"){
-                            //验证密码
-                            if(password!==au_password2){
-                                this.$message({
-                                    message: '两次密码不一致',
-                                    type: 'warning'
-                                });
-                            }else if(!isemail){
-                                this.$message({
-                                    message: '邮箱格式错误',
-                                    type: 'warning'
-                                });
-                            }
-                            else{
-                                axios.post('register', JSON.stringify(this.register_form),
-                                ).then(res => {
-                                    let resdata = res.data
-                                    let code = resdata.rspCode
-                                    let userdata = resdata.data
 
-                                    if(resdata.rspCode==='200'){
-                                        let info = '用户'+userdata+"注册成功"
-                                        this.$message({
-                                            message: info,
-                                            type: 'success'
-                                        });
-                                        this.tabSelect = 'first'
-                                    }else{
-                                        let errorMessage = "ERROR:"+code+" "+userdata
-                                        this.$message({
-                                            message: errorMessage,
-                                            type:'error'
-                                        });
-                                    }
-
-                                }).catch(error => {
-                                    let message = error.message
-                                    this.$message.error(message)
-
-                                });
-                            }
-                        }else{
-                            this.$message({
-                                message: '邮箱和验证码验证失败',
-                                type: 'warning'
-                            });
-                        }
-
-                    }).catch(error => {
-                        let message = error.message
-                        this.$message({
-                            message: message,
-                            type: 'error'
-                        });
-                    });
-                }else{
-                    this.$message({
-                        message: "表单未填写完整",
-                        type: 'warning'
-                    });
-                }
-            }
         }
     };
 </script>
