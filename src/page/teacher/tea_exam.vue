@@ -70,19 +70,24 @@
                     width="80">
             </el-table-column>
             <el-table-column
+                    :formatter="examStatusFormatter"
+                    width="100"
+                    sortable
+                    label="考试状态">
+                <template slot-scope="status">
+                    <el-tag v-if="examStatusFormatter(status.row)==='已结束'" type="danger">{{examStatusFormatter(status.row)}}</el-tag>
+                    <el-tag v-if="examStatusFormatter(status.row)==='进行中'" type="success">{{examStatusFormatter(status.row)}}</el-tag>
+                    <el-tag v-if="examStatusFormatter(status.row)==='未开始'" type="info">{{examStatusFormatter(status.row)}}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column
                     prop="createTime"
                     sortable
                     :formatter="dateFormatter"
                     label="添加时间"
                     min-width="150">
             </el-table-column>
-            <el-table-column
-                    prop="createBy"
-                    min-width="100"
-                    sortable
-                    label="创建者"
-                    align="center">
-            </el-table-column>
+
             <el-table-column
                     fixed="right"
                     label="操作"
@@ -137,7 +142,7 @@
     import examInfo from "@/component/exam/examInfo";
     import addExam from "@/component/exam/addExam";
     import examStuList from "@/component/exam/examStuList";
-    import {dateFormatter,startDateFormatter,deadlineDateFormatter,groupTypeFormatter,securityFormatter} from "@/utils/validate"
+    import {dateFormatter,startDateFormatter,deadlineDateFormatter,groupTypeFormatter,securityFormatter,examStatusFormatter} from "@/utils/validate"
     export default {
         name: "tea_paper",
         components:{
@@ -161,6 +166,7 @@
                 deadlineDateFormatter,
                 groupTypeFormatter,
                 securityFormatter,
+                examStatusFormatter,
                 //控制弹窗 显示
                 dialogVisible: false,
                 stuListVisible:false,

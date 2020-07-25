@@ -88,3 +88,16 @@ export function groupTypeFormatter(row){
 export function securityFormatter(row){
     return row.security? "开启":"关闭"
 }
+
+export function examStatusFormatter(row){
+    let now = Date.now()
+    let start = row.starttime
+    let dead = row.deadline
+    if( now < start ){
+        return '未开始'
+    }else if( start < now && now < dead ){
+        return '进行中'
+    }else if( dead < now){
+        return '已结束'
+    }
+}
