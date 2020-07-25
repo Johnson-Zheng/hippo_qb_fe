@@ -114,7 +114,7 @@
                 <el-button @click="cancelAddDialog" size="medium" class="normal-button">取消</el-button>
             </el-col>
             <el-col :span="6">
-                <el-button type="primary" @click="addQuestionHandle" size="medium" class="ok-button">添加</el-button>
+                <el-button type="primary" @click="addQuestionHandle" size="medium" class="ok-button">添加试卷</el-button>
             </el-col>
         </el-row>
 

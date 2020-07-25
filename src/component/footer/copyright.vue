@@ -10,13 +10,13 @@
 
 <style scoped>
     #copyright{
-        position:absolute;
+        position:relative;
         font-size:12px;
-        bottom:3vh;
+        margin-top:30px;
         left: 50%;
         transform: translateX(-50%);
         font-weight:400;
-        line-height:21px;
+        line-height:20px;
         color:rgba(188,188,188,1);
         opacity:1;
         text-align: center;

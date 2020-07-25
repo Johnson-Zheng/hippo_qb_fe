@@ -9,7 +9,6 @@
                         <el-form
                                 label-position="left"
                                 ref="resetform"
-                                :rules="login_rules"
                                 status-icon :model="login_form" label-width="80px" class="mt-30">
                             <el-form-item label="用户名" prop="username" style="margin-top:40px">
                                 <el-input v-model="login_form.username" placeholder="请输入用户名"/>
@@ -17,26 +16,19 @@
                             <el-form-item label="邮箱" prop="email" style="margin-bottom:40px">
                                 <el-input placeholder="请输入邮箱" v-model="login_form.email" />
                             </el-form-item>
-
-
-                            <el-col :span="24" class="mt-30"><el-button type="primary" style="width:100%;" @click="resetpwd">重置密码</el-button></el-col>
-
+                            <el-button type="primary" style="width:100%;" @click="resetpwd">重置密码</el-button>
                         </el-form>
-
                     </el-tab-pane>
 
-
                 </el-tabs>
+                <copyright> </copyright>
+
             </div>
         </div>
-        <copyright></copyright>
     </div>
 </template>
 
 <script>
-    import {isEmail,findValue} from '@/utils/validate'
-    import {mapMutations} from 'vuex'
-    import axios from 'axios'
     import Copyright from "@/component/footer/copyright";
 
     export default {
@@ -47,6 +39,7 @@
 
         data() {
             return {
+
                 tabSelect:"first",
                 remember_me : true,
                 login_form: {

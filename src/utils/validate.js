@@ -84,3 +84,7 @@ export function groupTypeFormatter(row){
             return '名单内可参与'
     }
 }
+
+export function securityFormatter(row){
+    return row.security? "开启":"关闭"
+}

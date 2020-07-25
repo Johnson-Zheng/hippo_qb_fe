@@ -49,15 +49,24 @@
                     width="100">
             </el-table-column>
             <el-table-column
-                    prop="grouptype"
-                    :formatter="groupTypeFormatter"
-                    label="可参加人员"
+                    prop="allowtimes"
+                    align="center"
+                    label="可考次数"
                     width="100">
             </el-table-column>
             <el-table-column
-                    prop="allowtimes"
+                    prop="grouptype"
+                    :formatter="groupTypeFormatter"
+                    label="可参加人员"
+                    width="100"
                     align="center"
-                    label="可进入时间"
+            >
+            </el-table-column>
+            <el-table-column
+                    prop="security"
+                    align="center"
+                    :formatter="securityFormatter"
+                    label="防作弊"
                     width="120">
             </el-table-column>
             <el-table-column
@@ -99,7 +108,7 @@
                     </el-pagination>
                 </el-col>
                 <el-col :span="4">
-                    <el-button class="operate-button" type="primary " @click="addQuestion">添加试卷</el-button>
+                    <el-button class="operate-button" type="primary " @click="addQuestion">添加考试</el-button>
 
                 </el-col>
             </el-row>
@@ -108,26 +117,22 @@
 
     </div>
     <copyright></copyright>
-    <add-paper id="addPaper" :addDialogVisible="addDialogVisible" @update:addDialogVisible="addDialogVisibles"></add-paper>
-<!--    <add-question id="addQuestion" :addDialogVisible="addDialogVisible" @update:addDialogVisible="addDialogVisibles"></add-question>-->
-<!--    <paper-info id="paperInfo" :dialogVisible="dialogVisible" :dialogInfo="dialogInfo" @update:dialogVisible="dialogVisibles "></paper-info>-->
-    <exam-info id="examInfo" :dialogVisible="dialogVisible" :dialogInfo="dialogInfo" @update:dialogVisible="dialogVisibles "></exam-info>
+    <exam-info id="examInfo" :dialogVisible="dialogVisible" :dialogInfo="dialogInfo" @update:dialogVisible="dialogVisibles "> </exam-info>
+    <add-exam id="addExam" :addDialogVisible="addDialogVisible" @update:addDialogVisible="addDialogVisibles"> </add-exam>
 </div>
 </template>
 
 <script>
     import navigation from "@/component/header/navigation";
     import Copyright from "@/component/footer/copyright";
-    import PaperInfo from "@/component/paper/paperInfo";
     import examInfo from "@/component/exam/examInfo";
-    import {questionType,dateFormatter,startDateFormatter,deadlineDateFormatter,groupTypeFormatter} from "@/utils/validate"
-    import addPaper from "@/component/paper/addPaper";
+    import addExam from "@/component/exam/addExam";
+    import {dateFormatter,startDateFormatter,deadlineDateFormatter,groupTypeFormatter,securityFormatter} from "@/utils/validate"
     export default {
         name: "tea_paper",
         components:{
             examInfo,
-            addPaper,
-            // addQuestion,
+            addExam,
             Copyright,
             navigation,
         },
@@ -139,12 +144,11 @@
                 dataPerPage:10,
                 //总元素数
                 totalElements: 0,
-                questionlist:[],
-                questionType: questionType,
                 dateFormatter,
                 startDateFormatter,
                 deadlineDateFormatter,
                 groupTypeFormatter,
+                securityFormatter,
                 //控制弹窗 显示
                 dialogVisible: false,
                 //点击查看按钮  这条数据详细信息
@@ -156,10 +160,10 @@
         },
         mounted(){
             this.loading = true
-            this.getPaperTable(this.dataPerPage,this.currentPage)
+            this.getExamTable(this.dataPerPage,this.currentPage)
         },
         methods:{
-            getPaperTable(dataPerpage, currentPage){
+            getExamTable(dataPerpage, currentPage){
                 this.$axios.get('exroom/listnum?num='+dataPerpage+'&start='+currentPage).then(res=>{
                     if(res && res.data.rspCode ==='200'){
                         this.examTable = res.data.data["content"]
@@ -182,21 +186,18 @@
             handleSizeChange(val){
                 this.dataPerPage = val
                 this.loading = true
-                this.getPaperTable(this.dataPerPage,this.currentPage-1)
+                this.getExamTable(this.dataPerPage,this.currentPage-1)
             },
             handleCurrentChange(val){
                 this.currentPage = val
                 this.loading = true
-                this.getPaperTable(this.dataPerPage,this.currentPage-1)
+                this.getExamTable(this.dataPerPage,this.currentPage-1)
             },
             addDialogVisibles(v){
                 this.addDialogVisible = v
             },
             addQuestion(){
                 this.addDialogVisible = true;
-            },
-            showqlist:function (msg){
-                this.questionlist=msg
             },
         }
     }
@@ -227,23 +228,26 @@
         text-align: left!important;
     }
 
-    #addPaper >>> .el-dialog{
+    #addExam >>> .el-dialog{
         width: 550px;
         height: max-content;
         border-radius: 10px;
         padding: 20px 20px 10px  20px;
     }
-    #addPaper >>>.el-dialog__title{
+    #addExam >>>.el-dialog__title{
         font-size:24px;
         font-weight: 500;
         text-align: left!important;
     }
-    #addPaper >>> .el-radio-group{
+    #addExam >>> .el-radio-group{
         width: 100%;
     }
-    #addPaper >>> .el-select{
+    #addExam >>> .el-select{
         width:100%;
     }
 
+    #addExam >>> .el-date-editor.el-input{
+        width: 100% !important;
+    }
 
 </style>

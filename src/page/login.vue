@@ -75,8 +75,9 @@
 
                 </el-tabs>
             </div>
+            <copyright> </copyright>
+
         </div>
-        <copyright></copyright>
     </div>
 </template>
 

@@ -47,7 +47,7 @@
                 <p>{{dialogInfo.time}}</p>
             </el-col>
             <el-col :span="4">
-                <h4>可进入时间</h4>
+                <h4>可考次数</h4>
             </el-col>
             <el-col :span="8">
                 <p>{{dialogInfo.allowtimes}}</p>
@@ -74,13 +74,13 @@
                 <h4>可参与人员</h4>
             </el-col>
             <el-col :span="8">
-                <sp>{{groupTypeFormatter(dialogInfo)}}</sp>
+                <p>{{groupTypeFormatter(dialogInfo)}}</p>
             </el-col>
             <el-col :span="4">
-                <h4>可进入时间</h4>
+                <h4>防作弊</h4>
             </el-col>
             <el-col :span="8">
-                <p>{{dialogInfo.allowtimes}}</p>
+                <p>{{securityFormatter(dialogInfo)}}</p>
             </el-col>
         </el-row>
 
@@ -94,7 +94,7 @@
 
 <script>
     import dayjs from "dayjs";
-    import {dateFormatter,startDateFormatter,deadlineDateFormatter,groupTypeFormatter} from "@/utils/validate"
+    import {dateFormatter,startDateFormatter,deadlineDateFormatter,groupTypeFormatter,securityFormatter} from "@/utils/validate"
     export default {
         name: "examInfo",
         props: {
@@ -113,7 +113,8 @@
                 dateFormatter,
                 groupTypeFormatter,
                 startDateFormatter,
-                deadlineDateFormatter
+                deadlineDateFormatter,
+                securityFormatter
             };
         },
         methods: {

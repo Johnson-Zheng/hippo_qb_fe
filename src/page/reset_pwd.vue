@@ -11,17 +11,15 @@
                         <el-form
                                 label-position="left"
                                 ref="resetform"
-                                :rules="login_rules"
                                 status-icon :model="reset_form" label-width="80px" class="mt-30">
                             <el-form-item label="新密码" prop="password" style="margin-top:40px">
                                 <el-input v-model="reset_form.password" placeholder="请输入密码"/>
                             </el-form-item>
-                            <el-form-item label="重复新密码" prop="passwoed_2" style="margin-bottom:40px">
+                            <el-form-item label="重复密码" prop="passwoed_2" style="margin-bottom:40px">
                                 <el-input placeholder="请再一次输入密码" v-model="reset_form.password_2" />
                             </el-form-item>
 
-
-                            <el-col :span="24" class="mt-30"><el-button type="primary" style="width:100%;" @click="resetpwd">重置密码</el-button></el-col>
+                            <el-button type="primary" style="width:100%;" @click="resetpwd">重置密码</el-button>
 
                         </el-form>
 
@@ -30,14 +28,19 @@
 
                 </el-tabs>
             </div>
+            <copyright> </copyright>
+
         </div>
-        <copyright></copyright>
     </div>
 </template>
 
 <script>
+    import Copyright from "@/component/footer/copyright";
     export default {
         name: "reset_pwd",
+        component(){
+            cop
+        },
         data(){
             return{
                 tabSelect:"first",
