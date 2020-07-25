@@ -10,15 +10,16 @@
                 :default-sort = "{prop: 'createTime', order: 'descending'}"
                 style="width: 100%"
                 :header-cell-style="{background:'#F5F7FA',fontWeight:'400'}"
-                max-height="450"
+                max-height="420"
                 show-overflow-tooltip="true"
+                size="small"
                 fit>
             <el-table-column
                     align="center"
                     prop="kid"
-                    label="编号"
+                    label="考试编号"
                     sortable
-                    width="80">
+                    width="100">
             </el-table-column>
             <el-table-column
                     align="center"
@@ -29,7 +30,7 @@
             </el-table-column>
             <el-table-column
                     prop="name"
-                    label="试卷标题"
+                    label="考试标题"
                     width="150"
                     sortable
                     :show-tooltip-when-overflow="true">
@@ -42,25 +43,29 @@
                     width="150">
             </el-table-column>
             <el-table-column
-                    prop="deadline"
-                    sortable
-                    :formatter="deadlineDateFormatter"
-                    label="截止时间"
-                    width="150">
-            </el-table-column>
-            <el-table-column
                     prop="time"
                     align="center"
-                    sortable
                     label="考试时长"
-                    width="150">
+                    width="100">
+            </el-table-column>
+            <el-table-column
+                    prop="grouptype"
+                    :formatter="groupTypeFormatter"
+                    label="可参加人员"
+                    width="100">
+            </el-table-column>
+            <el-table-column
+                    prop="allowtimes"
+                    align="center"
+                    label="可进入时间"
+                    width="120">
             </el-table-column>
             <el-table-column
                     prop="createTime"
                     sortable
                     :formatter="dateFormatter"
                     label="添加时间"
-                    min-width="100">
+                    min-width="150">
             </el-table-column>
             <el-table-column
                     prop="createBy"
@@ -84,7 +89,7 @@
                 <el-col :span="20">
                     <el-pagination
                             @size-change="handleSizeChange"
-                            :page-sizes="[5,10,15,20,25,50]"
+                            :page-sizes="[10,20,50]"
                             :page-size=dataPerPage
                             @current-change="handleCurrentChange"
                             :current-page="currentPage"
@@ -105,22 +110,22 @@
     <copyright></copyright>
     <add-paper id="addPaper" :addDialogVisible="addDialogVisible" @update:addDialogVisible="addDialogVisibles"></add-paper>
 <!--    <add-question id="addQuestion" :addDialogVisible="addDialogVisible" @update:addDialogVisible="addDialogVisibles"></add-question>-->
-    <paper-info id="paperInfo" :dialogVisible="dialogVisible" :dialogInfo="dialogInfo" @update:dialogVisible="dialogVisibles "></paper-info>
+<!--    <paper-info id="paperInfo" :dialogVisible="dialogVisible" :dialogInfo="dialogInfo" @update:dialogVisible="dialogVisibles "></paper-info>-->
+    <exam-info id="examInfo" :dialogVisible="dialogVisible" :dialogInfo="dialogInfo" @update:dialogVisible="dialogVisibles "></exam-info>
 </div>
 </template>
 
 <script>
     import navigation from "@/component/header/navigation";
     import Copyright from "@/component/footer/copyright";
-    import dayjs from 'dayjs'
     import PaperInfo from "@/component/paper/paperInfo";
-    import {questionType,dateFormatter,startDateFormatter,deadlineDateFormatter} from "@/utils/validate"
+    import examInfo from "@/component/exam/examInfo";
+    import {questionType,dateFormatter,startDateFormatter,deadlineDateFormatter,groupTypeFormatter} from "@/utils/validate"
     import addPaper from "@/component/paper/addPaper";
-    import addQuestion from "@/component/question/addQuestion";
     export default {
         name: "tea_paper",
         components:{
-            PaperInfo,
+            examInfo,
             addPaper,
             // addQuestion,
             Copyright,
@@ -139,6 +144,7 @@
                 dateFormatter,
                 startDateFormatter,
                 deadlineDateFormatter,
+                groupTypeFormatter,
                 //控制弹窗 显示
                 dialogVisible: false,
                 //点击查看按钮  这条数据详细信息
@@ -209,13 +215,13 @@
         margin-top:20px;
     }
 
-    #paperInfo >>> .el-dialog{
+    #examInfo >>> .el-dialog{
         width: 700px;
         height: max-content;
         border-radius: 10px;
         padding: 20px;
     }
-    #paperInfo >>> .el-dialog__title{
+    #examInfo >>> .el-dialog__title{
         font-size:24px;
         font-weight: 500;
         text-align: left!important;

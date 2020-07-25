@@ -74,3 +74,13 @@ export function sleep(ms) {
         setTimeout(resolve, ms)
     )
 }
+export function groupTypeFormatter(row){
+    let groupType = row.grouptype
+    switch (groupType) {
+        case 0:
+            return '全部'
+
+        case 1:
+            return '名单内可参与'
+    }
+}
