@@ -1,0 +1,142 @@
+<template>
+    <el-dialog title="考生列表" :visible.sync="stuListVisible" :before-close="cancelDialog" >
+        <el-row>
+            <el-col :span="4">
+                <h4>考场编号</h4>
+            </el-col>
+            <el-col :span="20">
+                <p>{{kid}}</p>
+            </el-col>
+        </el-row>
+        <el-row class="mt-1875">
+            <el-col :span="4">
+                <h4>考号列表</h4>
+            </el-col>
+        </el-row>
+        <div class="stu-list mt-1875">
+            <el-row :gutter="10" >
+                <template  v-for="i in stuList">
+                    <el-col class="stu-id" :span="6" align="center">
+                        <el-tag style="width: 100%">{{i}}</el-tag>
+                    </el-col>
+                </template>
+            </el-row>
+            <div class="addStu mt-1875">
+                <el-form :model="addStuForm" ref="addStuForm" label-position="left" label-width="80px" rules="addStuRules">
+                    <el-row>
+                        <el-col :span="18">
+                            <el-form-item label="添加考生" prop="uno">
+                                <el-input v-model="addStuForm.uno" placeholder="请输入考生考号"> </el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-button style="width: 100%;" type="primary" plain @click="addStuHandler">添加</el-button>
+                        </el-col>
+                    </el-row>
+
+                </el-form>
+            </div>
+        </div>
+
+
+
+    </el-dialog>
+</template>
+
+<script>
+    import {
+        dateFormatter,
+        startDateFormatter,
+        deadlineDateFormatter,
+        groupTypeFormatter,
+        securityFormatter,
+        sleep
+    } from "@/utils/validate"
+    export default {
+        name: "examStuList",
+        props: {
+            stuListVisible: {
+                type: Boolean,
+                default: false
+            },
+            stuList: {
+                type: Array,
+                default: []
+            },
+            kid: {
+                type: Number,
+                default: 0
+            }
+
+        },
+        data() {
+            return {
+                addStuForm: {
+                    uno: '',
+                },
+
+                dateFormatter,
+                groupTypeFormatter,
+                startDateFormatter,
+                deadlineDateFormatter,
+                securityFormatter,
+                addStuRules: {
+                    uno: [{required: true, message: '考生考号不能为空', trigger: 'blur'}],
+                }
+
+            };
+        },
+        methods: {
+            //修改父组件传过来的值
+            cancelDialog() {
+                this.$emit("update:stuListVisible", false);
+            },
+            addStuHandler() {
+                this.$refs.addStuForm.validate((valid) => {
+                        if (valid) {
+                            this.$axios.post('exroom/putsingleper?exid='+this.kid+"&uno="+this.addStuForm.uno).then(resp => {
+                                if (resp && resp.data.rspCode === '200') {
+                                    this.$message.success("考生添加成功")
+                                    this.stuList.push(this.addStuForm.uno)
+                                    this.addStuForm.uno=''
+                                } else {
+                                    this.loading = false;
+                                    this.$message.warning(resp.data.data + ",请重新尝试")
+                                }
+                            }).catch(error => {
+                                let message = error.message
+                                this.$message({
+                                    message: message,
+                                    type: 'error'
+                                });
+                            });
+                        }
+                    }
+                )
+            }
+        },
+    }
+</script>
+
+<style scoped>
+    .stu-list{
+        padding: 10px;
+        background: #fafafa;
+        border-radius: 5px;
+        overflow-y:scroll;
+        height: max-content;
+        max-height: 200px;
+    }
+    .stu-id{
+        margin-bottom: 5px;
+    }
+    .addStu >>> .el-input__inner{
+        border-radius:  5px 0 0 5px ;
+    }
+    .addStu >>> .el-button{
+        border-radius:  0 5px 5px 0;
+    }
+    .addStu >>> .el-form-item{
+        margin-bottom: 0;
+    }
+</style>

@@ -214,6 +214,8 @@
 
                         if(resdata.rspCode==='200'){
                             this.$message({
+                                duration:2000,
+                                showClose:true,
                                 message: '登陆成功',
                                 type: 'success'
                             });

@@ -84,16 +84,10 @@
             </el-col>
         </el-row>
 
-
-
-        <!--        <el-row class="mt-30"><el-button type="primary" @click="cancelDialog" size="medium" class="ok-button">确认信息</el-button></el-row>-->
-
-
     </el-dialog>
 </template>
 
 <script>
-    import dayjs from "dayjs";
     import {dateFormatter,startDateFormatter,deadlineDateFormatter,groupTypeFormatter,securityFormatter} from "@/utils/validate"
     export default {
         name: "examInfo",
@@ -122,22 +116,11 @@
             cancelDialog() {
                 this.$emit("update:dialogVisible", false);
             },
-            date(val) {
-                // 过滤器过滤时间格式
-                return dayjs(val).format("YYYY-MM-DD HH:mm");
-            },
 
         }
     }
 </script>
 
 <style scoped>
-
-    .form{
-        background: #fff;
-    }
-    .answer-desc{
-        border:unset!important;
-    }
 
 </style>

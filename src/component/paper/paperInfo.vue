@@ -65,6 +65,7 @@
                           style="width: 100%"
                           :header-cell-style="{background:'#F5F7FA',fontWeight:'400'}"
                           height="300"
+                          size="small"
                           show-overflow-tooltip="true"
                 fit>
                     <el-table-column
@@ -154,11 +155,6 @@
             cancelDialog() {
                 this.$emit("update:dialogVisible", false);
             },
-            date(val) {
-                // 过滤器过滤时间格式
-                return dayjs(val).format("YYYY-MM-DD HH:mm");
-            },
-
         }
     }
 </script>

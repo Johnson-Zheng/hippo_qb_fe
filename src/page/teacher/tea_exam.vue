@@ -46,13 +46,13 @@
                     prop="time"
                     align="center"
                     label="考试时长"
-                    width="100">
+                    width="70">
             </el-table-column>
             <el-table-column
                     prop="allowtimes"
                     align="center"
                     label="可考次数"
-                    width="100">
+                    width="70">
             </el-table-column>
             <el-table-column
                     prop="grouptype"
@@ -67,7 +67,7 @@
                     align="center"
                     :formatter="securityFormatter"
                     label="防作弊"
-                    width="120">
+                    width="80">
             </el-table-column>
             <el-table-column
                     prop="createTime"
@@ -86,9 +86,17 @@
             <el-table-column
                     fixed="right"
                     label="操作"
-                    min-width="80">
+                    width="160">
             <template slot-scope="scope">
-                <el-button @click="checkInfo(scope.row)" type="text" size="small">查看详情></el-button>
+                <el-row>
+                    <el-col :span="12">
+                        <el-button @click="checkInfo(scope.row)" type="text" size="small">查看详情></el-button>
+                    </el-col>
+                    <el-col :span="12" v-if="scope.row.grouptype===1">
+                        <el-button @click="checkStuList(scope.row)" type="text" size="small">考生列表></el-button>
+                    </el-col>
+                </el-row>
+
             </template>
             </el-table-column>
         </el-table>
@@ -119,6 +127,7 @@
     <copyright></copyright>
     <exam-info id="examInfo" :dialogVisible="dialogVisible" :dialogInfo="dialogInfo" @update:dialogVisible="dialogVisibles "> </exam-info>
     <add-exam id="addExam" :addDialogVisible="addDialogVisible" @update:addDialogVisible="addDialogVisibles"> </add-exam>
+    <exam-stu-list id="examStuList" :stuListVisible="stuListVisible" :stuList="stuList" :kid="selectKid" @update:stuListVisible="stuListVisibles"> </exam-stu-list>
 </div>
 </template>
 
@@ -127,10 +136,12 @@
     import Copyright from "@/component/footer/copyright";
     import examInfo from "@/component/exam/examInfo";
     import addExam from "@/component/exam/addExam";
+    import examStuList from "@/component/exam/examStuList";
     import {dateFormatter,startDateFormatter,deadlineDateFormatter,groupTypeFormatter,securityFormatter} from "@/utils/validate"
     export default {
         name: "tea_paper",
         components:{
+            examStuList,
             examInfo,
             addExam,
             Copyright,
@@ -141,6 +152,7 @@
                 //当前页码
                 currentPage:0,
                 //每页数据数量
+                selectKid:0,
                 dataPerPage:10,
                 //总元素数
                 totalElements: 0,
@@ -151,8 +163,10 @@
                 securityFormatter,
                 //控制弹窗 显示
                 dialogVisible: false,
+                stuListVisible:false,
                 //点击查看按钮  这条数据详细信息
                 dialogInfo: {},
+                stuList:[],
                 addDialogVisible: false,
                 loading: false,
                 examTable: null,
@@ -179,6 +193,25 @@
             checkInfo(row){
                 this.dialogVisible = true;
                 this.dialogInfo = row
+
+            },
+            //考生列表请求
+            checkStuList(row){
+                this.stuListVisible = true;
+                this.selectKid = row.kid
+                this.$axios.get('exroom/getpeset?exid='+this.selectKid).then(res=>{
+                    if(res && res.data.rspCode ==='200'){
+                        this.stuList = res.data.data
+                    }
+                }).catch(error => {
+                    let message = error.message
+                    this.$message.error(message)
+
+                });
+
+            },
+            stuListVisibles(v){
+                this.stuListVisible = v
             },
             dialogVisibles(v){
                 this.dialogVisible = v
@@ -248,6 +281,17 @@
 
     #addExam >>> .el-date-editor.el-input{
         width: 100% !important;
+    }
+    #examStuList >>>.el-dialog{
+        width: 550px;
+        height: max-content;
+        border-radius: 10px;
+        padding: 20px 20px 10px  20px;
+    }
+    #examStuList >>>.el-dialog__title{
+        font-size:24px;
+        font-weight: 500;
+        text-align: left!important;
     }
 
 </style>
