@@ -7,6 +7,10 @@ import axios from "axios";
 import global_ from './Global'
 import 'element-ui/lib/theme-chalk/display.css';
 import store from './store'
+import echarts from 'echarts'
+
+Vue.prototype.$echarts = echarts
+
 Vue.config.productionTip = false
 
 Vue.use(router)
@@ -21,7 +25,7 @@ Vue.prototype.$axios = axios
 axios.interceptors.request.use(
     config => {
       let token = localStorage.getItem('token')
-      if (token && token != '') {
+      if (token && token !== '') {
         config.headers.hippotoken = token;
       }
       return config;
@@ -57,3 +61,4 @@ new Vue({
     store,
   render: h => h(App)
 }).$mount('#app')
+

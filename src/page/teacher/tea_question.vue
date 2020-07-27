@@ -180,7 +180,7 @@
     .table-panel{
         position: relative;
         margin:30px auto;
-        width: 88%;
+        width: 90%;
         text-align:left;
     }
 

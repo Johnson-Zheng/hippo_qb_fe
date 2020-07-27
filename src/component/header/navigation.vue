@@ -1,14 +1,19 @@
 <template>
-    <div class="nav shadow ">
-        <img class="logo" src="../../assets/logo/nav-logo-tea.png"/>
-        <el-menu :default-active="path" class="menu hidden-sm-and-down"  mode="horizontal" router>
-            <template v-for="(item, index) in nav_menu_data">
-                <el-menu-item :index = "item.path" :key = "index">
-                    {{item.title}}
-                </el-menu-item>
-            </template>
-        </el-menu>
-        <router-link class="nav-link" to="login">登陆</router-link>
+    <div>
+        <div class="anchor">
+            <p>1</p>
+        </div>
+        <div class="nav shadow ">
+            <img class="logo" src="../../assets/logo/nav-logo-tea.png"/>
+            <el-menu :default-active="path" class="menu hidden-sm-and-down"  mode="horizontal" router>
+                <template v-for="(item, index) in nav_menu_data">
+                    <el-menu-item :index = "item.path" :key = "index">
+                        {{item.title}}
+                    </el-menu-item>
+                </template>
+            </el-menu>
+            <router-link class="nav-link" to="login">登陆</router-link>
+        </div>
     </div>
 </template>
 
@@ -20,7 +25,7 @@
                 path: '',
                 nav_menu_data: [{
                     title: '首页',
-                    path: '/'
+                    path: '/tea_index'
                 }, {
                     title: '题库',
                     path: '/tea_question'
@@ -46,8 +51,14 @@
 </script>
 
 <style scoped>
+    .anchor{
+        z-index: -99;
+        position: relative;
+        height: 80px;
+        opacity: 0;
+    }
     .nav{
-        position:relative;
+        position:fixed;
         height: 80px;
         width:100%;
         background:white;

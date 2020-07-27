@@ -8,6 +8,7 @@ import reset_pwd from "../page/reset_pwd";
 import tea_question from "@/page/teacher/tea_question";
 import tea_paper from "@/page/teacher/tea_paper";
 import tea_exam from "@/page/teacher/tea_exam";
+import tea_index from "@/page/teacher/tea_index";
 
 import test from "../page/test";
 import NewTest from "../page/NewTest";
@@ -106,6 +107,16 @@ export default new Router({
                 title: '老师端-考试'
             }
         },
+        {
+            path:'/tea_index',
+            name:'tea_index',
+            component: tea_index,
+            meta:{
+                // 页面标题title
+                title: '老师端-首页'
+            }
+        },
+
 
 
     ]

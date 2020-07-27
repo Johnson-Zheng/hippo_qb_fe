@@ -1,0 +1,349 @@
+<template>
+<div class="container">
+    <navigation></navigation>
+    <div class="main-panel">
+        <div class="panel shadow w4 panel-left">
+            <el-row type="flex" justify="space-between">
+                <el-col :span="4">
+                    <h2>统计信息</h2>
+                </el-col>
+                <el-col :span="3">
+                    <el-button type="text" class="tips-text info-button">查看详情></el-button>
+                </el-col>
+            </el-row>
+            <el-row class="mt-1875">
+                <el-col :span="9">
+                    <div class="panel shadow sta-panel">
+                        <el-row type="flex" justify="center" :gutter="30">
+                            <el-col :span="12">
+                                <img class="sta-icon" src="../../assets/icon/题目@2x.png"/>
+                            </el-col>
+                            <el-col :span="12">
+                                <div class="sta-data">
+                                    <p class="data">{{paperNum}}</p>
+                                    <p class="title">发布试卷</p>
+                                </div>
+                            </el-col>
+                        </el-row>
+                    </div>
+                </el-col>
+                <el-col :span="15">
+                    <div class="panel shadow sta-panel">
+                        <el-row type="flex" justify="center" :gutter="35">
+                            <el-col :span="6">
+                                <img class="sta-icon" src="../../assets/icon/题目@2x.png"/>
+                            </el-col>
+                            <el-col :span="6">
+                                <div class="sta-data">
+                                    <p class="data">{{examNum}}</p>
+                                    <p class="title">已发布考试</p>
+                                </div>
+                            </el-col>
+                            <el-col :span="6">
+                                <div class="sta-data">
+                                    <p class="data">{{examOff}}</p>
+                                    <p class="title">未开始考试</p>
+                                </div>
+                            </el-col>
+                            <el-col :span="6">
+                                <div class="sta-data">
+                                    <p class="data">{{examOther}}</p>
+                                    <p class="title">其他考试</p>
+                                </div>
+                            </el-col>
+                        </el-row>
+
+                    </div>
+
+                </el-col>
+            </el-row>
+        </div>
+        <div class="panel shadow w4 panel-left">
+            <el-row type="flex" justify="space-between">
+                <el-col :span="4">
+                    <h2>最近发布</h2>
+                </el-col>
+                <el-col :span="8">
+                    <p class="tips-text dec-text">您最近发布的3场考试安排</p>
+                </el-col>
+                <el-col :span="3" offset="8">
+                    <el-button type="text" class="tips-text info-button">查看详情></el-button>
+                </el-col>
+            </el-row>
+            <el-table class="mt-1875" :data="examForm" ref="examForm"
+                      v-loading="loading"
+                      :default-sort = "{prop: 'createTime', order: 'descending'}"
+                      style="width: 100%"
+                      :header-cell-style="{background:'#F5F7FA',fontWeight:'400'}"
+                      show-overflow-tooltip="true"
+                      size="small"
+                      fit
+            >
+                <el-table-column
+                        align="center"
+                        prop="kid"
+                        label="考试编号"
+
+                        >
+                </el-table-column>
+                <el-table-column
+                        prop="name"
+                        label="考试标题"
+                        :show-tooltip-when-overflow="true">
+                </el-table-column>
+                <el-table-column
+                        prop="starttime"
+                        label="开始时间"
+                        :formatter="startDateFormatter"
+                        width="140">
+                </el-table-column>
+                <el-table-column
+                        prop="time"
+                        align="center"
+                        label="考试时长"
+                        >
+                </el-table-column>
+                <el-table-column
+                        :formatter="examStatusFormatter"
+                        align="center"
+                        width="80"
+                        label="考试状态">
+                    <template slot-scope="status">
+                        <el-tag v-if="examStatusFormatter(status.row)==='已结束'" type="danger">{{examStatusFormatter(status.row)}}</el-tag>
+                        <el-tag v-if="examStatusFormatter(status.row)==='进行中'" type="success">{{examStatusFormatter(status.row)}}</el-tag>
+                        <el-tag v-if="examStatusFormatter(status.row)==='未开始'" type="info">{{examStatusFormatter(status.row)}}</el-tag>
+                    </template>
+                </el-table-column>
+
+            </el-table>
+        </div>
+        <div class="panel shadow w4 panel-left">
+            <el-row type="flex" justify="space-between">
+                <el-col :span="4">
+                    <h2>发布统计</h2>
+                </el-col>
+                <el-col :span="8">
+                    <p class="tips-text dec-text">您最近发布考试统计</p>
+                </el-col>
+                <el-col :span="3" offset="8">
+                    <el-button type="text" class="tips-text info-button">查看详情></el-button>
+                </el-col>
+            </el-row>
+            <div id="exam-chart" :style="{width: '570px', height: '300px'}"></div>
+        </div>
+    </div>
+    <copyright></copyright>
+</div>
+</template>
+
+<script>
+    import navigation from "@/component/header/navigation";
+    import Copyright from "@/component/footer/copyright";
+    import {getWeekArray} from '@/utils/functions'
+    import {startDateFormatter,examStatusFormatter} from '@/utils/validate'
+    export default {
+        name: "tea_index",
+        components:{
+            Copyright,
+            navigation,
+        },
+        data() {
+            return{
+                startDateFormatter,
+                examStatusFormatter,
+                loading:true,
+                username:'sys',
+                paperNum:'-',
+                examNum:'-',
+                examOff:'-',
+                examOther:'-',
+                examForm:null,
+                weekExamData:[]
+            }
+        },
+        mounted(){
+            this.getStatistic()
+            this.getExamForm()
+            this.getExamChart()
+        },
+        methods: {
+            getStatistic(){
+                this.$axios.get('datavisualization/Tdashboard?name='+this.username).then(res=>{
+                    if(res && res.data.rspCode ==='200'){
+                        let data = res.data.data
+                        this.paperNum = data['添加试卷']
+                        this.examNum = data['添加试卷']
+                        this.examOff = data['未开始考试']
+                        this.examOther = data['已开始/已结束考试']
+
+                    }
+                }).catch(error => {
+                    let message = error.message
+                    this.$message.error(message)
+
+                });
+            },
+            getExamForm(){
+                this.$axios.get('exroom/last3exam?name='+this.username).then(res=>{
+                    if(res && res.data.rspCode ==='200'){
+                        this.examForm = res.data.data
+                        this.loading = false
+                    }
+                }).catch(error => {
+                    let message = error.message
+                    this.$message.error(message)
+
+                });
+            },
+            getExamChart(){
+                let obj = require('../../assets/chart-theme')
+                this.$echarts.registerTheme('theme', obj)
+                let examchart = this.$echarts.init(document.getElementById('exam-chart'),'theme')
+                examchart.showLoading()
+                this.$axios.get('datavisualization/numOfExam?name='+this.username)
+                    .then(res=> {
+                        if (res && res.data.rspCode === '200'){
+                            this.weekExamData = res.data.data
+                            examchart.setOption({
+                                tooltip: {
+                                    trigger: 'axis',
+                                    axisPointer: {
+                                        type: 'line',
+                                        label: {
+                                            backgroundColor: '#6a7985'
+                                        }
+                                    }
+                                },
+                                xAxis: {
+                                    data: getWeekArray()
+                                },
+                                yAxis: {
+                                },
+                                legend: {
+                                    data: ['发布数量'],
+                                    selected: {'发布数量': true},
+                                    icon: "circle",   //  这个字段控制形状  类型包括 circle，rect ，roundRect，triangle，diamond，pin，arrow，none
+                                    left: 25,
+                                    bottom: 0
+                                },
+                                series: [{
+                                    name: '发布数量',
+                                    type: 'line',
+                                    areaStyle: {},
+                                    data: this.weekExamData,
+                                    markPoint: {
+                                        data: [{
+                                            name: '最大值',
+                                            type: 'max'
+                                        }]
+                                    },
+
+                                }]
+                            });
+                            examchart.hideLoading()
+                        }else {
+                            this.$message.error("获取失败")
+                        }
+                    }).catch(error => {
+                        let message = error.message
+                        this.$message.error(message)
+                    })
+            }
+
+    }
+
+}
+</script>
+
+<style scoped>
+    .main-panel{
+        position:relative;
+        width:90%;
+        height: max-content;
+        margin:30px auto;
+    }
+    .panel{
+        position:relative;
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px 30px;
+        width: max-content;
+    }
+    .w4{
+        width: 40%;
+    }
+    .sta-panel{
+        padding: 15px 20px!important;
+    }
+    .panel h2{
+        font-size:18px;
+        margin: 0;
+        line-height: 27px;
+        width: 78px;
+
+    }
+    .panel >>> .el-input__inner{
+        border-radius: 20px;
+        padding: 0 0 0 22.5%;
+        width:70px;
+    }
+    .panel >> .el-button{
+        padding: 0!important;
+    }
+    .sta-icon{
+        height: 40px;
+        display:block
+
+    }
+    .sta-data{
+        width: 40px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+    }
+    .sta-data .data{
+        text-align: center;
+        font-size:23px;
+        font-weight:bold;
+        line-height:25px;
+        color:rgba(28,148,219,1);
+        user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+    }
+    .sta-data .title{
+        text-align: center;
+        font-size:9px;
+        font-weight:400;
+        line-height:15px;
+        color:rgba(136,136,136,1);
+        white-space: nowrap;
+        user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+    }
+    .el-button{
+        padding: 0!important;
+    }
+    .panel-left{
+        width:490px!important;
+        height: max-content;
+        margin-bottom: 20px;
+        margin-right: 20px;
+    }
+    .info-button{
+        text-align: right;
+    }
+    .dec-text{
+        line-height: 27px;
+    }
+    #exam-chart{
+        left: -30px;
+    }
+</style>

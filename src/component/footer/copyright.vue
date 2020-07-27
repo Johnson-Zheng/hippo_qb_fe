@@ -13,6 +13,7 @@
         position:relative;
         font-size:12px;
         margin-top:30px;
+        margin-bottom: 30px;
         left: 50%;
         transform: translateX(-50%);
         font-weight:400;
