@@ -10,10 +10,11 @@ import tea_paper from "@/page/teacher/tea_paper";
 import tea_exam from "@/page/teacher/tea_exam";
 import tea_index from "@/page/teacher/tea_index";
 
+import stu_index from "@/page/student/stu_index";
+
 import test from "../page/test";
 import NewTest from "../page/NewTest";
 import Paper from "@/page/Paper";
-
 
 Vue.use(Router)
 
@@ -116,9 +117,15 @@ export default new Router({
                 title: '老师端-首页'
             }
         },
-
-
-
+        {
+            path:'/stu_index',
+            name:'stu_index',
+            component: stu_index,
+            meta:{
+                // 页面标题title
+                title: '学生端-首页'
+            }
+        },
     ]
 
 })

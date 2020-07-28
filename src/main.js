@@ -9,6 +9,8 @@ import 'element-ui/lib/theme-chalk/display.css';
 import store from './store'
 import echarts from 'echarts'
 
+const Base64 = require('js-base64').Base64
+
 Vue.prototype.$echarts = echarts
 
 Vue.config.productionTip = false
@@ -27,9 +29,9 @@ axios.interceptors.request.use(
       let token = localStorage.getItem('token')
       if (token && token !== '') {
         config.headers.hippotoken = token;
+
       }
       return config;
-
     },
     error => {
       return Promise.reject(error);
@@ -38,27 +40,43 @@ axios.interceptors.request.use(
 // http response 拦截器
 axios.interceptors.response.use(
     response => {
-        console.log(response.headers.Hippotoken)
         if(response.headers['hippotoken']!==''&&response.headers['hippotoken']){
             store.commit('login', response.headers['hippotoken']);
-            console.log("token更新")
-        return response;  //请求成功的时候返回的data
-            }else {
+            window.localStorage.setItem('username', getUsername(response.headers['hippotoken']))
+            return response;  //请求成功的时候返回的data
+        }else {
             return response;  //请求成功的时候返回的data
         }
-    },
-    );
+    },error => {
+        if (error.response.data.errCode === 401) {
+            router.replace('/')
+        }
+    })
+
 router.beforeEach((to, from, next) => {
-  if(to.meta.title){
-    document.title = to.meta.title
-  }
-  next()
+    if (to.matched.length === 0) {  //如果未匹配到路由
+        next('/')
+    }else {
+        if(to.meta.title){
+            document.title = to.meta.title
+        }
+        next();    //如果匹配到正确跳转
+    }
 })
 
 new Vue({
-  el: '#app',
-  router,
+    el: '#app',
+    Base64,
+    router,
     store,
-  render: h => h(App)
+    render: h => h(App)
 }).$mount('#app')
 
+function base64Decode(encode) {
+    return Base64.decode(encode)
+}
+
+function getUsername(token){
+    let list = token.split('.')
+    return JSON.parse(base64Decode(list[1])).username
+}
