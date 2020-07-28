@@ -88,7 +88,7 @@
             </el-table-column>
             <el-table-column
                     fixed="right"
-                label="操作"
+                    label="操作"
                     min-width="80"
                 >
             <template slot-scope="scope">
@@ -180,7 +180,7 @@
     .table-panel{
         position: relative;
         margin:30px auto;
-        width: 90%;
+        width: 88%;
         text-align:left;
     }
 

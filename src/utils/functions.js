@@ -13,7 +13,7 @@ function getUpDay(day) {
 export function getWeekArray() {
     let weekList = []
     let today = new Date()
-    weekList.push(today)
+    weekList.push(getUpDay(today))
     for(let i=0;i<6;i++){
         weekList.push(getUpDay(weekList[i]))
     }
