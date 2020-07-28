@@ -80,5 +80,6 @@ function base64Decode(encode) {
 
 function getUsername(token){
     let list = token.split('.')
-    return JSON.parse(base64Decode(list[1])).username
+    let result = JSON.parse(base64Decode(list[1])).username
+    return result
 }

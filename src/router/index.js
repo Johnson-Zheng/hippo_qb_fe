@@ -11,6 +11,7 @@ import tea_exam from "@/page/teacher/tea_exam";
 import tea_index from "@/page/teacher/tea_index";
 
 import stu_index from "@/page/student/stu_index";
+import stu_exam from "@/page/student/stu_exam";
 
 import test from "../page/test";
 import NewTest from "../page/NewTest";
@@ -131,6 +132,15 @@ export default new Router({
                 title: '学生端-首页'
             }
         },
+        {
+            path:'/stu_exam',
+            name:'stu_exam',
+            component: stu_exam,
+            meta:{
+                // 页面标题title
+                title: '学生端-考试'
+            }
+        }
     ]
 
 })

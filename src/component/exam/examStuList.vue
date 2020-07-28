@@ -21,24 +21,24 @@
                     </el-col>
                 </template>
             </el-row>
-            <div class="addStu mt-1875">
-                <el-form :model="addStuForm" ref="addStuForm" label-position="left" label-width="80px" rules="addStuRules">
-                    <el-row>
-                        <el-col :span="18">
-                            <el-form-item label="添加考生" prop="uno">
-                                <el-input v-model="addStuForm.uno" placeholder="请输入考生考号"> </el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-button style="width: 100%;" type="primary" plain @click="addStuHandler">添加</el-button>
-                        </el-col>
-                    </el-row>
 
-                </el-form>
-            </div>
         </div>
 
+        <div class="addStu mt-1875">
+            <el-form :model="addStuForm" ref="addStuForm" label-position="left" label-width="80px" rules="addStuRules">
+                <el-row>
+                    <el-col :span="18">
+                        <el-form-item label="添加考生" prop="uno">
+                            <el-input v-model="addStuForm.uno" placeholder="请输入考生考号"> </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-button style="width: 100%;" type="primary" plain @click="addStuHandler">添加</el-button>
+                    </el-col>
+                </el-row>
 
+            </el-form>
+        </div>
 
     </el-dialog>
 </template>

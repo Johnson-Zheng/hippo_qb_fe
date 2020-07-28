@@ -12,7 +12,7 @@
                     </el-menu-item>
                 </template>
             </el-menu>
-            <router-link class="nav-link" to="login">登陆</router-link>
+            <p class="nav-link">{{name}}</p>
         </div>
     </div>
 </template>
@@ -23,10 +23,12 @@
         data(){
             return{
                 path: '',
-                nav_menu_data: []
+                nav_menu_data: [],
+                name:''
             }
         },
         created () {
+            this.getName()
             this.onRouteChanged()
             this.showMenu()
         },
@@ -54,6 +56,13 @@
                     this.$message.error(message)
 
                 });
+            },
+            getName(){
+                if(window.localStorage.getItem('username').length <= 30){
+                    this.name = window.localStorage.getItem('username')
+                }else{
+                    this.name = ''
+                }
             }
         }
     }

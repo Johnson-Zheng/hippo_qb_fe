@@ -147,7 +147,7 @@
                 dialogInfo: {},
                 addDialogVisible: false,
                 loading: false,
-                paperTable: null,
+                paperTable: [],
             }
         },
         mounted(){
