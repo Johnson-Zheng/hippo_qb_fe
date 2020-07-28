@@ -75,7 +75,7 @@
 
                 </el-tabs>
             </div>
-            <copyright> </copyright>
+            <copyright style="margin-bottom: 0;"> </copyright>
 
         </div>
     </div>
@@ -171,15 +171,14 @@
                     role:'1',
                     enabled:true,
                     uno:'',
-                    phone:' ',
-                    name:' '
+                    phone:' '
                 },
                 roles: [{
                     value: '1',
-                    label: '学生'
+                    label: '老师'
                 }, {
                     value: '2',
-                    label: '老师'
+                    label: '学生'
                 }],
 
                 register_rules: {
@@ -222,7 +221,8 @@
                             let token = resdata.data.token
                             _this.$store.commit('login', resdata.data)
 
-                            this.$router.push('/tea_question');
+                            this.$router.push('/tea_index');
+
                         }else{
                             let errorMessage = "ERROR:"+code+" "+userdata
                             this.$message({
@@ -307,6 +307,10 @@
                             .post('register?code='+this.register_au_form.code, this.register_form).then(resp => {
                             if (resp && resp.data.rspCode === '200') {
                                 this.$message.success(resp.data.data+"注册成功")
+                                this.tabSelect = 'first'
+                                this.login_form.username  = this.register_form.username
+                                this.login_form.user_password = this.register_form.user_password
+
                             }
                             else {
                                 this.loading = false;

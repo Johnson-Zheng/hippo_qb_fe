@@ -68,7 +68,7 @@
                         <el-col :span="8">
                             <p class="tips-text dec-text">您最近发布的3场考试安排</p>
                         </el-col>
-                        <el-col :span="3" offset='8'>
+                        <el-col :span="3" :offset=8>
                             <el-button type="text" class="tips-text info-button" @click="goto('/tea_exam')">查看详情></el-button>
                         </el-col>
                     </el-row>

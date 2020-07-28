@@ -23,6 +23,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
 axios.defaults.withCredentials=false
 Vue.prototype.$axios = axios
 
+
 //axios.defaults.headers.common['Hippotoken'] = localStorage.getItem("token");
 axios.interceptors.request.use(
     config => {
@@ -50,6 +51,7 @@ axios.interceptors.response.use(
     },error => {
         if (error.response.data.errCode === 401) {
             router.replace('/')
+            alert('登陆令牌失效，请重新登录')
         }
     })
 

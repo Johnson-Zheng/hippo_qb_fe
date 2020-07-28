@@ -137,7 +137,7 @@
                 dialogInfo: {},
                 addDialogVisible: false,
                 loading: false,
-                questionTable: null,
+                questionTable: [],
             }
         },
         mounted(){

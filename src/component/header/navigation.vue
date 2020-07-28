@@ -8,7 +8,7 @@
             <el-menu :default-active="path" class="menu hidden-sm-and-down"  mode="horizontal" router>
                 <template v-for="(item, index) in nav_menu_data">
                     <el-menu-item :index = "item.path" :key = "index">
-                        {{item.title}}
+                        {{item.nameZh}}
                     </el-menu-item>
                 </template>
             </el-menu>
@@ -23,28 +23,37 @@
         data(){
             return{
                 path: '',
-                nav_menu_data: [{
-                    title: '首页',
-                    path: '/tea_index'
-                }, {
-                    title: '题库',
-                    path: '/tea_question'
-                }, {
-                    title: '试卷',
-                    path: '/tea_paper'
-                }, {
-                    title: '考试',
-                    path: '/tea_exam'
-                }]
+                nav_menu_data: []
             }
         },
         created () {
             this.onRouteChanged()
+            this.showMenu()
         },
         methods: {
             onRouteChanged () {
                 let that = this
                 that.path  = that.$route.path
+            },
+            showMenu(){
+                if(window.sessionStorage.getItem('navList')!==null){
+                    this.nav_menu_data = JSON.parse(window.sessionStorage.getItem('navList'))
+                }else{
+                    this.getMenu()
+                }
+            },
+            getMenu(){
+                this.$axios.get('menu').then(res=>{
+                    if(res && res.data.rspCode ==='200'){
+                        this.nav_menu_data = res.data.data
+                        window.sessionStorage.setItem('navList',JSON.stringify(this.nav_menu_data))
+
+                    }
+                }).catch(error => {
+                    let message = error.message
+                    this.$message.error(message)
+
+                });
             }
         }
     }
