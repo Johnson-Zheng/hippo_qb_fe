@@ -29,7 +29,7 @@
                                 </el-col>
                             </el-row>
 
-                            <el-col :span="24" class="mt-30"><el-button type="primary" style="width:100%;" @click="user_login(login_form)">登陆</el-button></el-col>
+                            <el-col :span="24" class="mt-30"><el-button type="primary" style="width:100%;" @click="user_login(login_form)" :loading='loginLoading'>登陆</el-button></el-col>
 
                         </el-form>
 
@@ -142,6 +142,7 @@
                 }
             }
             return {
+                loginLoading:false,
                 tabSelect:"first",
                 remember_me : true,
                 login_form: {
@@ -200,6 +201,7 @@
             ...mapMutations(['changeLogin']),
             //登陆表单提交及验证
             user_login(form_name){
+                this.loginLoading = true
                 var _this = this
                 let user_name = this.login_form.username
                 let user_password = this.login_form.user_password
@@ -231,12 +233,13 @@
                                 message: errorMessage,
                                 type:'error'
                             });
+                            this.loginLoading=false
                         }
 
                     }).catch(error => {
                         let message = error.message
                         this.$message.error(message)
-
+                        this.loginLoading=false
                     });
                 }else if(user_name==='' || user_password===''){
                     this.$message({

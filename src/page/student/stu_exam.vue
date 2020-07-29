@@ -85,20 +85,27 @@
                     sortable
                     :formatter="dateFormatter"
                     label="添加时间"
-                    min-width="150">
+                    min-width="120">
             </el-table-column>
 
             <el-table-column
                     fixed="right"
+                    align="center"
                     label="操作"
                     width="160">
             <template slot-scope="scope">
-                <el-row>
+                <el-row >
                     <el-col :span="12">
-                        <el-button @click="checkInfo(scope.row)" type="text" size="small">查看详情></el-button>
+                        <el-button v-if="examStatusFormatter(scope.row)==='已结束'" @click="checkInfo(scope.row)" type="text" size="small">考试详情></el-button>
                     </el-col>
-                    <el-col :span="12" v-if="scope.row.grouptype===1">
-                        <el-button @click="checkStuList(scope.row)" type="text" size="small">考生列表></el-button>
+                    <el-col :span="12">
+                        <el-button v-if="examStatusFormatter(scope.row)==='已结束'" @click="checkScore(scope.row)" type="text" size="small">查看成绩></el-button>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-button  v-if="examStatusFormatter(scope.row)==='进行中'"  @click="checkInfo(scope.row)" type="success" size="mini" round plain>参加考试</el-button>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-button  v-if="examStatusFormatter(scope.row)==='未开始'"  @click="checkInfo(scope.row)" type="info" size="mini" round plain disabled>参加考试</el-button>
                     </el-col>
                 </el-row>
 
@@ -127,8 +134,6 @@
     </div>
     <copyright></copyright>
     <exam-info id="examInfo" :dialogVisible="dialogVisible" :dialogInfo="dialogInfo" @update:dialogVisible="dialogVisibles "> </exam-info>
-    <add-exam id="addExam" :addDialogVisible="addDialogVisible" @update:addDialogVisible="addDialogVisibles"> </add-exam>
-    <exam-stu-list id="examStuList" :stuListVisible="stuListVisible" :stuList="stuList" :kid="selectKid" @update:stuListVisible="stuListVisibles"> </exam-stu-list>
 </div>
 </template>
 
@@ -136,15 +141,11 @@
     import navigation from "@/component/header/navigation";
     import Copyright from "@/component/footer/copyright";
     import examInfo from "@/component/exam/examInfo";
-    import addExam from "@/component/exam/addExam";
-    import examStuList from "@/component/exam/examStuList";
     import {dateFormatter,startDateFormatter,deadlineDateFormatter,groupTypeFormatter,securityFormatter,examStatusFormatter} from "@/utils/validate"
     export default {
         name: "stu_exam",
         components:{
-            examStuList,
             examInfo,
-            addExam,
             Copyright,
             navigation,
         },
@@ -197,24 +198,6 @@
                 this.dialogInfo = row
 
             },
-            //考生列表请求
-            checkStuList(row){
-                this.stuListVisible = true;
-                this.selectKid = row.kid
-                this.$axios.get('exroom/getpeset?exid='+this.selectKid).then(res=>{
-                    if(res && res.data.rspCode ==='200'){
-                        this.stuList = res.data.data
-                    }
-                }).catch(error => {
-                    let message = error.message
-                    this.$message.error(message)
-
-                });
-
-            },
-            stuListVisibles(v){
-                this.stuListVisible = v
-            },
             dialogVisibles(v){
                 this.dialogVisible = v
             },
@@ -228,12 +211,9 @@
                 this.loading = true
                 this.getExamTable(this.dataPerPage,this.currentPage-1)
             },
-            addDialogVisibles(v){
-                this.addDialogVisible = v
-            },
-            addQuestion(){
-                this.addDialogVisible = true;
-            },
+            checkScore(row){
+
+            }
         }
     }
 </script>
@@ -263,38 +243,7 @@
         text-align: left!important;
     }
 
-    #addExam >>> .el-dialog{
-        width: 550px;
-        height: max-content;
-        border-radius: 10px;
-        padding: 20px 20px 10px  20px;
-    }
-    #addExam >>>.el-dialog__title{
-        font-size:24px;
-        font-weight: 500;
-        text-align: left!important;
-    }
-    #addExam >>> .el-radio-group{
-        width: 100%;
-    }
-    #addExam >>> .el-select{
-        width:100%;
-    }
 
-    #addExam >>> .el-date-editor.el-input{
-        width: 100% !important;
-    }
-    #examStuList >>>.el-dialog{
-        width: 550px;
-        height: max-content;
-        border-radius: 10px;
-        padding: 20px 20px 10px  20px;
-    }
-    #examStuList >>>.el-dialog__title{
-        font-size:24px;
-        font-weight: 500;
-        text-align: left!important;
-    }
     .el-tag{
         user-select: none;
         -webkit-user-drag: none;

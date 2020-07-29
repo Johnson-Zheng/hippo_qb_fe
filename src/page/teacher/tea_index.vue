@@ -387,7 +387,7 @@
 <style scoped>
     .main-panel{
         position:relative;
-        width:100%;
+        width:90vw;
         height: max-content;
         margin:30px 0;
     }

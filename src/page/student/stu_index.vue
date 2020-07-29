@@ -329,6 +329,7 @@
                                 },
                                 series: [{
                                     name: '发布数量',
+                                    smooth:true,  //这个是把线变成曲线
                                     type: 'line',
                                     areaStyle: {},
                                     data: this.weekExamData,
