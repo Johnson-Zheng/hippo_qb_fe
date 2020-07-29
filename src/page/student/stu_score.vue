@@ -2,7 +2,7 @@
 <div class="container">
     <navigation></navigation>
     <div class="table-panel panel_shadow">
-        <h2>考试列表</h2>
+        <h2>成绩列表</h2>
         <el-table
                 :data="examTable"
                 ref="examTable"
@@ -140,7 +140,7 @@
     import examStuList from "@/component/exam/examStuList";
     import {dateFormatter,startDateFormatter,deadlineDateFormatter,groupTypeFormatter,securityFormatter,examStatusFormatter} from "@/utils/validate"
     export default {
-        name: "stu_exam",
+        name: "stu_score",
         components:{
             examStuList,
             examInfo,

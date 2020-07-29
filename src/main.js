@@ -9,8 +9,6 @@ import 'element-ui/lib/theme-chalk/display.css';
 import store from './store'
 import echarts from 'echarts'
 
-const Base64 = require('js-base64').Base64
-
 Vue.prototype.$echarts = echarts
 
 Vue.config.productionTip = false
@@ -51,7 +49,8 @@ axios.interceptors.response.use(
     },error => {
         if (error.response.data.errCode === 401) {
             router.replace('/')
-            alert('登陆令牌失效，请重新登录')
+            // Vue.prototype.$message('登陆令牌失效，请求失败');
+
         }
     })
 
@@ -68,18 +67,18 @@ router.beforeEach((to, from, next) => {
 
 new Vue({
     el: '#app',
-    Base64,
     router,
     store,
     render: h => h(App)
 }).$mount('#app')
 
 function base64Decode(encode) {
-    return Base64.decode(encode)
+    return window.atob(encode)
 }
 
 function getUsername(token){
-    let list = token.split('.')
-    let result = JSON.parse(base64Decode(list[1])).username
+    let list = token.split('.');
+    let data = list[1];
+    let result = JSON.parse(base64Decode(data)).username;
     return result
 }

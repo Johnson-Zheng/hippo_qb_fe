@@ -1,23 +1,21 @@
 <template>
 <div class="container">
+    <navigation> </navigation>
     <div class="main-panel">
-        <el-row type="flex" justify="center">
-            <el-col :span="11">
+        <el-row class="center">
+            <el-col style="margin-right:45px" :span="11" :lg="11" :xl="11" :md="24" :sm="24" :xs="24">
                 <div class="panel shadow w4 panel-left">
                     <el-row type="flex" justify="space-between">
                         <el-col :span="4">
                             <h2>统计信息</h2>
                         </el-col>
-<!--                        <el-col :span="3">-->
-<!--                            <el-button type="text" class="tips-text info-button">查看详情></el-button>-->
-<!--                        </el-col>-->
                     </el-row>
                     <el-row class="mt-1875">
                         <el-col :span="9">
                             <div class="panel shadow sta-panel">
                                 <el-row type="flex" justify="center" :gutter="30">
                                     <el-col :span="12">
-                                        <img class="sta-icon" src="../../assets/icon/题目@2x.png"/>
+                                        <img class="sta-icon" src="../../assets/icon/题目@2x.png" alt="题目"/>
                                     </el-col>
                                     <el-col :span="12">
                                         <div class="sta-data">
@@ -32,7 +30,7 @@
                             <div class="panel shadow sta-panel">
                                 <el-row type="flex" justify="center" :gutter="35">
                                     <el-col :span="6">
-                                        <img class="sta-icon" src="../../assets/icon/题目@2x.png"/>
+                                        <img class="sta-icon" src="../../assets/icon/题目@2x.png" alt="题目"/>
                                     </el-col>
                                     <el-col :span="6">
                                         <div class="sta-data">
@@ -67,7 +65,7 @@
                         <el-col :span="8">
                             <p class="tips-text dec-text">您最近发布的3场考试安排</p>
                         </el-col>
-                        <el-col :span="3" offset="8">
+                        <el-col :span="3" :offset=8>
                             <el-button type="text" class="tips-text info-button" @click="goto('/tea_exam')">查看详情></el-button>
                         </el-col>
                     </el-row>
@@ -130,7 +128,7 @@
                     <div id="exam-chart" :style="{width: '570px', height: '300px'}"></div>
                 </div>
             </el-col>
-            <el-col :span="11">
+            <el-col :span="11" :lg="11" :xl="11" :md="24" :sm="24" :xs="24">
                 <div class="panel shadow w4 panel-left">
                     <el-row type="flex" justify="space-between">
                         <el-col :span="4">
@@ -139,13 +137,13 @@
                     </el-row>
                     <el-carousel class="anno-panel mt-1875" height="150px">
                         <el-carousel-item class="anno">
-                            <img class="anno-item" src="../../assets/images/anno1.png">
+                            <img class="anno-item" src="../../assets/images/anno1.png" alt="公告1">
                         </el-carousel-item>
                         <el-carousel-item class="anno">
-                            <img class="anno-item" src="../../assets/images/anno1.png">
+                            <img class="anno-item" src="../../assets/images/anno1.png" alt="公告2">
                         </el-carousel-item>
                         <el-carousel-item class="anno">
-                            <img class="anno-item" src="../../assets/images/anno1.png">
+                            <img class="anno-item" src="../../assets/images/anno1.png" alt="公告3">
                         </el-carousel-item>
                     </el-carousel>
                     <template v-for="i in annoList">
@@ -228,7 +226,7 @@
 
 
     </div>
-    <copyright></copyright>
+    <copyright> </copyright>
 </div>
 </template>
 
@@ -238,7 +236,7 @@
     import {getWeekArray} from '@/utils/functions'
     import {startDateFormatter,examStatusFormatter,questionType} from '@/utils/validate'
     export default {
-        name: "tea_index",
+        name: "stu_index",
         components:{
             Copyright,
             navigation,
@@ -254,6 +252,8 @@
                 examNum:'-',
                 examOff:'-',
                 examOther:'-',
+
+
                 examForm:null,
                 weekExamData:[],
                 annoList:[],
@@ -377,9 +377,7 @@
             goto(path){
                 this.$router.push(path)
             }
-
     }
-
 }
 </script>
 
@@ -487,9 +485,12 @@
         -ms-user-select:none;
     }
     .anno{
-        width: 100%;
-        height:150px;
-        background:rgba(239,249,253,1);
+         width: 100%;
+         height:150px;
+         background:rgba(239,249,253,1);
+
+     }
+    .anno-panel{
         border-radius: 5px;
     }
     .anno-item{
@@ -538,5 +539,19 @@
         line-height:20px;
         color:rgba(96,98,102,1);
         white-space: nowrap;
+    }
+    .center{
+        width: max-content;
+        position: relative;
+        left:50%;
+        transform: translateX(-50%);
+    }
+    @media screen and (max-width:1199px)  {
+        .center{
+            width: 50%;
+            position: relative;
+            left:50%;
+            transform: translateX(-50%);
+        }
     }
 </style>

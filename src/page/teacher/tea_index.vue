@@ -387,9 +387,9 @@
 <style scoped>
     .main-panel{
         position:relative;
-        width:90%;
+        width:100%;
         height: max-content;
-        margin:30px auto;
+        margin:30px 0;
     }
     .panel{
         position:relative;
@@ -491,6 +491,9 @@
         width: 100%;
         height:150px;
         background:rgba(239,249,253,1);
+
+    }
+    .anno-panel{
         border-radius: 5px;
     }
     .anno-item{

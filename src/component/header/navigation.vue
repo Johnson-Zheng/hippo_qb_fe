@@ -12,7 +12,15 @@
                     </el-menu-item>
                 </template>
             </el-menu>
-            <p class="nav-link">{{name}}</p>
+            <el-row class="user" type="flex" justify="end">
+                <el-col :span="16">
+                    <p class="nav-link">{{name}}</p>
+                </el-col>
+                <el-col :span="8">
+                    <el-button class="logout" @click="logout" ><img class="logout-icon" src="../../assets/icon/注销.svg"/></el-button>
+                </el-col>
+            </el-row>
+
         </div>
     </div>
 </template>
@@ -49,7 +57,10 @@
                     if(res && res.data.rspCode ==='200'){
                         this.nav_menu_data = res.data.data
                         window.sessionStorage.setItem('navList',JSON.stringify(this.nav_menu_data))
-
+                        this.path = this.nav_menu_data[0]['path']
+                        if(this.path==='/stu_index'){
+                            this.$router.replace('/stu_index')
+                        }
                     }
                 }).catch(error => {
                     let message = error.message
@@ -61,9 +72,16 @@
                 if(window.localStorage.getItem('username').length <= 30){
                     this.name = window.localStorage.getItem('username')
                 }else{
-                    this.name = ''
+                    this.name = 'user'
                 }
+            },
+            logout(){
+                window.localStorage.clear()
+                window.sessionStorage.clear()
+                this.$router.replace('/')
+
             }
+
         }
     }
 </script>
@@ -114,13 +132,37 @@
         font-weight: 500;
     }
     .nav-link{
-        position: absolute;
-        right: 15vw;
+        width: max-content;
         font-size:14px;
         font-weight:400;
-        line-height:17px;
+        line-height:30px;
         color:rgba(136,136,136,1);
         opacity:1;
         text-decoration: none;
+        text-align: right;
     }
+    .logout{
+        margin-left: 10px;
+        font-size:30px;
+        font-weight:400;
+        line-height: 20px;
+        color:rgba(136,136,136,1);
+        opacity:1;
+        text-decoration: none;
+        border-radius: 15px;
+        height: 30px;
+        width: 30px;
+        padding: 0;
+    }
+    .logout-icon{
+        position: relative;
+        height: 20px;
+        object-fit:cover;
+    }
+    .user{
+        position: absolute;
+        right: 10vw;
+        width: max-content;
+    }
+
 </style>

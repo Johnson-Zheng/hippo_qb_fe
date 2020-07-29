@@ -92,7 +92,9 @@
         components: {
             Copyright
         },
-
+        mounted(){
+            this.clearCache()
+        },
         data() {
             let checkName = (rule, value, callback) => {
                 if (value.trim() === '') {
@@ -323,6 +325,10 @@
                     }
                 });
             },
+            clearCache(){
+                window.sessionStorage.clear()
+                window.localStorage.clear()
+            }
 
         }
     };
