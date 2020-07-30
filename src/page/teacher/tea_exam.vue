@@ -31,7 +31,7 @@
             <el-table-column
                     prop="name"
                     label="考试标题"
-                    width="150"
+                    width="120"
                     sortable
                     :show-tooltip-when-overflow="true">
             </el-table-column>
@@ -87,21 +87,22 @@
                     label="添加时间"
                     min-width="150">
             </el-table-column>
-
             <el-table-column
                     fixed="right"
                     label="操作"
-                    width="160">
+                    width="200">
             <template slot-scope="scope">
                 <el-row>
-                    <el-col :span="12">
-                        <el-button @click="checkInfo(scope.row)" type="text" size="small">查看详情></el-button>
+                    <el-col :span='8'>
+                        <el-button @click="checkInfo(scope.row)" type="text" size="mini">查看详情</el-button>
                     </el-col>
-                    <el-col :span="12" v-if="scope.row.grouptype===1">
-                        <el-button @click="checkStuList(scope.row)" type="text" size="small">考生列表></el-button>
+                    <el-col :span="8" v-if="scope.row.grouptype===1">
+                        <el-button @click="checkStuList(scope.row)" type="text" size="mini">考生列表</el-button>
+                    </el-col>
+                    <el-col :span="8" v-if="examStatusFormatter(scope.row)==='进行中' || examStatusFormatter(scope.row)==='已结束'" >
+                        <el-button @click="checkScore(scope.row)" type="text" size="mini">成绩统计</el-button>
                     </el-col>
                 </el-row>
-
             </template>
             </el-table-column>
         </el-table>
@@ -121,7 +122,7 @@
                     </el-pagination>
                 </el-col>
                 <el-col :span="4">
-                    <el-button class="operate-button" type="primary " @click="addQuestion">添加考试</el-button>
+                    <el-button class="operate-button" type="primary " @click="addExam">添加考试</el-button>
 
                 </el-col>
             </el-row>
@@ -205,6 +206,7 @@
             checkStuList(row){
                 this.stuListVisible = true;
                 this.selectKid = row.kid
+
                 this.$axios.get('exroom/getpeset?exid='+this.selectKid).then(res=>{
                     if(res && res.data.rspCode ==='200'){
                         this.stuList = res.data.data
@@ -235,9 +237,10 @@
             addDialogVisibles(v){
                 this.addDialogVisible = v
             },
-            addQuestion(){
+            addExam(){
                 this.addDialogVisible = true;
             },
+
         }
     }
 </script>

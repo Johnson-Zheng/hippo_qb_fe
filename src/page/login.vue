@@ -212,7 +212,6 @@
                     ).then(res => {
                         let resdata = res.data
                         let code = resdata.rspCode
-                        let message = resdata.rspMsg
                         let userdata = resdata.data
 
                         if(resdata.rspCode==='200'){
@@ -222,8 +221,12 @@
                                 message: '登陆成功',
                                 type: 'success'
                             });
-                            let token = resdata.data.token
-                            _this.$store.commit('login', resdata.data)
+                            let username = userdata.username
+                            let uid = userdata.uid
+                            let uno = userdata.uno
+
+                            window.localStorage.setItem('uname', username)
+                            _this.$store.commit('login', userdata.token)
 
                             this.$router.push('/tea_index');
 

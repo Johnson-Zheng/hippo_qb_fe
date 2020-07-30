@@ -22,13 +22,11 @@ axios.defaults.withCredentials=false
 Vue.prototype.$axios = axios
 
 
-//axios.defaults.headers.common['Hippotoken'] = localStorage.getItem("token");
 axios.interceptors.request.use(
     config => {
-      let token = localStorage.getItem('token')
+      let token = window.localStorage.getItem('token')
       if (token && token !== '') {
         config.headers.hippotoken = token;
-
       }
       return config;
     },
@@ -41,7 +39,6 @@ axios.interceptors.response.use(
     response => {
         if(response.headers['hippotoken']!==''&&response.headers['hippotoken']){
             store.commit('login', response.headers['hippotoken']);
-            window.localStorage.setItem('username', getUsername(response.headers['hippotoken']))
             return response;  //请求成功的时候返回的data
         }else {
             return response;  //请求成功的时候返回的data
@@ -49,8 +46,6 @@ axios.interceptors.response.use(
     },error => {
         if (error.response.data.errCode === 401) {
             router.replace('/')
-            // Vue.prototype.$message('登陆令牌失效，请求失败');
-
         }
     })
 
@@ -71,14 +66,3 @@ new Vue({
     store,
     render: h => h(App)
 }).$mount('#app')
-
-function base64Decode(encode) {
-    return window.atob(encode)
-}
-
-function getUsername(token){
-    let list = token.split('.');
-    let data = list[1];
-    let result = JSON.parse(base64Decode(data)).username;
-    return result
-}

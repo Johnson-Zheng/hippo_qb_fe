@@ -8,12 +8,12 @@
                 <p>{{kid}}</p>
             </el-col>
         </el-row>
-        <el-row class="mt-1875">
+        <el-row v-if='stuList.length!==0' class="mt-1875">
             <el-col :span="4">
                 <h4>考号列表</h4>
             </el-col>
         </el-row>
-        <div class="stu-list mt-1875">
+        <div v-if='stuList.length!==0' class="stu-list mt-1875">
             <el-row :gutter="10" >
                 <template  v-for="i in stuList">
                     <el-col class="stu-id" :span="6" align="center">
@@ -21,7 +21,6 @@
                     </el-col>
                 </template>
             </el-row>
-
         </div>
 
         <div class="addStu mt-1875">

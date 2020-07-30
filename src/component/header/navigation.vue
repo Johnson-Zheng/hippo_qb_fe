@@ -36,9 +36,10 @@
             }
         },
         created () {
-            this.getName()
             this.onRouteChanged()
             this.showMenu()
+            this.getName()
+
         },
         methods: {
             onRouteChanged () {
@@ -69,8 +70,8 @@
                 });
             },
             getName(){
-                if(window.localStorage.getItem('username').length <= 30){
-                    this.name = window.localStorage.getItem('username')
+                if(window.localStorage.getItem('uname')){
+                    this.name = window.localStorage.getItem('uname')
                 }else{
                     this.name = 'user'
                 }
