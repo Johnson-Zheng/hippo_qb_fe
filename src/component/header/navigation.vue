@@ -4,11 +4,12 @@
             <p>1</p>
         </div>
         <div class="nav shadow ">
-            <img class="logo" src="../../assets/logo/nav-logo-tea.png"/>
+            <img v-if="role==='1'" class="logo" src="../../assets/logo/nav-logo-tea.png"/>
+            <img v-if="role==='2'" class="logo" src="../../assets/logo/nav-logo-stu.png"/>
             <el-menu :default-active="path" class="menu hidden-sm-and-down"  mode="horizontal" router>
-                <template v-for="(item, index) in nav_menu_data">
+                <template v-for="(item, index) in nav_menu">
                     <el-menu-item :index = "item.path" :key = "index">
-                        {{item.nameZh}}
+                        {{item.name}}
                     </el-menu-item>
                 </template>
             </el-menu>
@@ -31,43 +32,57 @@
         data(){
             return{
                 path: '',
-                nav_menu_data: [],
-                name:''
+                nav_menu: [],
+                tea_nav_menu: [
+                    {
+                        name:'首页',
+                        path:'/tea_index',
+                    },
+                    {
+                        name:'题库',
+                        path:'/tea_question',
+                    },
+                    {
+                        name:'试卷',
+                        path:'/tea_paper',
+                    },
+                    {
+                        name:'考试',
+                        path:'/tea_exam',
+                    },
+                ],
+                stu_nav_menu: [
+                    {
+                        name:'首页',
+                        path:'/stu_index',
+                    },
+                    {
+                        name:'考试',
+                        path:'/stu_exam',
+                    },
+                ],
+                name:'',
+                role:'1'
             }
         },
-        created () {
-            this.onRouteChanged()
-            this.showMenu()
+        mounted(){
+            this.getLogo()
             this.getName()
-
+            this.routerChange()
         },
         methods: {
-            onRouteChanged () {
-                let that = this
-                that.path  = that.$route.path
+            routerChange(){
+                this.path = this.$route.path
             },
-            showMenu(){
-                if(window.sessionStorage.getItem('navList')!==null){
-                    this.nav_menu_data = JSON.parse(window.sessionStorage.getItem('navList'))
-                }else{
-                    this.getMenu()
+            getLogo(){
+                let role = window.localStorage.getItem('urole')
+                this.role = role
+                if(role==='1'){
+                    this.nav_menu = this.tea_nav_menu
+                }else if(role==='2'){
+                    this.nav_menu = this.stu_nav_menu
                 }
-            },
-            getMenu(){
-                this.$axios.get('menu').then(res=>{
-                    if(res && res.data.rspCode ==='200'){
-                        this.nav_menu_data = res.data.data
-                        window.sessionStorage.setItem('navList',JSON.stringify(this.nav_menu_data))
-                        this.path = this.nav_menu_data[0]['path']
-                        if(this.path==='/stu_index'){
-                            this.$router.replace('/stu_index')
-                        }
-                    }
-                }).catch(error => {
-                    let message = error.message
-                    this.$message.error(message)
-
-                });
+                this.path  = this.$route.path
             },
             getName(){
                 if(window.localStorage.getItem('uname')){
@@ -80,7 +95,6 @@
                 window.localStorage.clear()
                 window.sessionStorage.clear()
                 this.$router.replace('/')
-
             }
 
         }

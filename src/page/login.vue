@@ -224,11 +224,15 @@
                             let username = userdata.username
                             let uid = userdata.uid
                             let uno = userdata.uno
-
+                            let role = userdata.role[0].rid
                             window.localStorage.setItem('uname', username)
+                            window.localStorage.setItem('urole', role)
                             _this.$store.commit('login', userdata.token)
-
-                            this.$router.push('/tea_index');
+                            if(role===1){
+                                this.$router.push('/tea_index')
+                            }else if(role===2){
+                                this.$router.push('/stu_index')
+                            }
 
                         }else{
                             let errorMessage = "ERROR:"+code+" "+userdata
