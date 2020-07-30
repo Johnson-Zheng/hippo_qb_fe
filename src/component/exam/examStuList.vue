@@ -24,10 +24,10 @@
         </div>
 
         <div class="addStu mt-1875">
-            <el-form :model="addStuForm" ref="addStuForm" label-position="left" label-width="80px" rules="addStuRules">
+            <el-form :model="addStuForm" ref="addStuForm" label-position="left" label-width="80px">
                 <el-row>
                     <el-col :span="18">
-                        <el-form-item label="添加考生" prop="uno">
+                        <el-form-item label="添加考生">
                             <el-input v-model="addStuForm.uno" placeholder="请输入考生考号"> </el-input>
                         </el-form-item>
                     </el-col>
@@ -43,14 +43,6 @@
 </template>
 
 <script>
-    import {
-        dateFormatter,
-        startDateFormatter,
-        deadlineDateFormatter,
-        groupTypeFormatter,
-        securityFormatter,
-        sleep
-    } from "@/utils/validate"
     export default {
         name: "examStuList",
         props: {
@@ -73,16 +65,6 @@
                 addStuForm: {
                     uno: '',
                 },
-
-                dateFormatter,
-                groupTypeFormatter,
-                startDateFormatter,
-                deadlineDateFormatter,
-                securityFormatter,
-                addStuRules: {
-                    uno: [{required: true, message: '考生考号不能为空', trigger: 'blur'}],
-                }
-
             };
         },
         methods: {
@@ -91,28 +73,33 @@
                 this.$emit("update:stuListVisible", false);
             },
             addStuHandler() {
-                this.$refs.addStuForm.validate((valid) => {
-                        if (valid) {
-                            this.$axios.post('exroom/putsingleper?exid='+this.kid+"&uno="+this.addStuForm.uno).then(resp => {
-                                if (resp && resp.data.rspCode === '200') {
-                                    this.$message.success("考生添加成功")
-                                    this.stuList.push(this.addStuForm.uno)
-                                    this.addStuForm.uno=''
-                                } else {
-                                    this.loading = false;
-                                    this.$message.warning(resp.data.data + ",请重新尝试")
-                                }
-                            }).catch(error => {
-                                let message = error.message
-                                this.$message({
-                                    message: message,
-                                    type: 'error'
-                                });
-                            });
+                if (this.checkUno()) {
+                    this.$axios.post('exroom/putsingleper?exid='+this.kid+"&uno="+this.addStuForm.uno).then(resp => {
+                        if (resp && resp.data.rspCode === '200') {
+                            this.$message.success("考生添加成功")
+                            this.stuList.push(this.addStuForm.uno)
+                            this.addStuForm.uno=''
+                        } else {
+                            this.loading = false;
+                            this.$message.warning(resp.data.data + ",请重新尝试")
                         }
-                    }
-                )
-            }
+                    }).catch(error => {
+                        let message = error.message
+                        this.$message({
+                            message: message,
+                            type: 'error'
+                        });
+                    });
+                }else{
+                    this.$message({
+                        message: '考号不能为空',
+                        type: 'warning'
+                    });
+                }
+            },
+            checkUno(){
+                return (this.addStuForm.uno!=='')
+            },
         },
     }
 </script>

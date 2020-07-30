@@ -240,6 +240,15 @@
             addExam(){
                 this.addDialogVisible = true;
             },
+            checkScore(row){
+                this.$router.push({
+                    name: 'stu_exam_score',
+                    path:'/stu_exam_score',
+                    params: {
+                        kid: row.kid,
+                    }
+                });
+            }
 
         }
     }

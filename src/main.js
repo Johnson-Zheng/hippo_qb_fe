@@ -46,6 +46,7 @@ axios.interceptors.response.use(
     },error => {
         if (error.response.data.errCode === 401) {
             router.replace('/')
+            // Vue.prototype.$message('登陆令牌失效，请求失败');
         }
     })
 

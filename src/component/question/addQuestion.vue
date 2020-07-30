@@ -107,7 +107,6 @@
                 questionNum:2,
                 addQuestionForm:{
                     type:'',
-                    //TODO:创建者需要题库页面传参
                     questionName:'',
                     answer:'',
                     optionA:'',
