@@ -270,7 +270,7 @@
         },
         methods: {
             getStatistic(){
-                this.$axios.get('datavisualization/Tdashboard?name='+this.username).then(res=>{
+                this.$axios.get('datavisualization/Tdashboard').then(res=>{
                     if(res && res.data.rspCode ==='200'){
                         let data = res.data.data
                         this.paperNum = data['添加试卷']
@@ -286,7 +286,7 @@
                 });
             },
             getExamForm(){
-                this.$axios.get('exroom/last3exam?name='+this.username).then(res=>{
+                this.$axios.get('exroom/last3exam').then(res=>{
                     if(res && res.data.rspCode ==='200'){
                         this.examForm = res.data.data
                         this.loading = false
@@ -302,7 +302,7 @@
                 this.$echarts.registerTheme('theme', obj)
                 let examchart = this.$echarts.init(document.getElementById('exam-chart'),'theme')
                 examchart.showLoading()
-                this.$axios.get('datavisualization/numOfExam?name='+this.username)
+                this.$axios.get('datavisualization/numOfExam')
                     .then(res=> {
                         if (res && res.data.rspCode === '200'){
                             this.weekExamData = res.data.data

@@ -2,7 +2,7 @@
 <div class="container">
     <navigation> </navigation>
         <el-row class="main-panel" :gutter="80">
-            <el-col :span="6">
+            <el-col :span="7">
                 <div class="shadow panel">
                     <el-page-header @back="goBack"> </el-page-header>
                     <h2>考生列表</h2>
@@ -16,6 +16,14 @@
                     >
                         <el-table-column
                                 align="center"
+                                prop="uno"
+                                label="学号"
+                                width="80"
+                                show-overflow-tooltip
+                        >
+                        </el-table-column>
+                        <el-table-column
+                                align="center"
                                 prop="name"
                                 label="姓名"
                                 width="60"
@@ -25,22 +33,23 @@
                                 align="center"
                                 prop="totalscore"
                                 label="分数"
-                                width="60"
+                                width="55"
                         >
                         </el-table-column>
                         <el-table-column
                                 align="center"
                                 label="操作"
                                 fixed="right"
+                                width="60"
                         >
                             <template scope="scope">
-                                <el-button size="small" type="text">查看详情></el-button>
+                                <el-button size="small" type="text">详情></el-button>
                             </template>
                         </el-table-column>
                     </el-table>
                 </div>
             </el-col>
-            <el-col :span="18" >
+            <el-col :span="17" >
                 <div class="shadow panel">
                     <h2>{{examName}}</h2>
                     <h4 class="mt-1875">数据概况</h4>
@@ -129,11 +138,8 @@
     import navigation from "@/component/header/navigation";
     import Copyright from "@/component/footer/copyright";
     import {getWeekArray} from "@/utils/functions";
-
-
     export default {
         name: "stu_exam_score",
-
         components:{
             Copyright,
             navigation,
@@ -143,6 +149,7 @@
                 stuTable:[],
                 scoreTable:[],
                 wrongTable:[],
+                faultTable:[],
                 dataList:['-','-','-','-','-','-'],
                 examName:'考试标题',
                 kid:''
@@ -168,24 +175,26 @@
                         }
                     })
                 }else{
-                    // this.getStuList()
+                    this.getStuList()
                     this.getGeneralData()
                     this.getScoreChart()
                     this.getQuestionChart()
                     this.getFaultChart()
                 }
             },
-            // getStuList(){
-            //     this.$axios.get('datavisualization/studentsList?kid='+this.kid).then(res=>{
-            //         if(res && res.data.rspCode ==='200'){
-            //             this.stuTable = res.data.data
-            //         }
-            //     }).catch(error => {
-            //         let message = error.message
-            //         this.$message.error(message)
-            //     });
-            // },
-
+            getStuList(){
+                this.$axios.get('datavisualization/studentsList?kid='+this.kid).then(res=>{
+                    if(res && res.data.rspCode ==='200'){
+                        this.stuTable = res.data.data
+                    }else{
+                        let message = error.message
+                        this.$message.error(message)
+                    }
+                }).catch(error => {
+                    let message = error.message
+                    this.$message.error(message)
+                });
+            },
             getGeneralData(){
                 this.$axios.get('datavisualization/generalDataOfTeacher?kid='+this.kid).then(res=>{
                     if(res && res.data.rspCode ==='200'){
@@ -218,7 +227,7 @@
                                     fontSize:14,
                                     fontWeight:400,
                                 },
-                                x:'20',
+                                x: '20',
                                 y: 'top',
                             },
                             tooltip: {
@@ -229,8 +238,8 @@
                             legend: {
                                 data: ['优秀','良好','差','极差'],
                                 icon: "circle",
-                                right: 20,
-                                top:80,
+                                right: 40,
+                                top: 75,
                                 type: 'scroll',
                                 orient: 'vertical',
                             },
@@ -261,7 +270,7 @@
                                     name: '',
                                     type: 'pie',
                                     radius: ['30%','70%'],       //饼图大小
-                                    center: ['40%','60%'],
+                                    center: ['35%','60%'],
                                     data: [
                                         {value: this.scoreTable[0], name: '优秀'},
                                         {value: this.scoreTable[1], name: '良好'},
@@ -285,18 +294,47 @@
                 });
 
             },
-            //TODO:数据格式接入
+            questionData(questionTable){
+                let table = {
+                    legend:[],
+                    data:[],
+                }
+                let temp = { value:0, name:'' }
+                let qidlist = questionTable.wrongqidList
+                let numList = questionTable.numList
+                if(qidlist.length!==0){
+                    for(let i=0;i<4;i++){
+                        if(numList[i]!==-1){
+                            table.legend.push(qidlist[i])
+                            temp = { value:numList[i], name:qidlist[i]}
+                            table.data.push(temp)
+                        }
+                    }
+                }else{
+                    table={
+                        legend: ['无数据1','无数据2','无数据3','无数据4'],
+                        data: [
+                            {value:'0',name:'无数据1'},
+                            {value:'0',name:'无数据2'},
+                            {value:'0',name:'无数据3'},
+                            {value:'0',name:'无数据4'},
+                        ],
+                    }
+                }
+                return table
+            },
             getQuestionChart(){
                 let obj = require('../../assets/chart-theme')
                 this.$echarts.registerTheme('theme', obj)
                 let questionChart = this.$echarts.init(document.getElementById('question_chart'),'theme')
-                this.$axios.get('datavisualization/disOfScore?kid='+this.kid).then(res=>{
+                this.$axios.get('datavisualization/wrongSituation?kid='+this.kid).then(res=>{
                     if(res && res.data.rspCode ==='200'){
                         this.wrongTable = res.data.data
+                        let chartData = this.questionData(this.wrongTable)
                         questionChart.showLoading()
                         questionChart.setOption({
                             title : {
-                                text: '错题人数最高的4道题',
+                                text: '错题人数最多的4道题',
                                 textStyle: {
                                     fontSize:14,
                                     fontWeight:400,
@@ -310,11 +348,69 @@
                             },
                             color:['#79d5fa', '#a3a1f4', '#fad98e', '#f08a79'],
                             legend: {
-                                data: [],
+                                data: chartData.legend,
                                 icon: "circle",
-                                right: 20,
-                                top:70,
-                                type: 'scroll',
+                                right: 40, // 4-75 3-85 2-95 1-105
+                                top:75,
+                                orient: 'vertical',
+                                formatter: function (name) {
+                                    return  '第'+name+'题';
+                                }
+                            },
+                            series: [
+                                {
+                                    labelLine: {
+                                        show: false
+                                    },
+                                    emphasis: {
+                                        label: {
+                                            show: true,
+                                            fontSize: '16',
+                                            fontWeight: 'bold',
+                                        }
+                                    },
+                                    label:{            //饼图图形上的文本标签
+                                        normal:{
+                                            show:true,
+                                            position:'inner', //标签的位置
+                                            textStyle : {
+                                                fontSize : 14    //文字的字体大小
+                                            },
+                                            formatter:'{c}人'
+                                        }
+                                    },
+                                    avoidLabelOverlap: false,
+                                    name: '',
+                                    type: 'pie',
+                                    radius: ['30%','70%'],       //饼图大小
+                                    center: ['40%','60%'],
+                                    data: chartData.data,
+                                }
+                            ],
+                        })
+                        questionChart.hideLoading()
+            }else if(res && res.data.rspCode ===500){
+                        questionChart.showLoading()
+                        questionChart.setOption({
+                            title : {
+                                text: '错题人数最多的4道题',
+                                textStyle: {
+                                    fontSize:14,
+                                    fontWeight:400,
+                                },
+                                x:'20',
+                                y: 'top',
+                            },
+                            tooltip: {
+                                trigger: 'item',
+                                formatter: " {b}:{d}% "
+                            },
+                            color:['#79d5fa', '#a3a1f4', '#fad98e', '#f08a79'],
+                            legend: {
+                                data: ['无数据1','无数据2','无数据3','无数据4'],
+                                icon: "circle",
+                                right: 40,
+                                top:75,
                                 orient: 'vertical',
                             },
                             series: [
@@ -345,17 +441,15 @@
                                     radius: ['30%','70%'],       //饼图大小
                                     center: ['40%','60%'],
                                     data: [
-                                        {value: 5, name: '问题1'},
-                                        {value: 9, name: '问题2'},
-                                        {value: 16, name: '问题3'},
-                                        {value: 16, name: '问题4'}
+                                        {value:'0',name:'无数据1'},
+                                        {value:'0',name:'无数据2'},
+                                        {value:'0',name:'无数据3'},
+                                        {value:'0',name:'无数据4'},
                                     ],
                                 }
                             ],
                         })
                         questionChart.hideLoading()
-            }else if(res && res.data.rspCode ===500){
-                        this.scoreTable = [0,0,0,0]
                     }
                     else{
                         let message = "ERROR"+res.data.rspCode+' '+res.data.rspMsg
@@ -367,107 +461,164 @@
                 });
 
             },
+            faultData(faultTable){
+                let qidList = faultTable.qidList
+                let data = faultTable.rightRateList
+                let table = []
+                let temp = {}
+                if(qidList.length!==0){
+                    for(let i=0;i<qidList.length;i++){
+                        temp={value:(data[i]*100),name:qidList[i]}
+                        table.push(temp)
+
+                    }
+                }
+
+                return  table
+            },
             getFaultChart(){
                 let obj = require('../../assets/chart-theme')
                 this.$echarts.registerTheme('theme', obj)
-                let questionChart = this.$echarts.init(document.getElementById('fault_chart'),'theme')
-                questionChart.showLoading()
-                questionChart.setOption({
-                    title : {
-                        text: '各试题错误率分布',
-                        textStyle: {
-                            fontSize:14,
-                            fontWeight:400,
-                        },
-                        x:'20',
-                        y: 'top',
-                    },
-                    tooltip: {
-                        trigger: 'axis',
-                        axisPointer: {
-                            type: 'line',
-                            label: {
-                                backgroundColor: '#6a7985'
-                            }
-                        }
-                    },
-                    xAxis: {
-                        data: ['1','2','3','4','5','6','7'],
-                        boundaryGap: false,
-                    },
-                    yAxis: {
-                        max : 100,
-                        min : 0,
-                        splitNumber : 5,
-                        axisLabel: {
-                            show: true,
-                            interval: 'auto',
-                            formatter: '{value} %',
-                        },
-                    },
-                    legend: {
-                        data: ['错误率','未答率'],
-                        icon: "circle",   //  这个字段控制形状  类型包括 circle，rect ，roundRect，triangle，diamond，pin，arrow，none
-                        x:'center',
-                        y:'bottom'
-                    },
-                    series: [{
-                        name: '错误率',
-                        type: 'line',
-                        smooth:true,  //这个是把线变成曲线
-                        areaStyle: {},
-                        data: [
-                            {value: 90, name: '1'},
-                            {value: 89, name: '2'},
-                            {value: 79, name: '3'},
-                            {value: 50, name: '4'},
-                            {value: 45, name: '5'},
-                            {value: 35, name: '6'},
-                            {value: 50, name: '7'},
-                        ],
-                        markPoint: {
-                            data: [{
-                                name: '最大值',
-                                type: 'max'
-                            },
-                            {
-                                name: '最小值',
-                                type: 'min'
-                            },
-                            ]
-                        },
-
-                    },
-                        {
-                        name: '未答率',
-                        type: 'line',
-                        smooth:true,  //这个是把线变成曲线
-                        areaStyle: {},
-                        data: [
-                            {value: 23, name: '1'},
-                            {value: 12, name: '2'},
-                            {value: 2, name: '3'},
-                            {value: 4, name: '4'},
-                            {value: 23, name: '5'},
-                            {value: 12, name: '6'},
-                            {value: 9, name: '7'},
-                        ],
-                        markPoint: {
-                            data: [{
-                                name: '最大值',
-                                type: 'max'
-                            },
-                                {
-                                    name: '最小值',
-                                    type: 'min'
+                let faultChart = this.$echarts.init(document.getElementById('fault_chart'),'theme')
+                this.$axios.get('datavisualization/riaghtRate?kid='+this.kid).then(res=>{
+                    if(res && res.data.rspCode ==='200'){
+                        this.faultTable = res.data.data
+                        let table = this.faultData(this.faultTable)
+                        let qidList = this.faultTable.qidList
+                        let rightRateList = table
+                        faultChart.showLoading()
+                        faultChart.setOption({
+                            title : {
+                                text: '各试题错误率分布',
+                                textStyle: {
+                                    fontSize:14,
+                                    fontWeight:400,
                                 },
-                            ]
-                        },
+                                x:'20',
+                                y: 'top',
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                axisPointer: {
+                                    type: 'line',
+                                    label: {
+                                        backgroundColor: '#6a7985'
+                                    }
+                                }
+                            },
+                            xAxis: {
+                                data: qidList,
+                                boundaryGap: false,
+                            },
+                            yAxis: {
+                                max : 100,
+                                min : 0,
+                                splitNumber : 5,
+                                axisLabel: {
+                                    show: true,
+                                    interval: 'auto',
+                                    formatter: '{value} %',
+                                },
+                            },
+                            legend: {
+                                data: ['试题错误率'],
+                                icon: "circle",   //  这个字段控制形状  类型包括 circle，rect ，roundRect，triangle，diamond，pin，arrow，none
+                                x:'center',
+                                y:'bottom'
+                            },
+                            series: [{
+                                name: '试题错误率',
+                                type: 'line',
+                                smooth:true,  //这个是把线变成曲线
+                                areaStyle: {},
+                                data: rightRateList,
+                                markPoint: {
+                                    data: [{
+                                        name: '最大值',
+                                        type: 'max'
+                                    },
+                                    {
+                                        name: '最小值',
+                                        type: 'min'
+                                    },
+                                    ]
+                                },
 
-                    },
-                    ]
+                            }]
+                        });
+                        faultChart.hideLoading()
+                    }else if(res && res.data.rspCode ===500){
+                        faultChart.showLoading()
+                        faultChart.setOption({
+                            title : {
+                                text: '各试题错误率分布',
+                                textStyle: {
+                                    fontSize:14,
+                                    fontWeight:400,
+                                },
+                                x:'20',
+                                y: 'top',
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                axisPointer: {
+                                    type: 'line',
+                                    label: {
+                                        backgroundColor: '#6a7985'
+                                    }
+                                }
+                            },
+                            xAxis: {
+                                data: [0],
+                                boundaryGap: false,
+                            },
+                            yAxis: {
+                                max : 100,
+                                min : 0,
+                                splitNumber : 5,
+                                axisLabel: {
+                                    show: true,
+                                    interval: 'auto',
+                                    formatter: '{value} %',
+                                },
+                            },
+                            legend: {
+                                data: ['无数据'],
+                                icon: "circle",   //  这个字段控制形状  类型包括 circle，rect ，roundRect，triangle，diamond，pin，arrow，none
+                                x:'center',
+                                y:'bottom'
+                            },
+                            series: [{
+                                name: '无数据',
+                                type: 'line',
+                                smooth:true,  //这个是把线变成曲线
+                                areaStyle: {},
+                                data: [{value:0,name:0}],
+                                markPoint: {
+                                    data: [{
+                                        name: '最大值',
+                                        type: 'max'
+                                    },
+                                        {
+                                            name: '最小值',
+                                            type: 'min'
+                                        },
+                                    ]
+                                },
+
+                            }]
+                        });
+                        faultChart.hideLoading()
+                    }
+                    else{
+                        let message = "ERROR"+res.data.rspCode+' '+res.data.rspMsg
+                        this.$message.error(message)
+                    }
+                }).catch(error => {
+                    let message = error.message
+                    this.$message.error(message)
                 });
-                questionChart.hideLoading()
+
             },
 
     }

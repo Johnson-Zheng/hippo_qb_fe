@@ -32,7 +32,7 @@
                                             <el-radio v-if="question.optionF!==''" :label="'F'">F:{{question.optionF}}</el-radio>
                                         </el-radio-group>
                                     </el-col>
-                                    <el-col v-if="question.type===2" :span="24" align="left">
+                                    <el-col v-if="question.type===2" v-model="question.optionList"  :span="24" align="left">
                                         <el-checkbox-group v-model="question.optionList" class="mt-1875" @change="updateMul(question.mulchoice)">
                                             <el-checkbox v-if="question.optionA!==''" :label="'A'">A:{{question.optionA}}</el-checkbox>
                                             <el-checkbox v-if="question.optionB!==''" :label="'B'">B:{{question.optionB}}</el-checkbox>
@@ -95,7 +95,7 @@
                             </div>
                         </el-col>
                         <el-col :span="11" class="mt-1875">
-                            <el-button style="width:100%" type="primary" size="small">确认交卷</el-button>
+                            <el-button style="width:100%" type="primary" size="small" @click="submitPaper()">确认交卷</el-button>
                         </el-col>
                         <el-col :span="11" :offset="1" class="mt-1875">
                             <el-button style="width:100%" type="danger" plain size="small">离开</el-button>
@@ -202,8 +202,10 @@
                     this.$message.error(message)
 
                 });
+            },
+            submit(){
+                console.log(this.updateInfo)
             }
-
         }
 }
 </script>
