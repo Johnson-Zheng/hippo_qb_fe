@@ -13,6 +13,7 @@ import tea_index from "@/page/teacher/tea_index";
 import stu_index from "@/page/student/stu_index";
 import stu_exam from "@/page/student/stu_exam";
 import stu_exam_score from "@/page/student/stu_exam_score";
+import stu_exam_paper from "@/page/student/stu_exam_paper";
 
 import test from "../page/test";
 import NewTest from "../page/NewTest";
@@ -148,9 +149,18 @@ export default new Router({
             component: stu_exam_score,
             meta:{
                 // 页面标题title
-                title: '学生端-考试-成绩'
+                title: '教师端-考试-成绩列表'
             }
-        }
+        },
+        {
+            path:'/stu_exam_paper',
+            name:'stu_exam_paper',
+            component: stu_exam_paper,
+            meta:{
+                // 页面标题title
+                title: '学生端-考试-开始考试'
+            }
+        },
 
     ]
 

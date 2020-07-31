@@ -2,8 +2,8 @@
 <div class="container">
     <navigation></navigation>
     <div class="main-panel">
-        <el-row type="flex" justify="center">
-            <el-col :span="11">
+        <el-row class="center">
+            <el-col style="margin-right:45px" :span="11" :lg="11" :xl="11" :md="24" :sm="24" :xs="24">
                 <div class="panel shadow w4 panel-left">
                     <el-row type="flex" justify="space-between">
                         <el-col :span="4">
@@ -131,7 +131,7 @@
                     <div id="exam-chart" :style="{width: '570px', height: '300px'}"></div>
                 </div>
             </el-col>
-            <el-col :span="11">
+            <el-col :span="11" :lg="11" :xl="11" :md="24" :sm="24" :xs="24">
                 <div class="panel shadow w4 panel-left">
                     <el-row type="flex" justify="space-between">
                         <el-col :span="4">
@@ -389,7 +389,7 @@
         position:relative;
         width:90vw;
         height: max-content;
-        margin:30px 0;
+        margin:30px auto;
     }
     .panel{
         position:relative;
@@ -542,5 +542,19 @@
         line-height:20px;
         color:rgba(96,98,102,1);
         white-space: nowrap;
+    }
+    .center{
+        width: max-content;
+        position: relative;
+        left:50%;
+        transform: translateX(-50%);
+    }
+    @media screen and (max-width:1199px)  {
+        .center{
+            width: 50%;
+            position: relative;
+            left:50%;
+            transform: translateX(-50%);
+        }
     }
 </style>

@@ -144,12 +144,13 @@
                 scoreTable:[],
                 wrongTable:[],
                 dataList:['-','-','-','-','-','-'],
-                examName:'三年级数学期末考试',
+                examName:'考试标题',
                 kid:''
             }
         },
         created(){
             this.kid = this.$route.params.kid
+            this.examName = this.$route.params.name
         },
         mounted(){
             this.checkKid()

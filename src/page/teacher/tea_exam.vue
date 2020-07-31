@@ -246,6 +246,7 @@
                     path:'/stu_exam_score',
                     params: {
                         kid: row.kid,
+                        name:row.name,
                     }
                 });
             }

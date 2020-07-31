@@ -99,10 +99,10 @@
                         <el-button v-if="examStatusFormatter(scope.row)==='已结束'" @click="checkInfo(scope.row)" type="text" size="small">考试详情></el-button>
                     </el-col>
                     <el-col :span="12">
-                        <el-button v-if="examStatusFormatter(scope.row)==='已结束'" @click="checkScore(scope.row)" type="text" size="small">查看成绩></el-button>
+                        <el-button v-if="examStatusFormatter(scope.row)==='已结束'" type="text" size="small">查看成绩></el-button>
                     </el-col>
                     <el-col :span="24">
-                        <el-button  v-if="examStatusFormatter(scope.row)==='进行中'"  @click="checkInfo(scope.row)" type="success" size="mini" round plain>参加考试</el-button>
+                        <el-button  v-if="examStatusFormatter(scope.row)==='进行中'"  @click="joinExamInfo(scope.row)" type="success" size="mini" round plain>参加考试</el-button>
                     </el-col>
                     <el-col :span="24">
                         <el-button  v-if="examStatusFormatter(scope.row)==='未开始'"  @click="checkInfo(scope.row)" type="info" size="mini" round plain disabled>参加考试</el-button>
@@ -134,6 +134,7 @@
     </div>
     <copyright></copyright>
     <exam-info id="examInfo" :dialogVisible="dialogVisible" :dialogInfo="dialogInfo" @update:dialogVisible="dialogVisibles "> </exam-info>
+    <join-exam-info id="joinExamInfo" :dialogVisible="joinExamVisible" :dialogInfo="joinExamData" @update:dialogVisible="joinExamVisibles"> </join-exam-info>
 </div>
 </template>
 
@@ -141,6 +142,7 @@
     import navigation from "@/component/header/navigation";
     import Copyright from "@/component/footer/copyright";
     import examInfo from "@/component/exam/examInfo";
+    import joinExamInfo from "@/component/exam/joinExamInfo";
     import {dateFormatter,startDateFormatter,deadlineDateFormatter,groupTypeFormatter,securityFormatter,examStatusFormatter} from "@/utils/validate"
     export default {
         name: "stu_exam",
@@ -148,6 +150,7 @@
             examInfo,
             Copyright,
             navigation,
+            joinExamInfo
         },
         data() {
             return {
@@ -167,15 +170,16 @@
                 //控制弹窗 显示
                 dialogVisible: false,
                 stuListVisible:false,
+                joinExamVisible:false,
                 //点击查看按钮  这条数据详细信息
                 dialogInfo: {},
+                joinExamData:{},
                 stuList:[],
-                addDialogVisible: false,
                 loading: false,
                 examTable: null,
             }
         },
-        mounted(){
+        created(){
             this.loading = true
             this.getExamTable(this.dataPerPage,this.currentPage)
         },
@@ -196,10 +200,16 @@
             checkInfo(row){
                 this.dialogVisible = true;
                 this.dialogInfo = row
-
+            },
+            joinExamInfo(row){
+                this.joinExamVisible = true
+                this.joinExamData = row
             },
             dialogVisibles(v){
                 this.dialogVisible = v
+            },
+            joinExamVisibles(v){
+                this.joinExamVisible  = v
             },
             handleSizeChange(val){
                 this.dataPerPage = val
@@ -211,9 +221,7 @@
                 this.loading = true
                 this.getExamTable(this.dataPerPage,this.currentPage-1)
             },
-            checkScore(row){
 
-            }
         }
     }
 </script>
@@ -241,6 +249,18 @@
         font-size:24px;
         font-weight: 500;
         text-align: left!important;
+    }
+    #joinExamInfo >>> .el-dialog{
+        width: 700px;
+        height: max-content;
+        border-radius: 10px;
+        padding: 20px;
+    }
+    #joinExamInfo >>> .el-dialog__body{
+        padding:0;
+    }
+    #joinExamInfo >>> h3{
+        margin: 0 0 10px 0;
     }
 
 
