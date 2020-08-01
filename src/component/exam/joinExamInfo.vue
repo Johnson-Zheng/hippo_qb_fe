@@ -59,15 +59,30 @@
                 this.$emit("update:dialogVisible", false);
             },
             joinExam(){
-                let data = this.dialogInfo
-                this.$router.push({
-                    path:'/stu_exam_paper',
-                    name:'stu_exam_paper',
-                    params:{
-                        examData: data,
-                        enterTime:Date.now()
+                let form = {'kid':this.dialogInfo.kid}
+                this.$axios.post('exroom/enter',form).then(res=>{
+                    if(res && res.data.rspCode ==='200'){
+                        let data = this.dialogInfo
+                        let restTime = res.data.data
+                        this.$router.push({
+                            path:'/stu_exam_paper',
+                            name:'stu_exam_paper',
+                            params:{
+                                examData:  data,
+                                enterTime: Date.now(),
+                                restTime: restTime
+                            }
+                        })
+                    }else{
+                        let message = "Error"+res.data.rspCode+':'+res.data.data
+                        this.$message.error(message)
                     }
-                })
+                }).catch(error => {
+                    let message = error.message
+                    this.$message.error(message)
+
+                });
+
             },
 
         }

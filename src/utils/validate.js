@@ -90,15 +90,30 @@ export function securityFormatter(row){
 }
 
 export function examStatusFormatter(row){
-    let now = Date.now()
-    let start = row.starttime
-    let dead = row.deadline
-    if( now < start ){
-        return '未开始'
-    }else if( start < now && now < dead ){
-        return '进行中'
-    }else if( dead < now){
-        return '已结束'
+    let now = Date.now() //当前时间
+    let start = row.starttime //开始入场
+    let dead = row.deadline //截至入场时间
+    let end = row.starttime+(row.time*60*1000) //截止提交时间
+
+    if(dead <= end){
+        if( now < start ){
+            return '未开始'
+        }else if( now >= start && now < dead ){
+            return '进行中'
+        }else if( now >= dead && now < end){
+            return '截止入场'
+        }else if(now >= end){
+            return '已结束'
+        }
+    }else{
+        if( now < start ){
+            return '未开始'
+        }else if( now >= start && now < end ){
+            return '进行中'
+        }else{
+            return '已结束'
+        }
     }
+
 }
 

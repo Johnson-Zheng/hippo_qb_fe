@@ -49,12 +49,6 @@
                     width="70">
             </el-table-column>
             <el-table-column
-                    prop="allowtimes"
-                    align="center"
-                    label="可考次数"
-                    width="70">
-            </el-table-column>
-            <el-table-column
                     prop="grouptype"
                     :formatter="groupTypeFormatter"
                     label="可参加人员"
@@ -72,12 +66,13 @@
             <el-table-column
                     :formatter="examStatusFormatter"
                     width="100"
-                    sortable
+                    align="center"
                     label="考试状态">
                 <template slot-scope="status">
                     <el-tag v-if="examStatusFormatter(status.row)==='已结束'" type="danger">{{examStatusFormatter(status.row)}}</el-tag>
                     <el-tag v-if="examStatusFormatter(status.row)==='进行中'" type="success">{{examStatusFormatter(status.row)}}</el-tag>
                     <el-tag v-if="examStatusFormatter(status.row)==='未开始'" type="info">{{examStatusFormatter(status.row)}}</el-tag>
+                    <el-tag v-if="examStatusFormatter(status.row)==='截止入场'" type="info">{{examStatusFormatter(status.row)}}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column
@@ -99,7 +94,7 @@
                     <el-col :span="8" v-if="scope.row.grouptype===1">
                         <el-button @click="checkStuList(scope.row)" type="text" size="mini">考生列表</el-button>
                     </el-col>
-                    <el-col :span="8" v-if="examStatusFormatter(scope.row)==='进行中' || examStatusFormatter(scope.row)==='已结束'" >
+                    <el-col :span="8" v-if="examStatusFormatter(scope.row)==='进行中' || examStatusFormatter(scope.row)==='已结束' || examStatusFormatter(scope.row)==='截止入场'" >
                         <el-button @click="checkScore(scope.row)" type="text" size="mini">成绩统计</el-button>
                     </el-col>
                 </el-row>

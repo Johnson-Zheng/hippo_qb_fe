@@ -92,7 +92,7 @@
         components: {
             Copyright
         },
-        mounted(){
+        created(){
             this.clearCache()
         },
         data() {
@@ -171,16 +171,16 @@
                     user_password:'',
                     password2:'',
                     email:'',
-                    role:'1',
+                    role:1,
                     enabled:true,
                     uno:'',
                     phone:' '
                 },
                 roles: [{
-                    value: '1',
+                    value: 1,
                     label: '老师'
                 }, {
-                    value: '2',
+                    value: 2,
                     label: '学生'
                 }],
 

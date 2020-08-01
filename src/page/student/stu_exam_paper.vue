@@ -4,7 +4,9 @@
         <el-row class="main-panel" :gutter="80">
             <el-col :span="14" align="center">
                 <div class="panel shadow">
+                    <!--返回页头-->
                     <el-page-header @back="goBack"> </el-page-header>
+                    <!--标题和倒计时-->
                     <el-row class="mt-1875" type="flex" justify="space-between">
                         <el-col :span="14" align="left">
                             <h2>{{examTitle}}</h2>
@@ -15,15 +17,18 @@
                             </div>
                         </el-col>
                     </el-row>
+                    <!--题目列表-->
                     <el-row>
+                        <!--一行试题-->
                         <template v-for="(question,index) in questionList" >
                             <el-col :span="24">
                                 <el-row class="mt-30">
+                                    <!--试题题目-->
                                     <el-col :span="24" align="left">
                                         <h4>{{index+1}}、{{question.questionName}}</h4>
                                     </el-col>
-                                    <el-col v-if="question.type===1" :span="24" align="left">
-                                        <el-radio-group v-model="question.answerContent" class="mt-1875" @change="updateSingle(question)">
+                                    <el-col v-if="isChoice(question.type)" :span="24" align="left">
+                                        <el-radio-group v-model="question.answerContent" class="mt-1875" @change="updateChoice(question)">
                                             <el-radio v-if="question.optionA!==''" :label="'A'">A:{{question.optionA}}</el-radio>
                                             <el-radio v-if="question.optionB!==''" :label="'B'">B:{{question.optionB}}</el-radio>
                                             <el-radio v-if="question.optionC!==''" :label="'C'">C:{{question.optionC}}</el-radio>
@@ -32,8 +37,8 @@
                                             <el-radio v-if="question.optionF!==''" :label="'F'">F:{{question.optionF}}</el-radio>
                                         </el-radio-group>
                                     </el-col>
-                                    <el-col v-if="question.type===2" v-model="question.optionList"  :span="24" align="left">
-                                        <el-checkbox-group v-model="question.optionList" class="mt-1875" @change="updateMul(question.mulchoice)">
+                                    <el-col v-if="isMultiChoice(question.type)" :span="24" align="left">
+                                        <el-checkbox-group v-model="question.optionList" class="mt-1875" @change="updateChoice(question)">
                                             <el-checkbox v-if="question.optionA!==''" :label="'A'">A:{{question.optionA}}</el-checkbox>
                                             <el-checkbox v-if="question.optionB!==''" :label="'B'">B:{{question.optionB}}</el-checkbox>
                                             <el-checkbox v-if="question.optionC!==''" :label="'C'">C:{{question.optionC}}</el-checkbox>
@@ -42,7 +47,7 @@
                                             <el-checkbox v-if="question.optionF!==''" :label="'F'">F:{{question.optionF}}</el-checkbox>
                                         </el-checkbox-group>
                                     </el-col>
-                                    <el-col v-if="question.type===3 && security" :span="24" align="left" class="mt-1875">
+                                    <el-col v-if="!isChoice(question.type) && !isMultiChoice(question.type) && security" :span="24" align="left" class="mt-1875">
                                         <el-input
                                                 @paste.native.capture.prevent="handlePaste"
                                                 v-model="question.answerContent"
@@ -56,7 +61,7 @@
                                                 resize="none"
                                         />
                                     </el-col>
-                                    <el-col v-if="question.type===3 && !security" :span="24" align="left" class="mt-1875">
+                                    <el-col v-if="!isChoice(question.type) && !isMultiChoice(question.type) && !security" :span="24" align="left" class="mt-1875">
                                         <el-input
                                                 v-model="question.answerContent"
                                                 type="textarea"
@@ -84,21 +89,20 @@
                         </el-col>
                         <el-col :span="24" class="mt-1875">
                             <div class="card">
-                                <el-row type="flex">
+                                <el-row>
                                     <template v-for="(q,i) in questionList">
-                                        <el-col :span="6" align="center">
-                                            <el-button v-if="i<4" class="card-item" circle>{{i+1}}</el-button>
-                                            <el-button v-if="i>=4" class="card-item mt-1875" circle>{{i+1}}</el-button>
+                                        <el-col style="margin-left: 10px;margin-bottom:10px" :span='4' align="center">
+                                            <el-button class="card-item" circle>{{i+1}}</el-button>
                                         </el-col>
                                     </template>
                                 </el-row>
                             </div>
                         </el-col>
                         <el-col :span="11" class="mt-1875">
-                            <el-button style="width:100%" type="primary" size="small" @click="submitPaper()">确认交卷</el-button>
+                            <el-button style="width:100%" type="primary" size="small" @click="submitPaper()" :disabled="notSubmit" :loading="submitLoad">确认交卷</el-button>
                         </el-col>
                         <el-col :span="11" :offset="1" class="mt-1875">
-                            <el-button style="width:100%" type="danger" plain size="small">离开</el-button>
+                            <el-button style="width:100%" type="danger" plain size="small" @click='goBack()'>离开</el-button>
                         </el-col>
 
                     </el-row>
@@ -119,6 +123,8 @@
         components:{
             Copyright,
             navigation,
+        },
+        mounted(){
         },
         data() {
             return{
@@ -155,6 +161,10 @@
                     //  answerContent: ''
                 },
                 security:true,
+                restTime:0,
+                ctTimer:null,
+                notSubmit:false,
+                submitLoad:false,
             }
         },
         created(){
@@ -165,6 +175,19 @@
             this.pid = this.examData.pid
             this.kid = this.examData.kid
             this.security = this.examData.security
+            this.restTime = this.$route.params.restTime
+            if(this.security){
+                this.$nextTick(() => {
+                    // 禁用右键
+                    document.oncontextmenu = new Function("event.returnValue=false");
+                    // 禁用选择
+                    document.onselectstart = new Function("event.returnValue=false");
+                });}
+            this.$once("hook:beforeDestory",()=>{
+                clearInterval(this.ctTimer)
+                clearTimeout(this.ctTimer)
+                this.ctTimer = null
+            })
         },
         mounted(){
             this.getCountDown()
@@ -172,30 +195,70 @@
         },
         methods: {
             goBack(){
-                this.$router.go(-1)
+                this.$confirm('离开会丢失所有数据和本次考试机会，确定吗？', '离开考试', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$message({
+                        type: 'warning',
+                        message: '您已离开考试'
+                    });
+                    this.ctTimer = null
+                    clearTimeout(this.ctTimer)
+                    this.$router.go(-1)
+                })
             },
             getCountDown(){
                 let start = Date.now()
-                let endTime = this.enterTime+this.totalTime*60*1000
+                let endTime = this.enterTime + this.restTime*1000
                 let lefttime = timeBetween(start,endTime)
                 this.countTime = time2HMS(lefttime)
                 if(lefttime>=0){
-                    setTimeout(this.getCountDown,1000)
+                    if(lefttime===60*5){
+                        let waring = '距离考试结束还有5分钟，请尽快完成'
+                        this.$message.warning(waring)
+                    }
+                    this.ctTimer = setTimeout(this.getCountDown,1000)
                 }else{
                     this.countTime = '已结束'
+                    this.notSubmit = true
+                    this.$alert('本场考试已结束，请离开考场', '考试结束', {
+                        confirmButtonText: '确定',
+                        callback: action => {
+                            this.ctTimer = null
+                            clearTimeout(this.ctTimer)
+                            this.$router.go(-1)
+                        }
+                    });
+
                 }
             },
-            updateSingle(question){
-                this.$set(this.updateInfo ,question.qid, question.answerContent)
-            },
-            updateMul(question, mul){
-                this.$set(this.updateInfo ,question.qid, mul.toString())
+            isChoice(typeId) {
+                return typeId === 1
+            }, isMultiChoice(typeId) {
+                return typeId === 2
+            },updateChoice(question,mul) {
+                if(question.type===2){
+                    this.setarrUpdateInfo(question,mul)}
+                else {
+                    this.setUpdateInfo(question)
+                }
+            }, setUpdateInfo(question) {
+                this.$set(this.updateInfo, question.qid, question.answerContent)
+                console.log(this.updateInfo)
+            }, setarrUpdateInfo(question) {
+                this.$set(this.updateInfo , question.qid, question.optionList.toString())
+                console.log(this.updateInfo)
             },
             getQuestions(){
                 this.$axios.get('paper/getpaperinfo?pid='+this.pid).then(res=>{
                     if(res && res.data.rspCode ==='200'){
                         this.questionList= res.data.data.questions
                         this.questionNum = this.questionList.length
+                    }else{
+                        let message = "Error"+res.data.rspCode+":"+res.data.rspMsg
+                        this.$message.error(message)
                     }
                 }).catch(error => {
                     let message = error.message
@@ -203,8 +266,48 @@
 
                 });
             },
-            submit(){
-                console.log(this.updateInfo)
+            submitPaper(){
+                this.submitLoad = true
+                if(this.getMapLength(this.updateInfo) === this.questionList.length){
+                    this.$axios.post('paper/'+this.kid+'/'+this.pid+'/submit', this.updateInfo).then(resp => {
+                            if (resp && resp.data.rspCode === '200') {
+                                this.submitLoad = false
+                                this.notSubmit = true
+                                let data = resp.data
+                                this.$alert('试卷提交成功，请离开考场', '交卷成功', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        this.ctTimer = null
+                                        clearTimeout(this.ctTimer)
+                                        this.$router.go(-1)
+                                    }
+                                });
+                            } else {
+                                this.submitLoad = false
+                                this.notSubmit = false
+                                let message = "Error"+resp.data.rspCode+":"+resp.data.rspMsg
+                                this.$message.error(message)
+                            }
+                        }).catch(error => {
+                        let message = error.message
+                        this.$message.error(message)
+                    })
+                }else{
+                    this.$message.warning('您还有未完成的题目，无法交卷')
+                    this.submitLoad = false
+                }
+            },
+            getMapLength(map){
+                let length = 0;
+                for(let i in map){
+                    length++;
+                }
+                return length
+            },
+            getAnswerStatus(q,i){
+                let qIndex = i
+                let qid = i.qid
+                return (this.updateInfo[qid] === undefined)
             }
         }
 }

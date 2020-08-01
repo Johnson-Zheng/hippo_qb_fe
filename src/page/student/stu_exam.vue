@@ -31,7 +31,7 @@
             <el-table-column
                     prop="name"
                     label="考试标题"
-                    width="150"
+                    width="170"
                     sortable
                     :show-tooltip-when-overflow="true">
             </el-table-column>
@@ -40,18 +40,12 @@
                     sortable
                     label="开始时间"
                     :formatter="startDateFormatter"
-                    width="150">
+                    min-width="150">
             </el-table-column>
             <el-table-column
                     prop="time"
                     align="center"
                     label="考试时长"
-                    width="70">
-            </el-table-column>
-            <el-table-column
-                    prop="allowtimes"
-                    align="center"
-                    label="可考次数"
                     width="70">
             </el-table-column>
             <el-table-column
@@ -70,24 +64,24 @@
                     width="80">
             </el-table-column>
             <el-table-column
+                    prop="deadline"
+                    sortable
+                    :formatter="deadlineDateFormatter"
+                    label="截止入场"
+                    min-width="150">
+            </el-table-column>
+            <el-table-column
                     :formatter="examStatusFormatter"
                     width="100"
-                    sortable
+                    align="center"
                     label="考试状态">
                 <template slot-scope="status">
                     <el-tag v-if="examStatusFormatter(status.row)==='已结束'" type="danger">{{examStatusFormatter(status.row)}}</el-tag>
                     <el-tag v-if="examStatusFormatter(status.row)==='进行中'" type="success">{{examStatusFormatter(status.row)}}</el-tag>
                     <el-tag v-if="examStatusFormatter(status.row)==='未开始'" type="info">{{examStatusFormatter(status.row)}}</el-tag>
+                    <el-tag v-if="examStatusFormatter(status.row)==='截止入场'" type="info">{{examStatusFormatter(status.row)}}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column
-                    prop="createTime"
-                    sortable
-                    :formatter="dateFormatter"
-                    label="添加时间"
-                    min-width="120">
-            </el-table-column>
-
             <el-table-column
                     fixed="right"
                     align="center"
@@ -95,6 +89,9 @@
                     width="160">
             <template slot-scope="scope">
                 <el-row >
+                    <el-col :span="24" align="center">
+                        <el-button v-if="examStatusFormatter(scope.row)==='截止入场'" @click="checkInfo(scope.row)" type="text" size="small">考试详情></el-button>
+                    </el-col>
                     <el-col :span="12">
                         <el-button v-if="examStatusFormatter(scope.row)==='已结束'" @click="checkInfo(scope.row)" type="text" size="small">考试详情></el-button>
                     </el-col>
@@ -107,6 +104,7 @@
                     <el-col :span="24">
                         <el-button  v-if="examStatusFormatter(scope.row)==='未开始'"  @click="checkInfo(scope.row)" type="info" size="mini" round plain disabled>参加考试</el-button>
                     </el-col>
+
                 </el-row>
 
             </template>
