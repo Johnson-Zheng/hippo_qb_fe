@@ -25,10 +25,10 @@
                                 <el-row class="mt-30">
                                     <!--试题题目-->
                                     <el-col :span="24" align="left">
-                                        <h4>{{index+1}}、{{question.questionName}}</h4>
+                                        <h4 :id="'question'+(index+1)">{{index+1}}、{{question.questionName}}</h4>
                                     </el-col>
                                     <el-col v-if="isChoice(question.type)" :span="24" align="left">
-                                        <el-radio-group v-model="question.answerContent" class="mt-1875" @change="updateChoice(question)">
+                                        <el-radio-group v-model="question.answerContent" class="mt-1875" @change="updateChoice(question,index)">
                                             <el-radio v-if="question.optionA!==''" :label="'A'">A:{{question.optionA}}</el-radio>
                                             <el-radio v-if="question.optionB!==''" :label="'B'">B:{{question.optionB}}</el-radio>
                                             <el-radio v-if="question.optionC!==''" :label="'C'">C:{{question.optionC}}</el-radio>
@@ -38,7 +38,7 @@
                                         </el-radio-group>
                                     </el-col>
                                     <el-col v-if="isMultiChoice(question.type)" :span="24" align="left">
-                                        <el-checkbox-group v-model="question.optionList" class="mt-1875" @change="updateChoice(question)">
+                                        <el-checkbox-group v-model="question.optionList" class="mt-1875" @change="updateChoice(question,index)">
                                             <el-checkbox v-if="question.optionA!==''" :label="'A'">A:{{question.optionA}}</el-checkbox>
                                             <el-checkbox v-if="question.optionB!==''" :label="'B'">B:{{question.optionB}}</el-checkbox>
                                             <el-checkbox v-if="question.optionC!==''" :label="'C'">C:{{question.optionC}}</el-checkbox>
@@ -56,7 +56,7 @@
                                                 :maxlength="1000"
                                                 show-word-limit
                                                 :clearable="true"
-                                                @change="updateChoice(question)"
+                                                @change="updateChoice(question,index)"
                                                 placeholder="请输入内容"
                                                 resize="none"
                                         />
@@ -69,7 +69,7 @@
                                                 :maxlength="1000"
                                                 show-word-limit
                                                 :clearable="true"
-                                                @change="updateChoice(question)"
+                                                @change="updateChoice(question,index)"
                                                 placeholder="请输入内容"
                                                 resize="none"
                                         />
@@ -91,8 +91,8 @@
                             <div class="card">
                                 <el-row>
                                     <template v-for="(q,i) in questionList">
-                                        <el-col style="margin-left: 10px;margin-bottom:10px" :span='4' align="center">
-                                            <el-button class="card-item" circle>{{i+1}}</el-button>
+                                        <el-col style="margin-left: 10px;margin-bottom:15px" :span='4' align="center">
+                                            <el-button :class="{'active':answerList[i]}" class="card-item" circle @click="rollTo(i)">{{i+1}}</el-button>
                                         </el-col>
                                     </template>
                                 </el-row>
@@ -117,34 +117,21 @@
     import navigation from "@/component/header/navigation";
     import Copyright from "@/component/footer/copyright";
     import {time2HMS, timeBetween} from "@/utils/functions";
-
     export default {
+        
         name: "stu_exam_score",
         components:{
             Copyright,
             navigation,
         },
         mounted(){
+            window.onbeforeunload = e => {      //刷新时弹出提示
+                return '123123'
+            };
         },
         data() {
             return{
                 choices: ['A', 'B', 'C', 'D', 'E', 'F'],
-                mulchoices: [{
-                    "label": "A",
-                    "value": 'A'
-                }, {
-                    "label": "B",
-                    "value": "B"
-                }, {
-                    "label": "C",
-                    "value": 'C'
-                }, {
-                    "label": "D",
-                    "value": 'D'
-                },{
-                    "label": "E",
-                    "value": 'E'
-                }],
                 examData:{},
                 examTitle:'',
                 enterTime:'',
@@ -193,6 +180,7 @@
             this.getCountDown()
             this.getQuestions()
         },
+
         methods: {
             goBack(){
                 this.$confirm('离开会丢失所有数据和本次考试机会，确定吗？', '离开考试', {
@@ -238,24 +226,38 @@
                 return typeId === 1
             }, isMultiChoice(typeId) {
                 return typeId === 2
-            },updateChoice(question,mul) {
+            },updateChoice(question,index) {
                 if(question.type===2){
-                    this.setarrUpdateInfo(question,mul)}
+                    this.setarrUpdateInfo(question,index)}
                 else {
-                    this.setUpdateInfo(question)
+                    this.setUpdateInfo(question,index)
                 }
-            }, setUpdateInfo(question) {
+            }, setUpdateInfo(question,index) {
                 this.$set(this.updateInfo, question.qid, question.answerContent)
-                console.log(this.updateInfo)
-            }, setarrUpdateInfo(question) {
+                if(question.answerContent!==''){
+                    this.answerList[index] = true
+                }else{
+                    this.answerList[index] = false
+                }
+
+
+            }, setarrUpdateInfo(question,index) {
                 this.$set(this.updateInfo , question.qid, question.optionList.toString())
-                console.log(this.updateInfo)
+                if(question.optionList.toString()!==''){
+                    this.answerList[index] = true
+                }else{
+                    this.answerList[index] = false
+                }
+
+
             },
             getQuestions(){
                 this.$axios.get('paper/getpaperinfo?pid='+this.pid).then(res=>{
                     if(res && res.data.rspCode ==='200'){
                         this.questionList= res.data.data.questions
                         this.questionNum = this.questionList.length
+                        this.getAnswerStatus()
+
                     }else{
                         let message = "Error"+res.data.rspCode+":"+res.data.rspMsg
                         this.$message.error(message)
@@ -268,7 +270,7 @@
             },
             submitPaper(){
                 this.submitLoad = true
-                if(this.getMapLength(this.updateInfo) === this.questionList.length){
+                if(this.checkAnswerList()){
                     this.$axios.post('paper/'+this.kid+'/'+this.pid+'/submit', this.updateInfo).then(resp => {
                             if (resp && resp.data.rspCode === '200') {
                                 this.submitLoad = false
@@ -297,17 +299,23 @@
                     this.submitLoad = false
                 }
             },
-            getMapLength(map){
-                let length = 0;
-                for(let i in map){
-                    length++;
+            checkAnswerList(){
+                for(let i in this.answerList){
+                    if(!this.answerList[i]){
+                        return false
+                    }
                 }
-                return length
+                return true
             },
-            getAnswerStatus(q,i){
-                let qIndex = i
-                let qid = i.qid
-                return (this.updateInfo[qid] === undefined)
+            getAnswerStatus(){
+                for(let i=0;i<this.questionNum;i++){
+                    this.answerList.push(false)
+                }
+            },
+            rollTo(i){
+                document.getElementById('question'+i).scrollIntoView({
+                    behavior: "smooth"
+                });
             }
         }
 }
@@ -362,17 +370,28 @@
         width: 100%;
         height: max-content;
         background:rgba(250,250,250,1);
-        padding:10px 0;
+        padding:15px 0 0 0;
         border-radius: 10px;
     }
     .card-item{
-        background:rgba(255,255,255,1);
-        border:1px solid rgba(220,223,230,1);
+        background:#fafafa;
+        border:0 solid rgba(220,223,230,0.5);
+        font-weight: bold;
         user-select: none;
         line-height: 1;
         width: 30px;
         height: 30px;
         padding: 0;
-        color:rgb(110, 110, 110);
+        color: rgb(139, 139, 139);
+        transition: all ease-in-out 0.3s;
+    }
+    .active{
+        background: linear-gradient(to bottom right, #89bbff, #579ff8);
+        color:#ffffff;
+        border:0;
+        font-weight: 700;
+        transition: all ease-in-out 0.3s;
+        box-shadow:0 7px 15px rgba(91,132,247,0.3);
+        transform: translateY(-3px);
     }
 </style>
