@@ -103,7 +103,7 @@
                 </el-form-item>
             </div>
             <el-form-item v-if="this.addPaperForm.totalScore!==0" label="试卷总分" class="mt-1875">
-                <p>{{this.addPaperForm.totalScore}}</p>
+                <p>{{this.addPaperForm.totalscore}}</p>
             </el-form-item>
         </el-form>
         <el-row class="mt-30">
@@ -261,9 +261,8 @@
             addQuestionHandle(){
                 this.$refs.addPaperForm.validate((valid) => {
                     if (valid && this.checkClass() && this.checkQidList()) {
-                        this.addPaperForm.questionId = this.postQidList.toString()
-                        this.$axios
-                            .post('paper/addpaper', this.addPaperForm).then(resp => {
+                        this.addPaperForm.questionId = this.postQidList.sort().toString()
+                        this.$axios.post('paper/addpaper', this.addPaperForm).then(resp => {
                             if (resp && resp.data.rspCode === '200') {
                                 this.cancelAddDialog()
                                 this.$message.success("试卷添加成功")

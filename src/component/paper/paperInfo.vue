@@ -61,7 +61,7 @@
             <el-col :span="24" class="mt-1875">
                 <div class="answer-desc">
                 <el-table :data="JSON.parse(dialogInfo.qucontent)" ref="qucontent"
-                          :default-sort = "{prop: 'createTime', order: 'descending'}"
+                          :default-sort = "{prop: 'qid', order: 'descending'}"
                           style="width: 100%"
                           :header-cell-style="{background:'#F5F7FA',fontWeight:'400'}"
                           height="300"

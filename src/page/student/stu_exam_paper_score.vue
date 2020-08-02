@@ -247,8 +247,9 @@
                         this.getAnswerStatus()
 
                     }else{
-                        let message = "Error"+res.data.rspCode+":"+res.data.rspMsg
+                        let message = "Error"+res.data.rspCode+":"+'您未参加本次考试'
                         this.$message.error(message)
+                        this.$router.go(-1)
                     }
                 }).catch(error => {
                     let message = error.message
