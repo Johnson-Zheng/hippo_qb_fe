@@ -33,7 +33,7 @@
                             <div class="panel shadow sta-panel">
                                 <el-row type="flex" justify="center" :gutter="35">
                                     <el-col :span="6">
-                                        <img class="sta-icon" src="../../assets/icon/题目@2x.png"/>
+                                        <img class="sta-icon" src="../../assets/icon/考试@2x.png"/>
                                     </el-col>
                                     <el-col :span="6">
                                         <div class="sta-data">
@@ -274,7 +274,7 @@
                     if(res && res.data.rspCode ==='200'){
                         let data = res.data.data
                         this.paperNum = data['添加试卷']
-                        this.examNum = data['添加试卷']
+                        this.examNum = data['发布考试']
                         this.examOff = data['未开始考试']
                         this.examOther = data['已开始/已结束考试']
 

@@ -13,41 +13,32 @@
                     <el-row class="mt-1875">
                         <el-col :span="9">
                             <div class="panel shadow sta-panel">
-                                <el-row type="flex" justify="center" :gutter="30">
-                                    <el-col :span="12">
-                                        <img class="sta-icon" src="../../assets/icon/题目@2x.png" alt="题目"/>
+                                <el-row type="flex" :gutter="60">
+                                    <el-col :span="5">
+                                        <img class="sta-icon" src="../../assets/icon/考试@2x.png" alt="题目"/>
                                     </el-col>
-                                    <el-col :span="12">
-                                        <div class="sta-data">
-                                            <p class="data">{{paperNum}}</p>
-                                            <p class="title">发布试卷</p>
-                                        </div>
-                                    </el-col>
-                                </el-row>
-                            </div>
-                        </el-col>
-                        <el-col :span="15">
-                            <div class="panel shadow sta-panel">
-                                <el-row type="flex" justify="center" :gutter="35">
-                                    <el-col :span="6">
-                                        <img class="sta-icon" src="../../assets/icon/题目@2x.png" alt="题目"/>
-                                    </el-col>
-                                    <el-col :span="6">
+                                    <el-col :span="5">
                                         <div class="sta-data">
                                             <p class="data">{{examNum}}</p>
-                                            <p class="title">已发布考试</p>
+                                            <p class="title">参加考试</p>
                                         </div>
                                     </el-col>
-                                    <el-col :span="6">
+                                    <el-col :span="5">
+                                        <div class="sta-data">
+                                            <p class="data">{{paperNum}}</p>
+                                            <p class="title">最低分</p>
+                                        </div>
+                                    </el-col>
+                                    <el-col :span="5">
                                         <div class="sta-data">
                                             <p class="data">{{examOff}}</p>
-                                            <p class="title">未开始考试</p>
+                                            <p class="title">最高分</p>
                                         </div>
                                     </el-col>
-                                    <el-col :span="6">
+                                    <el-col :span="5">
                                         <div class="sta-data">
                                             <p class="data">{{examOther}}</p>
-                                            <p class="title">其他考试</p>
+                                            <p class="title">平均分</p>
                                         </div>
                                     </el-col>
                                 </el-row>
@@ -60,10 +51,10 @@
                 <div class="panel shadow w4 panel-left">
                     <el-row type="flex" justify="space-between">
                         <el-col :span="4">
-                            <h2>最近发布</h2>
+                            <h2>近期考试</h2>
                         </el-col>
                         <el-col :span="8">
-                            <p class="tips-text dec-text">您最近发布的3场考试安排</p>
+                            <p class="tips-text dec-text">最近的三场考试安排</p>
                         </el-col>
                         <el-col :span="3" :offset=8>
                             <el-button type="text" class="tips-text info-button" @click="goto('/tea_exam')">查看详情></el-button>
@@ -119,10 +110,10 @@
                 <div class="panel shadow w4 panel-left no-mt">
                     <el-row>
                         <el-col :span="4">
-                            <h2>发布统计</h2>
+                            <h2>考试统计</h2>
                         </el-col>
                         <el-col :span="8">
-                            <p class="tips-text dec-text">您最近发布考试统计</p>
+                            <p class="tips-text dec-text">您最近参加考试统计</p>
                         </el-col>
                     </el-row>
                     <div id="exam-chart" :style="{width: '570px', height: '300px'}"></div>
@@ -269,13 +260,13 @@
         },
         methods: {
             getStatistic(){
-                this.$axios.get('datavisualization/Tdashboard?name='+this.username).then(res=>{
+                this.$axios.get('datavisualization/Sdashboard').then(res=>{
                     if(res && res.data.rspCode ==='200'){
                         let data = res.data.data
-                        this.paperNum = data['添加试卷']
-                        this.examNum = data['添加试卷']
-                        this.examOff = data['未开始考试']
-                        this.examOther = data['已开始/已结束考试']
+                        this.paperNum = data['最低分']
+                        this.examNum = data['参加考试']
+                        this.examOff = data['最高分']
+                        this.examOther = data['平均分']
 
                     }
                 }).catch(error => {
@@ -285,7 +276,7 @@
                 });
             },
             getExamForm(){
-                this.$axios.get('exroom/last3exam?name='+this.username).then(res=>{
+                this.$axios.get('exroom/Slast3exam').then(res=>{
                     if(res && res.data.rspCode ==='200'){
                         this.examForm = res.data.data
                         this.loading = false
@@ -301,7 +292,7 @@
                 this.$echarts.registerTheme('theme', obj)
                 let examchart = this.$echarts.init(document.getElementById('exam-chart'),'theme')
                 examchart.showLoading()
-                this.$axios.get('datavisualization/numOfExam?name='+this.username)
+                this.$axios.get('datavisualization/stuExamLast7D')
                     .then(res=> {
                         if (res && res.data.rspCode === '200'){
                             this.weekExamData = res.data.data
@@ -321,14 +312,14 @@
                                 yAxis: {
                                 },
                                 legend: {
-                                    data: ['发布数量'],
-                                    selected: {'发布数量': true},
+                                    data: ['参与次数'],
+                                    selected: {'参与次数': true},
                                     icon: "circle",   //  这个字段控制形状  类型包括 circle，rect ，roundRect，triangle，diamond，pin，arrow，none
                                     left: 25,
                                     bottom: 0
                                 },
                                 series: [{
-                                    name: '发布数量',
+                                    name: '参与次数',
                                     smooth:true,  //这个是把线变成曲线
                                     type: 'line',
                                     areaStyle: {},

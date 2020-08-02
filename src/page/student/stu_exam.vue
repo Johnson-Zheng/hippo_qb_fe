@@ -183,7 +183,7 @@
         },
         methods:{
             getExamTable(dataPerpage, currentPage){
-                this.$axios.get('exroom/listnum?num='+dataPerpage+'&start='+currentPage).then(res=>{
+                this.$axios.get('exroom/list?num='+dataPerpage+'&start='+currentPage).then(res=>{
                     if(res && res.data.rspCode ==='200'){
                         this.examTable = res.data.data["content"]
                         this.totalElements = res.data.data['totalElements']
