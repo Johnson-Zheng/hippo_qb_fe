@@ -45,8 +45,8 @@
             <el-table-column
                     prop="time"
                     align="center"
-                    label="考试时长"
-                    width="70">
+                    label="考试时长/分钟"
+                    width="120">
             </el-table-column>
             <el-table-column
                     prop="grouptype"
@@ -68,6 +68,7 @@
                     sortable
                     :formatter="deadlineDateFormatter"
                     label="截止入场"
+
                     min-width="150">
             </el-table-column>
             <el-table-column
@@ -181,7 +182,7 @@
         },
         methods:{
             getExamTable(dataPerpage, currentPage){
-                this.$axios.get('exroom/listnum?num='+dataPerpage+'&start='+currentPage).then(res=>{
+                this.$axios.get('exroom/list?num='+dataPerpage+'&start='+currentPage).then(res=>{
                     if(res && res.data.rspCode ==='200'){
                         this.examTable = res.data.data["content"]
                         this.totalElements = res.data.data['totalElements']

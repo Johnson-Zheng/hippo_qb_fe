@@ -72,42 +72,28 @@
                             align="center"
                             prop="qid"
                             label="编号"
-                            sortable
-                            width="80">
+                            width="50">
                     </el-table-column>
                     <el-table-column
                             prop="questionName"
                             label="题目"
                             sortable
-                            width="100">
+                            show-overflow-tooltip
+                            width="250">
                     </el-table-column>
                     <el-table-column
                             prop="answer"
                             label="答案"
-                            :show-tooltip-when-overflow="true"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            prop="course.courseName"
-                            sortable
-                            label="课程"
-                            width="100"
+                            width="80"
+                            align="center"
                     >
                     </el-table-column>
                     <el-table-column
                             prop="type"
-                            sortable
                             :formatter="questionType"
                             label="题目类型"
-                            width="100"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            prop="createTime"
-                            sortable
-                            :formatter="dateFormatter"
-                            label="添加时间"
-                            width="150"
+                            align="center"
+                            width="90"
                     >
                     </el-table-column>
                     <el-table-column

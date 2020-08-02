@@ -17,42 +17,47 @@
             <el-table-column
                     align="center"
                     prop="kid"
-                    label="考试编号"
-                    sortable
-                    width="100">
+                    label="考试ID"
+                    width="70">
             </el-table-column>
             <el-table-column
                     align="center"
                     prop="pid"
-                    label="试卷编号"
-                    sortable
-                    width="100">
+                    label="试卷ID"
+                    width="70">
             </el-table-column>
             <el-table-column
                     prop="name"
                     label="考试标题"
-                    width="120"
+                    width="150"
                     sortable
                     :show-tooltip-when-overflow="true">
             </el-table-column>
             <el-table-column
                     prop="starttime"
                     sortable
-                    label="开始时间"
+                    label="考试开始时间"
                     :formatter="startDateFormatter"
-                    width="150">
+                    width="140">
+            </el-table-column>
+            <el-table-column
+                    prop="deadline"
+                    sortable
+                    label="截止入场时间"
+                    :formatter="deadlineDateFormatter"
+                    width="140">
             </el-table-column>
             <el-table-column
                     prop="time"
                     align="center"
-                    label="考试时长"
-                    width="70">
+                    label="时长/分钟"
+                    width="80">
             </el-table-column>
             <el-table-column
                     prop="grouptype"
                     :formatter="groupTypeFormatter"
-                    label="可参加人员"
-                    width="100"
+                    label="考试名单"
+                    width="80"
                     align="center"
             >
             </el-table-column>
@@ -80,11 +85,12 @@
                     sortable
                     :formatter="dateFormatter"
                     label="添加时间"
-                    min-width="150">
+                    min-width="140">
             </el-table-column>
             <el-table-column
                     fixed="right"
                     label="操作"
+
                     width="200">
             <template slot-scope="scope">
                 <el-row>

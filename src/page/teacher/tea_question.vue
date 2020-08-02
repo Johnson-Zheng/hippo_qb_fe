@@ -41,7 +41,7 @@
             <el-table-column
                     prop="questionName"
                     label="题目"
-                    min-width="120"
+                    min-width="150"
                     sortable
                     :show-tooltip-when-overflow="true"
                     >
@@ -50,8 +50,8 @@
                     prop="answer"
                     label="答案"
                     :show-tooltip-when-overflow="true"
-
-                    sortable
+                    width="100"
+                    align="center"
                     >
             </el-table-column>
             <el-table-column
@@ -63,7 +63,6 @@
             </el-table-column>
             <el-table-column
                     prop="type"
-                    align="center"
                     sortable
                     :formatter="questionType"
                     label="题目类型"
@@ -89,7 +88,8 @@
             <el-table-column
                     fixed="right"
                     label="操作"
-                    min-width="80"
+                    align="center"
+                    width="100"
                 >
             <template slot-scope="scope">
                 <el-button @click="checkInfo(scope.row)" type="text" size="small">查看详情></el-button>

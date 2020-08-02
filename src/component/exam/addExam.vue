@@ -19,16 +19,17 @@
                 <el-date-picker
                         v-model="addExamForm.deadline"
                         type="datetime"
-                        placeholder="入场截止时间"
+                        placeholder="考生截止入场时间"
                         value-format="timestamp"
                         default-time="12:00:00"
                 >
                 </el-date-picker>
             </el-form-item>
+
             <el-row type="flex" justify="space-between">
                 <el-col :span="12">
                     <el-form-item label="考试时长" prop="time">
-                        <el-input placeholder="可答题时长(分钟)"  v-model="addExamForm.time"/>
+                        <el-input placeholder="考试总时长(分钟)"  v-model="addExamForm.time"/>
                     </el-form-item>
                 </el-col>
                 <el-col :span="11">
@@ -37,6 +38,7 @@
                     </el-form-item>
                 </el-col>
             </el-row>
+
             <el-form-item label="参与人员">
                 <el-radio v-model="addExamForm.grouptype" label="0">全部</el-radio>
                 <el-radio v-model="addExamForm.grouptype" label="1">指定名单</el-radio>
@@ -50,9 +52,13 @@
                 <el-switch v-model="addExamForm.security">
                 </el-switch>
             </el-form-item>
-
-
         </el-form>
+        <el-alert
+                close-text="我知道了"
+                title="截止时间和考试时长说明"
+                :description="'① 超过截止时间后，未进入的考生无法入场，已进入的考生可以继续作答交卷\n② 考试时长是考试可以答题、交卷的时间（考试时间 = 开始时间 + 考试时长）'"
+                type="warning">
+        </el-alert>
         <el-row class="mt-30" type="flex" justify="end">
             <el-col :span="6">
                 <el-button @click="cancelAddDialog" size="medium" class="normal-button">取消</el-button>
@@ -63,10 +69,7 @@
         </el-row>
 
     </el-dialog>
-
-
 </template>
-
 <script>
     import {sleep,securityFormatter} from "@/utils/validate";
     import PaperQuery from "@/component/question/PaperQuery";
@@ -97,7 +100,7 @@
                 addExamRules:{
                     name:[{required:true, message:'考试标题不能为空', trigger: 'blur' }],
                     starttime:[{required:true, message:'开始时间不能为空', trigger: 'blur' }],
-                    deadline:[{required:true, message:'结束时间不能为空', trigger: 'blur' }],
+                    deadline:[{required:true, message:'截止入场时间不能为空', trigger: 'blur' }],
                     time:[{required:true, message:'考试时长不能为空', trigger: 'blur' }],
                     allowtimes:[{required:true, message:'可考次数不能为空', trigger: 'blur' }],
 

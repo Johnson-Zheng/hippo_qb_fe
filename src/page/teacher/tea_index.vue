@@ -131,7 +131,8 @@
                     <div id="exam-chart" :style="{width: '570px', height: '300px'}"></div>
                 </div>
             </el-col>
-            <el-col :span="11" :lg="11" :xl="11" :md="24" :sm="24" :xs="24">
+
+            <el-col class="mt-30-m" :span="11" :lg="11" :xl="11" :md="24" :sm="24" :xs="24">
                 <div class="panel shadow w4 panel-left">
                     <el-row type="flex" justify="space-between">
                         <el-col :span="4">
@@ -177,7 +178,7 @@
                         <el-row class="mt-1875" v-if="index===0">
                             <el-col :span="4">
                                 <div class="anno-type">
-                                    <p>{{questionType(i.type)}}</p>
+                                    <p>{{questionType(i)}}</p>
                                 </div>
                             </el-col>
                             <el-col :span="20">
@@ -189,7 +190,7 @@
                         <el-row class="mt-1875" v-if="index===1">
                             <el-col :span="4">
                                 <div class="anno-type" style="background:rgba(75,163,214,1);">
-                                    <p>{{questionType(i.type)}}</p>
+                                    <p>{{questionType(i)}}</p>
                                 </div>
                             </el-col>
                             <el-col :span="20">
@@ -201,7 +202,7 @@
                         <el-row class="mt-1875" v-if="index===2">
                             <el-col :span="4">
                                 <div class="anno-type" style="background:rgba(112,174,211,1);">
-                                    <p>{{questionType(i.type)}}</p>
+                                    <p>{{questionType(i)}}</p>
                                 </div>
                             </el-col>
                             <el-col :span="20">
@@ -537,11 +538,15 @@
         user-select: none;
     }
     .anno-title{
-        font-size:10px;
+        font-size:12px;
         font-weight:400;
         line-height:20px;
         color:rgba(96,98,102,1);
-        white-space: nowrap;
+    }
+    .anno-title p{
+        white-space: nowrap; /* 因为设置了block，所以需要设置nowrap来确保不换行 */
+        overflow: hidden; /* 超出隐藏结合width使用截取采用效果*/
+        text-overflow: ellipsis; /* 本功能的主要功臣，超出部分的剪裁方式 */
     }
     .center{
         width: max-content;
@@ -555,6 +560,9 @@
             position: relative;
             left:50%;
             transform: translateX(-50%);
+        }
+        .mt-30-m{
+            margin-top: 20px;
         }
     }
 </style>

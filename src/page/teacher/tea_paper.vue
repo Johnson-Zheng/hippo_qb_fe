@@ -49,8 +49,8 @@
             <el-table-column
                     prop="subscore"
                     align="center"
-                    label="主观题分数"
-                    :show-tooltip-when-overflow="true"
+                    label="主观分数"
+                    width="100"
                     sortable
             >
             </el-table-column>
@@ -59,7 +59,7 @@
                     sortable
                     :formatter="dateFormatter"
                     label="添加时间"
-                    min-width="100"
+                    width="140"
                     >
             </el-table-column>
             <el-table-column
