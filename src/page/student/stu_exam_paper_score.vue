@@ -67,7 +67,10 @@
                 </div>
             </el-col>
             <el-col :span='8' align="center">
-                <div class="panel shadow">
+                <div>
+
+                </div>
+                <div class="fix-panel panel shadow">
                     <el-row>
                         <el-col :span="12" align="left">
                             <h2 class="card-h2">答题卡</h2>
@@ -81,7 +84,7 @@
                             <div class="card">
                                 <el-row>
                                     <template v-for="(q,i) in questionList">
-                                        <el-col style="margin-left: 10px;margin-bottom:15px" :span='4' align="center">
+                                        <el-col class="hover-item" style="margin-left: 5px;margin-bottom:15px" :span='4' align="center">
                                             <el-button :class="{'active':answerList[i]}" class="card-item" circle @click="rollTo(i)">{{i+1}}</el-button>
                                         </el-col>
                                     </template>
@@ -345,7 +348,6 @@
 
     .count-down span{
         font-size: 28px;
-
     }
     .card-h2{
         line-height: 38px!important;
@@ -369,14 +371,23 @@
         color: #ffffff;
         transition: all ease-in-out 0.3s;
     }
+    .hover-item :hover{
+        transition: all ease-in-out 0.3s;
+        transform: translateY(-3px);
+    }
     .active{
         background: linear-gradient(to bottom right, #65fca1, #2caa47);
         color:#ffffff;
         border:0;
         font-weight: 700;
         transition: all ease-in-out 0.3s;
-        box-shadow:0 7px 15px rgba(91,132,247,0.3);
+        box-shadow:0 10px 20px rgba(0, 209, 107, 0.3);
         transform: translateY(-2%);
+    }
+    .active :hover{
+        transition: all ease-in-out 0.3s;
+        transform: translateY(-3px);
+        color: #ffffff;
     }
     .desc{
         padding: 10px;
@@ -390,5 +401,8 @@
         font-size:12px;
         margin-bottom: 10px;
     }
-
+    .fix-panel{
+        position: fixed;
+        width: 20%;
+    }
 </style>

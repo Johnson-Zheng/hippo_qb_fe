@@ -82,7 +82,9 @@
                 </div>
             </el-col>
             <el-col :span='8' align="center">
-                <div class="panel shadow">
+                <div>
+                </div>
+                <div class="fix-panel panel shadow">
                     <el-row>
                         <el-col :span="24" align="left">
                             <h4>答题卡</h4>
@@ -91,8 +93,8 @@
                             <div class="card">
                                 <el-row>
                                     <template v-for="(q,i) in questionList">
-                                        <el-col style="margin-left: 10px;margin-bottom:15px" :span='4' align="center">
-                                            <el-button :class="{'active':answerList[i]}" class="card-item" circle @click="rollTo(i)">{{i+1}}</el-button>
+                                        <el-col class="hover-item" style="margin-left: 5px;margin-bottom:15px" :span='4' align="center">
+                                            <el-button :class="{'active':answerList[i]}" class="card-item" circle @click="rollTo(i)"><span>{{i+1}}</span></el-button>
                                         </el-col>
                                     </template>
                                 </el-row>
@@ -254,8 +256,6 @@
                 }else{
                     this.answerList[index] = false
                 }
-
-
             },
             getQuestions(){
                 this.$axios.get('paper/getpaperinfo?pid='+this.pid).then(res=>{
@@ -390,6 +390,12 @@
         color: rgb(139, 139, 139);
         transition: all ease-in-out 0.3s;
     }
+    .card-item :hover{
+        color: rgb(72, 72, 72);
+    }
+    .hover-item :hover{
+        transform: translateY(-3px);
+    }
     .active{
         background: linear-gradient(to bottom right, #89bbff, #579ff8);
         color:#ffffff;
@@ -397,6 +403,14 @@
         font-weight: 700;
         transition: all ease-in-out 0.3s;
         box-shadow:0 7px 15px rgba(91,132,247,0.3);
+    }
+    .active :hover{
+        transition: all ease-in-out 0.3s;
         transform: translateY(-3px);
+        color: #ffffff;
+    }
+    .fix-panel{
+        position: fixed;
+        width: 20%;
     }
 </style>
