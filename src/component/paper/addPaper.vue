@@ -102,7 +102,7 @@
                     </el-row>
                 </el-form-item>
             </div>
-            <el-form-item v-if="this.addPaperForm.totalScore!==0" label="试卷总分" class="mt-1875">
+            <el-form-item v-if="this.addPaperForm.totalscore!==0" label="试卷总分" class="mt-1875">
                 <p>{{this.addPaperForm.totalscore}}</p>
             </el-form-item>
         </el-form>
@@ -155,7 +155,7 @@
                     mulsum:0,
                     subsum:0,
                     questionId:'',
-                    totalScore:0,
+                    totalscore:0,
                 },
                 addPaperRules:{
                     name:[{required:true, message:'试卷标题不能为空', trigger: 'blur' }],

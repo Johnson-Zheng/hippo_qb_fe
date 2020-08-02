@@ -7,44 +7,48 @@
                     <!--返回页头-->
                     <el-page-header @back="goBack"> </el-page-header>
                     <!--标题和倒计时-->
-                    <el-row class="mt-1875" type="flex" justify="space-between">
-                        <el-col :span="14" align="left">
-                            <h2>{{examTitle}}</h2>
+                    <el-row class="mt-1875" type="flex" justify="end">
+                        <el-col :span="6">
+
                         </el-col>
-                        <el-col :span="10" align="right">
+                        <el-col :span="12" align="center">
+                            <h2 class="examTitle">{{examTitle}}</h2>
+                        </el-col>
+                        <el-col :span="6" align="right">
                             <div class="count-down no-select">
                                 倒计时 {{countTime}}
                             </div>
                         </el-col>
                     </el-row>
                     <!--题目列表-->
-                    <el-row>
+                    <el-divider content-position="center">诚信考试，诚信人生</el-divider>
+                    <el-row style="margin-top:50px">
                         <!--一行试题-->
-                        <template v-for="(question,index) in questionList" >
+                        <template  v-for="(question,index) in questionList" >
                             <el-col :span="24">
-                                <el-row class="mt-30">
+                                <el-row style="padding:0 10px">
                                     <!--试题题目-->
                                     <el-col :span="24" align="left">
-                                        <h4 :id="'question'+(index+1)">{{index+1}}、{{question.questionName}}</h4>
+                                        <h4 class="questionTitle" :id="'question'+(index+1)"><span class="req">*</span>{{index+1}}、{{question.questionName}}</h4>
                                     </el-col>
-                                    <el-col v-if="isChoice(question.type)" :span="24" align="left">
-                                        <el-radio-group v-model="question.answerContent" class="mt-1875" @change="updateChoice(question,index)">
-                                            <el-radio v-if="question.optionA!==''" :label="'A'">A:{{question.optionA}}</el-radio>
-                                            <el-radio v-if="question.optionB!==''" :label="'B'">B:{{question.optionB}}</el-radio>
-                                            <el-radio v-if="question.optionC!==''" :label="'C'">C:{{question.optionC}}</el-radio>
-                                            <el-radio v-if="question.optionD!==''" :label="'D'">D:{{question.optionD}}</el-radio>
-                                            <el-radio v-if="question.optionE!==''" :label="'E'">E:{{question.optionE}}</el-radio>
-                                            <el-radio v-if="question.optionF!==''" :label="'F'">F:{{question.optionF}}</el-radio>
+                                    <el-col v-if="isChoice(question.type)" align="left">
+                                        <el-radio-group  style="width: 100%"  v-model="question.answerContent" class="mt-1875" @change="updateChoice(question,index)">
+                                            <el-radio class="option"  style="width: 18%;margin-bottom:15px"  v-if="question.optionA!==''" :label="'A'"><span class="optionChar">A</span>、{{question.optionA}}</el-radio>
+                                            <el-radio class="option" style="width: 18%;margin-bottom:15px" v-if="question.optionB!==''" :label="'B'"><span class="optionChar">B</span>、{{question.optionB}}</el-radio>
+                                            <el-radio class="option" style="width: 18%;margin-bottom:15px" v-if="question.optionC!==''" :label="'C'"><span class="optionChar">C</span>、{{question.optionC}}</el-radio>
+                                            <el-radio class="option" style="width: 18%;margin-bottom:15px" v-if="question.optionD!==''" :label="'D'"><span class="optionChar">D</span>、{{question.optionD}}</el-radio>
+                                            <el-radio class="option" style="width: 18%" v-if="question.optionE!==''" :label="'E'"><span class="optionChar">E</span>、{{question.optionE}}</el-radio>
+                                            <el-radio class="option" style="width: 18%" v-if="question.optionF!==''" :label="'F'"><span class="optionChar">F</span>、{{question.optionF}}</el-radio>
                                         </el-radio-group>
                                     </el-col>
                                     <el-col v-if="isMultiChoice(question.type)" :span="24" align="left">
-                                        <el-checkbox-group v-model="question.optionList" class="mt-1875" @change="updateChoice(question,index)">
-                                            <el-checkbox v-if="question.optionA!==''" :label="'A'">A:{{question.optionA}}</el-checkbox>
-                                            <el-checkbox v-if="question.optionB!==''" :label="'B'">B:{{question.optionB}}</el-checkbox>
-                                            <el-checkbox v-if="question.optionC!==''" :label="'C'">C:{{question.optionC}}</el-checkbox>
-                                            <el-checkbox v-if="question.optionD!==''" :label="'D'">D:{{question.optionD}}</el-checkbox>
-                                            <el-checkbox v-if="question.optionE!==''" :label="'E'">E:{{question.optionE}}</el-checkbox>
-                                            <el-checkbox v-if="question.optionF!==''" :label="'F'">F:{{question.optionF}}</el-checkbox>
+                                        <el-checkbox-group style="width: 100%" v-model="question.optionList" class="mt-1875" @change="updateChoice(question,index)">
+                                            <el-checkbox style="width: 18%;margin-bottom:15px" v-if="question.optionA!==''" :label="'A'"><span class="optionChar">A</span>、{{question.optionA}}</el-checkbox>
+                                            <el-checkbox style="width: 18%;margin-bottom:15px" v-if="question.optionB!==''" :label="'B'"><span class="optionChar">B</span>、{{question.optionB}}</el-checkbox>
+                                            <el-checkbox style="width: 18%;margin-bottom:15px" v-if="question.optionC!==''" :label="'C'"><span class="optionChar">C</span>、{{question.optionC}}</el-checkbox>
+                                            <el-checkbox style="width: 18%;margin-bottom:15px" v-if="question.optionD!==''" :label="'D'"><span class="optionChar">D</span>、{{question.optionD}}</el-checkbox>
+                                            <el-checkbox style="width: 18%" v-if="question.optionE!==''" :label="'E'"><span class="optionChar">E</span>、{{question.optionE}}</el-checkbox>
+                                            <el-checkbox style="width: 18%" v-if="question.optionF!==''" :label="'F'"><span class="optionChar">F</span>、{{question.optionF}}</el-checkbox>
                                         </el-checkbox-group>
                                     </el-col>
                                     <el-col v-if="!isChoice(question.type) && !isMultiChoice(question.type) && security" :span="24" align="left" class="mt-1875">
@@ -74,10 +78,14 @@
                                                 resize="none"
                                         />
                                     </el-col>
-
                                 </el-row>
                             </el-col>
+                            <el-col :span="24" style="opacity: 0.3;padding:0 10px;">
+                                <el-divider> </el-divider>
+                            </el-col>
+
                         </template>
+
                     </el-row>
                 </div>
             </el-col>
@@ -91,9 +99,9 @@
                         </el-col>
                         <el-col :span="24" class="mt-1875">
                             <div class="card">
-                                <el-row>
+                                <el-row >
                                     <template v-for="(q,i) in questionList">
-                                        <el-col class="hover-item" style="margin-left: 5px;margin-bottom:15px" :span='4' align="center">
+                                        <el-col class="hover-item" style="margin-left: 5px;margin-bottom:15px;" :span='4' align="center">
                                             <el-button :class="{'active':answerList[i]}" class="card-item" circle @click="rollTo(i)"><span>{{i+1}}</span></el-button>
                                         </el-col>
                                     </template>
@@ -145,9 +153,7 @@
                 pid:0,
                 kid:0,
                 updateInfo: {
-                    //  studentId: '',
-                    //   paperId: '',
-                    //  answerContent: ''
+
                 },
                 security:true,
                 restTime:0,
@@ -321,7 +327,18 @@
                 document.getElementById('question'+i).scrollIntoView({
                     behavior: "smooth"
                 });
+            },
+            calcOptionNum(question){
+                let list = ['optionA','optionB','optionC','optionD','optionE','optionF']
+                let num = 0
+                for(i in list){
+                    if(question[i]!==''){
+                        count++
+                    }
+                }
+                return num
             }
+
         }
 }
 </script>
@@ -412,5 +429,33 @@
     .fix-panel{
         position: fixed;
         width: 20%;
+    }
+    .questionTitle{
+        font-size: 15px;
+        font-weight: bold;
+        letter-spacing:1px;
+        line-height: 2;
+        color:#444444;
+        font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
+
+    }
+    .examTitle{
+        font-size: 24px!important;
+        font-weight: bolder!important;
+    }
+    .req{
+        color: red;
+        font-weight: bold;
+        top: 3px;
+        margin-right: 5px;
+        left: -10px;
+    }
+    .option{
+        letter-spacing: 1px;
+        font-weight: bolder;
+    }
+    .optionChar{
+        font-size: 15px;
+        font-weight: normal;
     }
 </style>
