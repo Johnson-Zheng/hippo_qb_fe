@@ -188,7 +188,7 @@
                     mulsum:0,
                     subsum:0,
                     questionId:'',
-                    totalScore:0,
+                    totalscore:0,
                 }
                 this.postQidList=[]
             },
@@ -308,8 +308,7 @@
                 let sinsum = this.addPaperForm.sinsum
                 let mulsum = this.addPaperForm.mulsum
                 let subsum = this.addPaperForm.subsum
-                this.addPaperForm.totalScore = sinscore*sinsum + mulscore*mulsum + subscore*subsum
-
+                this.addPaperForm.totalscore = sinscore * sinsum + mulscore * mulsum + subscore * subsum
             }
         }
     }

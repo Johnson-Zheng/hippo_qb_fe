@@ -43,7 +43,7 @@
                                 width="60"
                         >
                             <template scope="scope">
-                                <el-button size="small" type="text">详情></el-button>
+                                <el-button size="small" type="text" @click="checkExamInfo(scope.row)">详情></el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -164,7 +164,7 @@
         },
         methods: {
             goBack(){
-                this.$router.go(-1)
+                this.$router.push('/tea_exam')
             },
             checkKid(){
                 if( this.kid==='' || this.kid===undefined){
@@ -621,7 +621,18 @@
                 });
 
             },
-
+            checkExamInfo(row){
+                this.$router.push({
+                    path:'/stu_exam_paper_score',
+                    name:'stu_exam_paper_score',
+                    params:{
+                        examData: row,
+                        examName: this.examName,
+                        fromTeacher:true,
+                        kid:this.kid,
+                    }
+                })
+            }
     }
 }
 </script>
@@ -641,6 +652,7 @@
     }
     .sta-panel{
         padding: 15px 20px!important;
+        border-radius: 8px;
     }
     .panel h2{
         font-size:18px;

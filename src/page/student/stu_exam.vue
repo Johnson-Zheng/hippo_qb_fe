@@ -191,7 +191,6 @@
                 }).catch(error => {
                     let message = error.message
                     this.$message.error(message)
-
                 });
             },
             checkInfo(row){

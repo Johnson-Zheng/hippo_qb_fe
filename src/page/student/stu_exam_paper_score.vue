@@ -118,7 +118,7 @@
                 myScore:0,
                 youranswer:[],
                 wrongList:[],
-
+                stuData:{},
                 choices: ['A', 'B', 'C', 'D', 'E', 'F'],
                 examData:{},
                 examTitle:'',
@@ -135,24 +135,51 @@
                     //   paperId: '',
                     //  answerContent: ''
                 },
-
+                fromTeacher: false,
+                uno:'',
                 ctTimer:null,
                 notSubmit:false,
                 submitLoad:false,
             }
         },
         created(){
-            this.examData = this.$route.params.examData
-            this.examTitle = this.examData.name
-            this.pid = this.examData.pid
-            this.kid = this.examData.kid
+            if(this.$route.params.fromTeacher===undefined){
+                this.examData = this.$route.params.examData
+                this.examTitle = this.examData.name
+                this.pid = this.examData.pid
+                this.kid = this.examData.kid
+            }else{
+                this.stuData = this.$route.params.examData
+                this.fromTeacher = this.$route.params.fromTeacher
+                this.uno = this.stuData.uno
+                this.kid = this.$route.params.kid
+                this.examTitle = this.$route.params.examName
+            }
+
         },
         mounted(){
-            this.checkData()
+            if(!this.fromTeacher){
+                this.checkData()
+            }else{
+                this.checkStuData()
+            }
+
         },
         methods: {
             goBack(){
-                this.$router.go(-1)
+                if(this.fromTeacher){
+                    this.$router.push({
+                        path:'/stu_exam_score',
+                        name:'stu_exam_score',
+                        params:{
+                            examName: this.examTitle,
+                            kid:this.kid,
+                        }
+                    })
+                }else{
+                    this.$router.go(-1)
+                }
+
             },
             checkData(){
               if(this.examData===undefined || this.examData.length === 0) {
@@ -164,26 +191,43 @@
                   });
               }else{
                   this.getQuestions()
+
               }
+            },
+            checkStuData(){
+                if(this.stuData===undefined || this.stuData.length === 0) {
+                    this.$alert('获取学生成绩错误，无法加载成绩','数据错误', {
+                        confirmButtonText: '确定',
+                        callback: action => {
+                            this.$router.go('/tea_exam')
+                        }
+                    });
+                }else{
+                    this.getQuestionsByTeacher()
+                }
             },
             isChoice(typeId) {
                 return typeId === 1
-            }, isMultiChoice(typeId) {
+            },
+            isMultiChoice(typeId) {
                 return typeId === 2
-            },updateChoice(question,index) {
+            },
+            updateChoice(question,index) {
                 if(question.type===2){
                     this.setarrUpdateInfo(question,index)}
                 else {
                     this.setUpdateInfo(question,index)
                 }
-            }, setUpdateInfo(question,index) {
+            },
+            setUpdateInfo(question,index) {
                 this.$set(this.updateInfo, question.qid, question.answerContent)
                 if(question.answerContent!==''){
                     this.answerList[index] = true
                 }else{
                     this.answerList[index] = false
                 }
-            }, setarrUpdateInfo(question,index) {
+            },
+            setarrUpdateInfo(question,index) {
                 this.$set(this.updateInfo , question.qid, question.optionList.toString())
                 if(question.optionList.toString()!==''){
                     this.answerList[index] = true
@@ -212,7 +256,27 @@
 
                 });
             },
+            getQuestionsByTeacher(){
+                this.$axios.get('examdata/texamresult?kid='+this.kid+'&uno='+this.uno).then(res=>{
+                    if(res && res.data.rspCode ==='200'){
+                        this.questionList= res.data.data.questions
 
+                        this.myScore = res.data.data.yourscore
+                        this.totalScore = res.data.data.fullmark
+                        this.youranswer = res.data.data.youranswer
+                        this.questionNum = this.questionList.length
+                        this.getAnswerStatus()
+
+                    }else{
+                        let message = "Error"+res.data.rspCode+":"+res.data.rspMsg
+                        this.$message.error(message)
+                    }
+                }).catch(error => {
+                    let message = error.message
+                    this.$message.error(message)
+
+                });
+            },
             getAnswerStatus(){
                 for(let i=0; i<this.questionNum;i++){
                     if(this.questionList[i].answer === this.youranswer[i][this.questionList[i].qid]){
@@ -227,13 +291,7 @@
                     behavior: "smooth"
                 });
             },
-            getWrongList(){
-                for(let i=0; i<this.questionNum;i++){
-                    if(this.questionList[i].answer === this.youranswer[i][this.questionList[i].qid]){
-                        this.answerList.push()
-                    }
-                }
-            }
+
         }
 }
 </script>
@@ -317,6 +375,7 @@
         font-weight: 700;
         transition: all ease-in-out 0.3s;
         box-shadow:0 7px 15px rgba(91,132,247,0.3);
+        transform: translateY(-2%);
     }
     .desc{
         padding: 10px;

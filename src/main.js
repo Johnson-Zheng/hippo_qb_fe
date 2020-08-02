@@ -37,12 +37,12 @@ axios.interceptors.request.use(
 // http response 拦截器
 axios.interceptors.response.use(
     response => {
-        if(response.headers['hippotoken']!==''&&response.headers['hippotoken']){
-            store.commit('login', response.headers['hippotoken']);
-            return response;  //请求成功的时候返回的data
-        }else {
-            return response;  //请求成功的时候返回的data
-        }
+       if(response.data.rspCode=== "403"){
+           Vue.prototype.$message(response.data.rspMsg);
+           router.replace('/')
+       }else if(response.data.rspCode=== "501"){
+           Vue.prototype.$message(response.data.rspMsg);
+       }
     },error => {
         if (error.response.data.errCode === 401) {
             router.replace('/')

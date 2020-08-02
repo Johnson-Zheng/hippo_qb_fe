@@ -57,7 +57,7 @@
                             <p class="tips-text dec-text">最近的三场考试安排</p>
                         </el-col>
                         <el-col :span="3" :offset=8>
-                            <el-button type="text" class="tips-text info-button" @click="goto('/tea_exam')">查看详情></el-button>
+                            <el-button type="text" class="tips-text info-button" @click="goto('/stu_exam')">查看详情></el-button>
                         </el-col>
                     </el-row>
                     <el-table class="mt-1875" :data="examForm" ref="examForm"
@@ -157,9 +157,7 @@
                         <el-col :span="4">
                             <h2>推荐题目</h2>
                         </el-col>
-                        <el-col :span="3">
-                            <el-button type="text" class="tips-text info-button" @click="goto('/tea_question')">查看详情></el-button>
-                        </el-col>
+
                     </el-row>
                     <template v-for="(i,index) in questionList" v-if="i.questionName!==null">
                         <el-row class="mt-1875" v-if="index===0">
