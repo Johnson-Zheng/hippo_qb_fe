@@ -19,9 +19,9 @@
         <div class="desc mt-30">
             <h3>考试须知</h3>
             <strong>1、注意考试截止时间</strong>
-            <p>考生在设定的试卷内没有完成答题的话，系统会自动交卷，所以考生一定要留意考试时间，在时限范围内登录系统完成考试。</p>
+            <p>考生在设定的试卷内没有完成答题的话成绩会为0，考生一定要留意考试时间，在时限范围内登录系统完成考试</p>
             <strong>2、严守考试规则</strong>
-            <p>请务必仔细阅读考试规则，不要尝试触碰“红线”，否则一旦触发考试系统的“反作弊”规则，系统就会立即执行对应的操作，马上进行交卷，就不能作答了。</p>
+            <p>请务必仔细阅读考试规则，不要尝试触碰“红线”</p>
         </div>
         <el-row class="mt-1875">
             <el-col :span="24" align="center">
@@ -74,7 +74,7 @@
                             }
                         })
                     }else{
-                        let message = "Error"+res.data.rspCode+':'+res.data.data
+                        let message = "Error"+res.data.rspCode+':'+res.data.rspMsg
                         this.$message.error(message)
                     }
                 }).catch(error => {

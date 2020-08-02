@@ -8,14 +8,10 @@
                     <el-page-header @back="goBack"> </el-page-header>
                     <!--标题和倒计时-->
                     <el-row class="mt-1875" type="flex" justify="space-between">
-                        <el-col :span="14" align="left">
+                        <el-col :span="24" align="left">
                             <h2>{{examTitle}}</h2>
                         </el-col>
-                        <el-col :span="10" align="right">
-                            <div class="count-down no-select">
-                                倒计时 {{countTime}}
-                            </div>
-                        </el-col>
+
                     </el-row>
                     <!--题目列表-->
                     <el-row>
@@ -28,7 +24,7 @@
                                         <h4 :id="'question'+(index+1)">{{index+1}}、{{question.questionName}}</h4>
                                     </el-col>
                                     <el-col v-if="isChoice(question.type)" :span="24" align="left">
-                                        <el-radio-group v-model="question.answerContent" class="mt-1875" @change="updateChoice(question,index)">
+                                        <el-radio-group disabled v-model="youranswer[index][question.qid]" class="mt-1875" @change="updateChoice(question,index)">
                                             <el-radio v-if="question.optionA!==''" :label="'A'">A:{{question.optionA}}</el-radio>
                                             <el-radio v-if="question.optionB!==''" :label="'B'">B:{{question.optionB}}</el-radio>
                                             <el-radio v-if="question.optionC!==''" :label="'C'">C:{{question.optionC}}</el-radio>
@@ -36,9 +32,14 @@
                                             <el-radio v-if="question.optionE!==''" :label="'E'">E:{{question.optionE}}</el-radio>
                                             <el-radio v-if="question.optionF!==''" :label="'F'">F:{{question.optionF}}</el-radio>
                                         </el-radio-group>
+                                        <div class="desc mt-1875">
+                                            <p>你的答案：{{youranswer[index][question.qid]}}</p>
+                                            <p>正确答案：{{question.answer}}</p>
+                                            <p style="margin-bottom: 0">题目解析：{{question.context}}</p>
+                                        </div>
                                     </el-col>
                                     <el-col v-if="isMultiChoice(question.type)" :span="24" align="left">
-                                        <el-checkbox-group v-model="question.optionList" class="mt-1875" @change="updateChoice(question,index)">
+                                        <el-checkbox-group disabled v-model="youranswer[index][question.qid].split(',')" class="mt-1875" @change="updateChoice(question,index)">
                                             <el-checkbox v-if="question.optionA!==''" :label="'A'">A:{{question.optionA}}</el-checkbox>
                                             <el-checkbox v-if="question.optionB!==''" :label="'B'">B:{{question.optionB}}</el-checkbox>
                                             <el-checkbox v-if="question.optionC!==''" :label="'C'">C:{{question.optionC}}</el-checkbox>
@@ -46,35 +47,19 @@
                                             <el-checkbox v-if="question.optionE!==''" :label="'E'">E:{{question.optionE}}</el-checkbox>
                                             <el-checkbox v-if="question.optionF!==''" :label="'F'">F:{{question.optionF}}</el-checkbox>
                                         </el-checkbox-group>
+                                        <div class="desc mt-1875">
+                                            <p>你的答案：{{youranswer[index][question.qid]}}</p>
+                                            <p>正确答案：{{question.answer}}</p>
+                                            <p style="margin-bottom: 0">题目解析：{{question.context}}</p>
+                                        </div>
                                     </el-col>
-                                    <el-col v-if="!isChoice(question.type) && !isMultiChoice(question.type) && security" :span="24" align="left" class="mt-1875">
-                                        <el-input
-                                                @paste.native.capture.prevent="handlePaste"
-                                                v-model="question.answerContent"
-                                                type="textarea"
-                                                :autosize="{ minRows: 3, maxRows: 5}"
-                                                :maxlength="1000"
-                                                show-word-limit
-                                                :clearable="true"
-                                                @change="updateChoice(question,index)"
-                                                placeholder="请输入内容"
-                                                resize="none"
-                                        />
+                                    <el-col v-if="!isChoice(question.type) && !isMultiChoice(question.type)" :span="24" align="left" class="mt-1875">
+                                        <div class="desc mt-1875">
+                                            <p>你的答案：{{youranswer[index][question.qid]}}</p>
+                                            <p>正确答案：{{question.answer}}</p>
+                                            <p style="margin-bottom: 0">题目解析：{{question.context}}</p>
+                                        </div>
                                     </el-col>
-                                    <el-col v-if="!isChoice(question.type) && !isMultiChoice(question.type) && !security" :span="24" align="left" class="mt-1875">
-                                        <el-input
-                                                v-model="question.answerContent"
-                                                type="textarea"
-                                                :autosize="{ minRows: 3, maxRows: 5}"
-                                                :maxlength="1000"
-                                                show-word-limit
-                                                :clearable="true"
-                                                @change="updateChoice(question,index)"
-                                                placeholder="请输入内容"
-                                                resize="none"
-                                        />
-                                    </el-col>
-
                                 </el-row>
                             </el-col>
                         </template>
@@ -84,8 +69,13 @@
             <el-col :span='8' align="center">
                 <div class="panel shadow">
                     <el-row>
-                        <el-col :span="24" align="left">
-                            <h4>答题卡</h4>
+                        <el-col :span="12" align="left">
+                            <h2 class="card-h2">答题卡</h2>
+                        </el-col>
+                        <el-col :span="12" align="right">
+                            <div class="count-down no-select">
+                                <span>{{myScore}}</span>/{{totalScore}}
+                            </div>
                         </el-col>
                         <el-col :span="24" class="mt-1875">
                             <div class="card">
@@ -98,13 +88,6 @@
                                 </el-row>
                             </div>
                         </el-col>
-                        <el-col :span="11" class="mt-1875">
-                            <el-button style="width:100%" type="primary" size="small" @click="submitPaper()" :disabled="notSubmit" :loading="submitLoad">确认交卷</el-button>
-                        </el-col>
-                        <el-col :span="11" :offset="1" class="mt-1875">
-                            <el-button style="width:100%" type="danger" plain size="small" @click='goBack()'>离开</el-button>
-                        </el-col>
-
                     </el-row>
                 </div>
             </el-col>
@@ -131,6 +114,11 @@
         },
         data() {
             return{
+                totalScore:0,
+                myScore:0,
+                youranswer:[],
+                wrongList:[],
+
                 choices: ['A', 'B', 'C', 'D', 'E', 'F'],
                 examData:{},
                 examTitle:'',
@@ -147,8 +135,7 @@
                     //   paperId: '',
                     //  answerContent: ''
                 },
-                security:true,
-                restTime:0,
+
                 ctTimer:null,
                 notSubmit:false,
                 submitLoad:false,
@@ -157,110 +144,61 @@
         created(){
             this.examData = this.$route.params.examData
             this.examTitle = this.examData.name
-            this.enterTime = this.$route.params.enterTime
-            this.totalTime = this.examData.time
             this.pid = this.examData.pid
             this.kid = this.examData.kid
-            this.security = this.examData.security
-            this.restTime = this.$route.params.restTime
-            if(this.security){
-                this.$nextTick(() => {
-                    // 禁用右键
-                    document.oncontextmenu = new Function("event.returnValue=false");
-                    // 禁用选择
-                    document.onselectstart = new Function("event.returnValue=false");
-                });}
-            this.$once("hook:beforeDestory",()=>{
-                clearInterval(this.ctTimer)
-                clearTimeout(this.ctTimer)
-                this.ctTimer = null
-            })
         },
         mounted(){
-            this.getCountDown()
-            this.getQuestions()
+            this.checkData()
         },
-
         methods: {
             goBack(){
-                this.$confirm('离开会丢失所有数据和本次考试机会，确定吗？', '离开考试', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.$message({
-                        type: 'warning',
-                        message: '您已离开考试'
-                    });
-                    this.ctTimer = null
-                    clearTimeout(this.ctTimer)
-                    this.$router.go(-1)
-                })
+                this.$router.go(-1)
             },
-            getCountDown(){
-                let start = Date.now()
-                let endTime = this.enterTime + this.restTime*1000
-                let lefttime = timeBetween(start,endTime)
-                this.countTime = time2HMS(lefttime)
-                if(lefttime>=0){
-                    if(lefttime===60*5){
-                        let waring = '距离考试结束还有5分钟，请尽快完成'
-                        this.$message.warning(waring)
-                    }
-                    this.ctTimer = setTimeout(this.getCountDown,1000)
-                }else{
-                    this.countTime = '已结束'
-                    this.notSubmit = true
-                    clearInterval(this.ctTimer)
-                    clearTimeout(this.ctTimer)
-                    this.ctTimer = null
-                    this.$alert('本场考试已结束，请离开考场', '考试结束', {
-                        confirmButtonText: '确定',
-                        callback: action => {
-                            this.ctTimer = null
-                            clearTimeout(this.ctTimer)
-                            this.$router.go(-1)
-                        }
-                    });
-                }
+            checkData(){
+              if(this.examData===undefined || this.examData.length === 0) {
+                  this.$alert('获取错误，无法加载成绩','数据错误', {
+                      confirmButtonText: '确定',
+                      callback: action => {
+                          this.$router.go(-1)
+                      }
+                  });
+              }else{
+                  this.getQuestions()
+              }
             },
             isChoice(typeId) {
                 return typeId === 1
-            },
-            isMultiChoice(typeId) {
+            }, isMultiChoice(typeId) {
                 return typeId === 2
-            },
-            updateChoice(question,index) {
+            },updateChoice(question,index) {
                 if(question.type===2){
                     this.setarrUpdateInfo(question,index)}
                 else {
                     this.setUpdateInfo(question,index)
                 }
-            },
-            setUpdateInfo(question,index) {
+            }, setUpdateInfo(question,index) {
                 this.$set(this.updateInfo, question.qid, question.answerContent)
                 if(question.answerContent!==''){
                     this.answerList[index] = true
                 }else{
                     this.answerList[index] = false
                 }
-
-
-            },
-            setarrUpdateInfo(question,index) {
+            }, setarrUpdateInfo(question,index) {
                 this.$set(this.updateInfo , question.qid, question.optionList.toString())
                 if(question.optionList.toString()!==''){
                     this.answerList[index] = true
                 }else{
                     this.answerList[index] = false
                 }
-
-
             },
             getQuestions(){
-                this.$axios.get('paper/getpaperinfo?pid='+this.pid).then(res=>{
+                this.$axios.get('/examdata/examresult?kid='+this.kid).then(res=>{
                     if(res && res.data.rspCode ==='200'){
                         this.questionList= res.data.data.questions
+                        this.examTitle = res.data.data.papername
+                        this.myScore = res.data.data.yourscore
+                        this.totalScore = res.data.data.fullmark
+                        this.youranswer = res.data.data.youranswer
                         this.questionNum = this.questionList.length
                         this.getAnswerStatus()
 
@@ -274,53 +212,27 @@
 
                 });
             },
-            submitPaper(){
-                this.notSubmit = true
-                if(this.checkAnswerList()){
-                    this.$axios.post('paper/'+this.kid+'/'+this.pid+'/submit', this.updateInfo).then(resp => {
-                            if (resp && resp.data.rspCode === '200') {
-                                let data = resp.data
-                                this.ctTimer = null
-                                clearTimeout(this.ctTimer)
-                                this.$alert('试卷提交成功，请离开考场', '交卷成功', {
-                                    confirmButtonText: '确定',
-                                    callback: action => {
-                                        this.ctTimer = null
-                                        clearTimeout(this.ctTimer)
-                                        this.$router.go(-1)
-                                    }
-                                });
-                            }else{
-                                this.notSubmit = false
-                                let message = "Error"+resp.data.rspCode+":"+resp.data.rspMsg
-                                this.$message.error(message)
-                            }
-                        }).catch(error => {
-                        let message = error.message
-                        this.$message.error(message)
-                    })
-                }else{
-                    this.$message.warning('您还有未完成的题目，无法交卷')
-                    this.submitLoad = false
-                }
-            },
-            checkAnswerList(){
-                for(let i in this.answerList){
-                    if(!this.answerList[i]){
-                        return false
-                    }
-                }
-                return true
-            },
+
             getAnswerStatus(){
-                for(let i=0;i<this.questionNum;i++){
-                    this.answerList.push(false)
+                for(let i=0; i<this.questionNum;i++){
+                    if(this.questionList[i].answer === this.youranswer[i][this.questionList[i].qid]){
+                        this.answerList.push(true)
+                    }else{
+                        this.answerList.push(false)
+                    }
                 }
             },
             rollTo(i){
                 document.getElementById('question'+i).scrollIntoView({
                     behavior: "smooth"
                 });
+            },
+            getWrongList(){
+                for(let i=0; i<this.questionNum;i++){
+                    if(this.questionList[i].answer === this.youranswer[i][this.questionList[i].qid]){
+                        this.answerList.push()
+                    }
+                }
             }
         }
 }
@@ -363,13 +275,21 @@
 
     }
     .count-down{
-        background:rgba(250,250,250,1);
-        padding:5px 15px;
+        /*background: linear-gradient(to bottom right, #89bbff, #579ff8);*/
         font-size: 14px;
         border-radius: 20px;
         width: max-content;
-        color: rgb(110, 110, 110);
-        font-weight: 500;
+        color:#579ff8;
+        font-weight: 800;
+        font-style:italic;
+    }
+
+    .count-down span{
+        font-size: 28px;
+
+    }
+    .card-h2{
+        line-height: 38px!important;
     }
     .card{
         width: 100%;
@@ -379,7 +299,7 @@
         border-radius: 10px;
     }
     .card-item{
-        background:#fafafa;
+        background: linear-gradient(to bottom right, #f68c84, #dd5c4f);
         border:0 solid rgba(220,223,230,0.5);
         font-weight: bold;
         user-select: none;
@@ -387,16 +307,28 @@
         width: 30px;
         height: 30px;
         padding: 0;
-        color: rgb(139, 139, 139);
+        color: #ffffff;
         transition: all ease-in-out 0.3s;
     }
     .active{
-        background: linear-gradient(to bottom right, #89bbff, #579ff8);
+        background: linear-gradient(to bottom right, #65fca1, #2caa47);
         color:#ffffff;
         border:0;
         font-weight: 700;
         transition: all ease-in-out 0.3s;
         box-shadow:0 7px 15px rgba(91,132,247,0.3);
-        transform: translateY(-3px);
     }
+    .desc{
+        padding: 10px;
+        background:#f5f7fa;
+        transition: all ease-in-out 0.3s;
+        border:1px solid rgb(235,235,235);
+        border-radius: 5px;
+    }
+    .desc p{
+        color:#8b8b8b;
+        font-size:12px;
+        margin-bottom: 10px;
+    }
+
 </style>

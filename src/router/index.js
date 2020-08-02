@@ -14,6 +14,7 @@ import stu_index from "@/page/student/stu_index";
 import stu_exam from "@/page/student/stu_exam";
 import stu_exam_score from "@/page/student/stu_exam_score";
 import stu_exam_paper from "@/page/student/stu_exam_paper";
+import stu_exam_paper_score from "@/page/student/stu_exam_paper_score";
 
 import test from "../page/test";
 import NewTest from "../page/NewTest";
@@ -161,6 +162,15 @@ export default new Router({
                 title: '学生端-考试-开始考试'
             }
         },
+        {
+            path:'/stu_exam_paper_score',
+            name:'stu_exam_paper_score',
+            component: stu_exam_paper_score,
+            meta:{
+                // 页面标题title
+                title: '学生端-考试-考试成绩'
+            }
+        }
 
     ]
 

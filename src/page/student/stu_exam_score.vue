@@ -470,7 +470,6 @@
                     for(let i=0;i<qidList.length;i++){
                         temp={value:(data[i]*100),name:qidList[i]}
                         table.push(temp)
-
                     }
                 }
 
@@ -489,26 +488,28 @@
                         faultChart.showLoading()
                         faultChart.setOption({
                             title : {
-                                text: '各试题错误率分布',
+                                text: '各试题正确率分布',
                                 textStyle: {
                                     fontSize:14,
                                     fontWeight:400,
                                 },
                                 x:'20',
-                                y: 'top',
+                                y:'top',
                             },
                             tooltip: {
                                 trigger: 'axis',
+                                formatter: " 第{b}题:{c}% ",
                                 axisPointer: {
                                     type: 'line',
+
                                     label: {
-                                        backgroundColor: '#6a7985'
-                                    }
+                                        backgroundColor: '#6a7985',
+                                    },
+
                                 }
                             },
                             xAxis: {
                                 data: qidList,
-                                boundaryGap: false,
                             },
                             yAxis: {
                                 max : 100,
@@ -521,14 +522,14 @@
                                 },
                             },
                             legend: {
-                                data: ['试题错误率'],
+                                data: ['试题正确率'],
                                 icon: "circle",   //  这个字段控制形状  类型包括 circle，rect ，roundRect，triangle，diamond，pin，arrow，none
                                 x:'center',
                                 y:'bottom'
                             },
                             series: [{
-                                name: '试题错误率',
-                                type: 'line',
+                                name: '试题正确率',
+                                type: 'bar',
                                 smooth:true,  //这个是把线变成曲线
                                 areaStyle: {},
                                 data: rightRateList,
@@ -551,7 +552,7 @@
                         faultChart.showLoading()
                         faultChart.setOption({
                             title : {
-                                text: '各试题错误率分布',
+                                text: '各试题正确率分布',
                                 textStyle: {
                                     fontSize:14,
                                     fontWeight:400,

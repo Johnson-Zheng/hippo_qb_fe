@@ -113,7 +113,7 @@
                             <h2>考试统计</h2>
                         </el-col>
                         <el-col :span="8">
-                            <p class="tips-text dec-text">您最近参加考试统计</p>
+                            <p class="tips-text dec-text">您最近参加考试场数</p>
                         </el-col>
                     </el-row>
                     <div id="exam-chart" :style="{width: '570px', height: '300px'}"></div>
@@ -312,14 +312,14 @@
                                 yAxis: {
                                 },
                                 legend: {
-                                    data: ['参与次数'],
-                                    selected: {'参与次数': true},
+                                    data: ['参与场数'],
+                                    selected: {'参与场数': true},
                                     icon: "circle",   //  这个字段控制形状  类型包括 circle，rect ，roundRect，triangle，diamond，pin，arrow，none
                                     left: 25,
                                     bottom: 0
                                 },
                                 series: [{
-                                    name: '参与次数',
+                                    name: '参与场数',
                                     smooth:true,  //这个是把线变成曲线
                                     type: 'line',
                                     areaStyle: {},

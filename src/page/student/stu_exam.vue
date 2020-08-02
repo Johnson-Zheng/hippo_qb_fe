@@ -96,7 +96,7 @@
                         <el-button v-if="examStatusFormatter(scope.row)==='已结束'" @click="checkInfo(scope.row)" type="text" size="small">考试详情></el-button>
                     </el-col>
                     <el-col :span="12">
-                        <el-button v-if="examStatusFormatter(scope.row)==='已结束'" type="text" size="small">查看成绩></el-button>
+                        <el-button v-if="examStatusFormatter(scope.row)==='已结束'" type="text" size="small" @click="checkScore(scope.row)">查看成绩></el-button>
                     </el-col>
                     <el-col :span="24">
                         <el-button  v-if="examStatusFormatter(scope.row)==='进行中'"  @click="joinExamInfo(scope.row)" type="success" size="mini" round plain>参加考试</el-button>
@@ -110,7 +110,6 @@
             </template>
             </el-table-column>
         </el-table>
-
         <div class="operate-panel" >
             <el-row type="flex">
                 <el-col :span="20">
@@ -128,7 +127,6 @@
             </el-row>
 
         </div>
-
     </div>
     <copyright></copyright>
     <exam-info id="examInfo" :dialogVisible="dialogVisible" :dialogInfo="dialogInfo" @update:dialogVisible="dialogVisibles "> </exam-info>
@@ -183,7 +181,7 @@
         },
         methods:{
             getExamTable(dataPerpage, currentPage){
-                this.$axios.get('exroom/list?num='+dataPerpage+'&start='+currentPage).then(res=>{
+                this.$axios.get('exroom/listnum?num='+dataPerpage+'&start='+currentPage).then(res=>{
                     if(res && res.data.rspCode ==='200'){
                         this.examTable = res.data.data["content"]
                         this.totalElements = res.data.data['totalElements']
@@ -219,6 +217,15 @@
                 this.loading = true
                 this.getExamTable(this.dataPerPage,this.currentPage-1)
             },
+            checkScore(row){
+                this.$router.push({
+                    path:'/stu_exam_paper_score',
+                    name:'stu_exam_paper_score',
+                    params:{
+                        examData: row
+                    }
+                })
+            }
 
         }
     }
