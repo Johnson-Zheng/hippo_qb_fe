@@ -57,7 +57,7 @@
                     prop="grouptype"
                     :formatter="groupTypeFormatter"
                     label="考试名单"
-                    width="80"
+                    width="90"
                     align="center"
             >
             </el-table-column>

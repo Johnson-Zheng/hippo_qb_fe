@@ -74,7 +74,7 @@
                             }
                         })
                     }else{
-                        let message = "Error"+res.data.rspCode+':'+res.data.rspMsg
+                        let message = "Error"+res.data.rspMsg+':'+res.data.data
                         this.$message.error(message)
                     }
                 }).catch(error => {
