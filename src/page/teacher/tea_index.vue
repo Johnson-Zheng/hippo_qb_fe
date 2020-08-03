@@ -214,7 +214,7 @@
                         <el-row class="mt-1875" v-if="index>2">
                             <el-col :span="4">
                                 <div class="anno-type" style="background:rgba(160,197,219,1)">
-                                    <p>{{questionType(i.type)}}</p>
+                                    <p>{{questionType(i)}}</p>
                                 </div>
                             </el-col>
                             <el-col :span="20">

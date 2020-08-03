@@ -83,9 +83,7 @@
                             <el-col :span="24" style="opacity: 0.3;padding:0 10px;">
                                 <el-divider> </el-divider>
                             </el-col>
-
                         </template>
-
                     </el-row>
                 </div>
             </el-col>
